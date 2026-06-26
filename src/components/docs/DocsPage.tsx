@@ -39,9 +39,9 @@ export function DocsPage({
           </button>
         ))}
         <div className="mt-5 px-4 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
-          Reference
+          Attribute Values
         </div>
-        {["GapSize", "Padding", "Align", "Justify"].map((t) => (
+        {["gap / size", "padding", "align", "justify"].map((t) => (
           <div
             key={t}
             className="border-l-2 border-transparent px-4 py-1.5 text-xs text-zinc-600"
@@ -52,34 +52,50 @@ export function DocsPage({
       </div>
 
       {/* Main content */}
-      <div className="max-w-[760px] flex-1 px-12 py-10">
+      <div className="min-w-0 max-w-[760px] flex-1 px-5 py-10 sm:px-12">
         <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
-          Component
+          Tag
         </div>
         <h1 className="mb-2 text-4xl font-extrabold tracking-tight text-zinc-100">
-          &lt;{comp.name} /&gt;
+          &lt;{comp.name}&gt;
         </h1>
         <p className="mb-9 font-sans text-[15px] leading-relaxed text-muted">
           {comp.tagline}
         </p>
 
-        {/* Import */}
-        <div className="mb-8 rounded-lg border border-border bg-surface px-4 py-3 text-xs">
-          <span className="text-purple">import</span>
-          <span className="text-foreground">{" { "}</span>
-          <span className="text-accent">{comp.name}</span>
-          <span className="text-foreground">{" } "}</span>
-          <span className="text-purple">from</span>
-          <span className="text-green"> &quot;layoutkit-css&quot;</span>
+        {/* Usage */}
+        <div className="mb-8 space-y-1 overflow-x-auto whitespace-nowrap rounded-lg border border-border bg-surface px-4 py-3 text-xs">
+          <div>
+            <span className="text-foreground">&lt;</span>
+            <span className="text-purple">link</span>
+            <span className="text-accent"> rel</span>
+            <span className="text-foreground">=</span>
+            <span className="text-green">&quot;stylesheet&quot;</span>
+            <span className="text-accent"> href</span>
+            <span className="text-foreground">=</span>
+            <span className="text-green">
+              &quot;https://unpkg.com/layoutkit-css/layoutkit.css&quot;
+            </span>
+            <span className="text-foreground">&gt;</span>
+          </div>
+          <div>
+            <span className="text-foreground">&lt;</span>
+            <span className="text-accent">{comp.name}</span>
+            <span className="text-foreground">&gt;</span>
+            <span className="text-muted"> … </span>
+            <span className="text-foreground">&lt;/</span>
+            <span className="text-accent">{comp.name}</span>
+            <span className="text-foreground">&gt;</span>
+          </div>
         </div>
 
-        {/* Props table */}
+        {/* Attributes table */}
         <h3 className="mb-3 text-base font-bold tracking-tight text-zinc-100">
-          Props
+          Attributes
         </h3>
-        <div className="mb-9 overflow-hidden rounded-lg border border-border bg-surface">
-          <div className="grid grid-cols-[120px_140px_80px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
-            <div>Prop</div>
+        <div className="mb-9 overflow-x-auto rounded-lg border border-border bg-surface">
+          <div className="grid min-w-[520px] grid-cols-[120px_140px_80px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+            <div>Attribute</div>
             <div>Type</div>
             <div>Default</div>
             <div>Description</div>
@@ -87,7 +103,7 @@ export function DocsPage({
           {comp.props.map((p, i) => (
             <div
               key={p.name}
-              className={`grid grid-cols-[120px_140px_80px_1fr] items-center px-4 py-2.5 text-xs ${
+              className={`grid min-w-[520px] grid-cols-[120px_140px_80px_1fr] items-center px-4 py-2.5 text-xs ${
                 i < comp.props.length - 1 ? "border-b border-border" : ""
               }`}
             >
@@ -111,10 +127,10 @@ export function DocsPage({
             <div className="border-b border-border px-4 py-2.5 text-[11px] font-semibold text-muted">
               {ex.label}
             </div>
-            <div className="grid grid-cols-2">
-              <div className="border-r border-border p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2">
+              <div className="border-b border-border p-4 sm:border-b-0 sm:border-r">
                 <div className="mb-2 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
-                  LayoutKit
+                  HTML
                 </div>
                 <pre className="whitespace-pre-wrap text-xs leading-relaxed text-accent">
                   {ex.code}
@@ -122,7 +138,7 @@ export function DocsPage({
               </div>
               <div className="p-4">
                 <div className="mb-2 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
-                  Compiled CSS
+                  Applied CSS
                 </div>
                 <div className="rounded-md bg-background px-3 py-2 text-xs font-medium leading-relaxed text-purple">
                   {ex.output}
@@ -148,18 +164,18 @@ export function DocsPage({
           CSS Property Map
         </h3>
         <p className="mb-4 font-sans text-[13px] leading-relaxed text-zinc-500">
-          Exact native CSS generated for each prop value — applied via the inline style prop, no classes.
+          Exact native CSS the stylesheet applies for each attribute value — matched via attribute selectors, no JavaScript.
         </p>
-        <div className="mb-9 overflow-hidden rounded-lg border border-border bg-surface">
-          <div className="grid grid-cols-[140px_180px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
-            <div>Prop</div>
+        <div className="mb-9 overflow-x-auto rounded-lg border border-border bg-surface">
+          <div className="grid min-w-[520px] grid-cols-[140px_180px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+            <div>Attribute</div>
             <div>Value</div>
-            <div>Generated CSS</div>
+            <div>Applied CSS</div>
           </div>
           {comp.classMap.map((mapping, i) => (
             <div
               key={`${mapping.prop}-${mapping.value}-${i}`}
-              className={`grid grid-cols-[140px_180px_1fr] items-center px-4 py-2.5 text-xs ${
+              className={`grid min-w-[520px] grid-cols-[140px_180px_1fr] items-center px-4 py-2.5 text-xs ${
                 i < comp.classMap.length - 1 ? "border-b border-border" : ""
               }`}
             >
@@ -187,46 +203,36 @@ export function DocsPage({
         {selectedComponent <= 3 && (
           <>
             <h3 className="mb-3 mt-9 text-base font-bold tracking-tight text-zinc-100">
-              Type Reference
+              Attribute Value Reference
             </h3>
-            <div className="rounded-lg border border-border bg-surface p-4 text-xs leading-7">
+            <div className="overflow-x-auto break-words rounded-lg border border-border bg-surface p-4 text-xs leading-7">
               <div>
-                <span className="text-purple">type</span>{" "}
-                <span className="text-accent">GapSize</span> ={" "}
+                <span className="text-accent">gap / size</span> ={" "}
                 <span className="text-green">
-                  &quot;none&quot; | &quot;xs&quot; | &quot;sm&quot; |
-                  &quot;md&quot; | &quot;lg&quot; | &quot;xl&quot; |
-                  &quot;2xl&quot; | &quot;3xl&quot;
+                  none | px | xs | sm | md | lg | xl | 2xl | 3xl | 0.5 … 16
                 </span>
               </div>
               <div>
-                <span className="text-purple">type</span>{" "}
-                <span className="text-accent">Padding</span> ={" "}
+                <span className="text-accent">padding</span> ={" "}
                 <span className="text-green">
-                  &quot;none&quot; | &quot;xs&quot; | &quot;sm&quot; |
-                  &quot;md&quot; | &quot;lg&quot; | &quot;xl&quot; |
-                  &quot;2xl&quot;
+                  none | px | xs | sm | md | lg | xl | 2xl | 3xl | 0.5 … 16
                 </span>
               </div>
               <div>
-                <span className="text-purple">type</span>{" "}
-                <span className="text-accent">Align</span> ={" "}
+                <span className="text-accent">align</span> ={" "}
                 <span className="text-green">
-                  &quot;start&quot; | &quot;center&quot; | &quot;end&quot; |
-                  &quot;stretch&quot; | &quot;baseline&quot;
+                  start | center | end | stretch | baseline
                 </span>
               </div>
               <div>
-                <span className="text-purple">type</span>{" "}
-                <span className="text-accent">Justify</span> ={" "}
+                <span className="text-accent">justify</span> ={" "}
                 <span className="text-green">
-                  &quot;start&quot; | &quot;center&quot; | &quot;end&quot; |
-                  &quot;between&quot; | &quot;around&quot; | &quot;evenly&quot;
+                  start | center | end | between | around | evenly
                 </span>
               </div>
               <div className="mt-3">
                 <div className="mb-1 text-[11px] text-zinc-600">
-                  // Gap size &rarr; CSS length
+                  Gap / size value &rarr; CSS length
                 </div>
                 <div>
                   <span className="text-muted">xs</span> &rarr;{" "}

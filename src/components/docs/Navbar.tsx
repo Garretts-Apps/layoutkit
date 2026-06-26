@@ -1,6 +1,6 @@
 "use client";
 
-export type Section = "home" | "install" | "docs" | "playground" | "tutorial" | "linting";
+export type Section = "home" | "install" | "docs" | "playground" | "tutorial";
 
 const SECTION_LABELS: Record<Section, string> = {
   home: "Home",
@@ -8,7 +8,6 @@ const SECTION_LABELS: Record<Section, string> = {
   docs: "Docs",
   playground: "Compiler",
   tutorial: "Tutorial",
-  linting: "Linting",
 };
 
 interface NavbarProps {

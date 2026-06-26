@@ -1,54 +1,25 @@
 {
   "name": "layoutkit-css",
   "version": "0.1.0",
-  "description": "The first layout language for the web. 10 semantic components that compile to native CSS. Zero dependencies, no build step.",
+  "description": "The first layout language for the web — pure CSS. Style <lk-*> tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/garrett-s-apps/layoutkit.git",
     "directory": "packages/layoutkit"
   },
-  "keywords": ["layout", "css", "react", "components", "flexbox", "grid", "design-system", "zero-dependency", "inline-styles"],
-  "type": "module",
+  "keywords": ["layout", "css", "flexbox", "grid", "design-system", "zero-dependency", "no-build", "web-components", "custom-elements", "html"],
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
-    }
+    ".": "./layoutkit.css",
+    "./layoutkit.css": "./layoutkit.css"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": ["dist", "README.md"],
-  "sideEffects": false,
+  "main": "./layoutkit.css",
+  "style": "./layoutkit.css",
+  "unpkg": "./layoutkit.css",
+  "jsdelivr": "./layoutkit.css",
+  "files": ["layoutkit.css", "gen.mjs", "README.md"],
+  "sideEffects": ["*.css"],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
-  },
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
-  },
-  "peerDependenciesMeta": {
-    "react-dom": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "@types/react": "^19",
-    "react": "^19.2.0",
-    "tsup": "^8.4.0",
-    "typescript": "^5"
-  },
-  "overrides": {
-    "esbuild": "^0.28.1"
+    "build": "node gen.mjs"
   }
 }

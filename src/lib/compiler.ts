@@ -1,6 +1,8 @@
-// Compiles LayoutKit JSX to the native CSS the components actually emit (via
-// the inline `style` prop). Mirrors packages/layoutkit/src so the Playground
-// and Tutorial show exactly what ships — no Tailwind, no classes.
+// Parses LayoutKit HTML (<lk-*> custom-element tags with kebab-case attributes)
+// into the native CSS the layoutkit.css stylesheet applies via attribute
+// selectors. Mirrors packages/layoutkit/layoutkit.css so the Playground and
+// Tutorial show exactly the CSS each tag/attribute produces — no classes, no
+// runtime, no build.
 
 const SPACE: Record<string, string> = {
   none: "0", px: "1px", "0.5": "0.125rem", "1": "0.25rem", "1.5": "0.375rem",
@@ -17,108 +19,143 @@ const JUSTIFY: Record<string, string> = {
   between: "space-between", around: "space-around", evenly: "space-evenly",
 };
 
-type Props = Record<string, string | number | boolean>;
+type Props = Record<string, string | boolean>;
 type Decl = [string, string];
 
 const has = (p: Props, k: string) => Boolean(p[k]);
 const str = (p: Props, k: string, fallback: string) => (typeof p[k] === "string" ? (p[k] as string) : fallback);
 
-// One builder per component, returning ordered CSS declarations that match the
-// real component output in packages/layoutkit/src.
+// One builder per tag, returning ordered CSS declarations that match the
+// attribute-selector rules in packages/layoutkit/layoutkit.css.
 const STYLE_BUILDERS: Record<string, (p: Props) => Decl[]> = {
-  Center(p) {
+  "lk-stack"(p) {
+    const d: Decl[] = [
+      ["display", "flex"],
+      ["flex-direction", "column"],
+      ["gap", SPACE[str(p, "gap", "md")] ?? "1rem"],
+      ["align-items", has(p, "center") ? "center" : ALIGN[str(p, "align", "stretch")]],
+      ["justify-content", has(p, "center") ? "center" : JUSTIFY[str(p, "justify", "start")]],
+    ];
+    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
+    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+    if (has(p, "full-height")) d.push(["min-height", "100vh"]);
+    if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
+    return d;
+  },
+  "lk-row"(p) {
+    const d: Decl[] = [
+      ["display", "flex"],
+      ["flex-direction", has(p, "reverse") ? "row-reverse" : "row"],
+      ["gap", SPACE[str(p, "gap", "md")] ?? "1rem"],
+      ["align-items", has(p, "center") ? "center" : ALIGN[str(p, "align", "center")]],
+      ["justify-content", has(p, "center") ? "center" : JUSTIFY[str(p, "justify", "start")]],
+    ];
+    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
+    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+    if (has(p, "full-height")) d.push(["min-height", "100vh"]);
+    if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
+    return d;
+  },
+  "lk-center"(p) {
     const both = !has(p, "horizontal") && !has(p, "vertical");
     const d: Decl[] = [
       ["display", has(p, "inline") ? "inline-flex" : "flex"],
       ["flex-direction", "column"],
     ];
-    if (both || has(p, "horizontal")) d.push(["align-items", "center"]);
-    if (both || has(p, "vertical")) d.push(["justify-content", "center"]);
+    // Base lk-center centers both axes; single-axis attrs override the other.
+    d.push(["align-items", both || has(p, "horizontal") ? "center" : "stretch"]);
+    d.push(["justify-content", both || has(p, "vertical") ? "center" : "flex-start"]);
     if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
-    if (has(p, "fullHeight")) d.push(["min-height", "100vh"]);
+    if (has(p, "full-height")) d.push(["min-height", "100vh"]);
     return d;
   },
-  Stack(p) {
+  "lk-box"(p) {
+    const d: Decl[] = [["display", "block"]];
+    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
+    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+    return d;
+  },
+  "lk-spread"(p) {
     const d: Decl[] = [
-      ["display", "flex"],
-      ["flex-direction", "column"],
-      ["gap", SPACE[str(p, "gap", "md")]],
-      ["align-items", has(p, "center") ? "center" : ALIGN[str(p, "align", "stretch")]],
-      ["justify-content", has(p, "center") ? "center" : JUSTIFY[str(p, "justify", "start")]],
-    ];
-    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
-    if (has(p, "fullHeight")) d.push(["min-height", "100vh"]);
-    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
-    if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
-    return d;
-  },
-  Row(p) {
-    const d: Decl[] = [
-      ["display", "flex"],
-      ["flex-direction", has(p, "reverse") ? "row-reverse" : "row"],
-      ["gap", SPACE[str(p, "gap", "md")]],
-      ["align-items", has(p, "center") ? "center" : ALIGN[str(p, "align", "center")]],
-      ["justify-content", has(p, "center") ? "center" : JUSTIFY[str(p, "justify", "start")]],
-    ];
-    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
-    if (has(p, "fullHeight")) d.push(["min-height", "100vh"]);
-    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
-    if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
-    return d;
-  },
-  Box(p) {
-    const d: Decl[] = [];
-    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
-    if (has(p, "center")) d.push(["display", "flex"], ["align-items", "center"], ["justify-content", "center"]);
-    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
-    return d;
-  },
-  Spread(p) {
-    return [
       ["display", "flex"],
       ["flex-direction", "row"],
       ["justify-content", "space-between"],
       ["align-items", ALIGN[str(p, "align", "center")]],
-      ...(p.padding && p.padding !== "none" ? [["padding", SPACE[str(p, "padding", "none")]] as Decl] : []),
     ];
+    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
+    return d;
   },
-  Grid(p) {
-    const cols = typeof p.cols === "number" ? p.cols : 1;
-    return [
-      ["display", "grid"],
-      ["grid-template-columns", `repeat(${cols}, minmax(0, 1fr))`],
-      ["gap", SPACE[str(p, "gap", "md")]],
-    ];
+  "lk-grid"(p) {
+    const d: Decl[] = [["display", "grid"]];
+    if (has(p, "responsive")) {
+      d.push(["grid-template-columns", "repeat(auto-fit, minmax(var(--lk-min-child-width, 250px), 1fr))"]);
+    } else {
+      const cols = str(p, "cols", "1");
+      d.push(["grid-template-columns", `repeat(${cols}, minmax(0, 1fr))`]);
+    }
+    if (p.rows) d.push(["grid-template-rows", `repeat(${str(p, "rows", "1")}, minmax(0, 1fr))`]);
+    d.push(["gap", SPACE[str(p, "gap", "md")] ?? "1rem"]);
+    if (p["col-gap"]) d.push(["column-gap", SPACE[str(p, "col-gap", "none")]]);
+    if (p["row-gap"]) d.push(["row-gap", SPACE[str(p, "row-gap", "none")]]);
+    if (p.flow === "row") d.push(["grid-auto-flow", "row"]);
+    if (p.flow === "col") d.push(["grid-auto-flow", "column"]);
+    if (p.flow === "dense") d.push(["grid-auto-flow", "dense"]);
+    if (p["place-items"]) d.push(["place-items", str(p, "place-items", "stretch")]);
+    return d;
   },
-  Spacer(p) {
+  "lk-spacer"(p) {
     const size = str(p, "size", "auto");
-    return size === "auto" ? [["flex", "1 1 0%"]] : [["height", SPACE[size] ?? "0"]];
+    if (size === "auto" || !(size in SPACE)) return [["display", "block"], ["flex", "1 1 0%"]];
+    return [["display", "block"], ["flex", "none"], ["height", SPACE[size]]];
   },
-  Divider() {
+  "lk-divider"(p) {
+    if (p.orientation === "vertical") {
+      const width = p.thickness === "thick" ? "4px" : p.thickness === "medium" ? "2px" : "1px";
+      return [
+        ["display", "block"],
+        ["height", "100%"],
+        ["align-self", "stretch"],
+        ["border-left", `${width} solid var(--lk-divider-color, #e5e7eb)`],
+      ];
+    }
+    const width = p.thickness === "thick" ? "4px" : p.thickness === "medium" ? "2px" : "1px";
     return [
+      ["display", "block"],
       ["width", "100%"],
-      ["border-top", "1px solid #e5e7eb"],
+      ["border-top", `${width} solid var(--lk-divider-color, #e5e7eb)`],
     ];
   },
-  ScrollArea() {
-    return [["overflow-y", "auto"]];
-  },
-  AspectRatio(p) {
-    const ratio = typeof p.ratio === "number" ? p.ratio : 1;
+  "lk-aspect-ratio"() {
     return [
-      ["position", "relative"],
-      ["padding-bottom", `${((1 / ratio) * 100).toFixed(4).replace(/\.?0+$/, "")}%`],
+      ["display", "block"],
+      ["aspect-ratio", "var(--lk-ratio, 1)"],
     ];
+  },
+  "lk-scroll-area"(p) {
+    const d: Decl[] = [["display", "block"]];
+    if (p.direction === "horizontal") {
+      d.push(["overflow-x", "auto"], ["overflow-y", "hidden"]);
+    } else if (p.direction === "both") {
+      d.push(["overflow", "auto"]);
+    } else {
+      d.push(["overflow-y", "auto"]);
+      if (p.direction === "vertical") d.push(["overflow-x", "hidden"]);
+    }
+    d.push(["max-height", "var(--lk-max-height, none)"]);
+    d.push(["max-width", "var(--lk-max-width, none)"]);
+    return d;
   },
 };
 
 export interface CompilerResult {
+  /** The tag name, e.g. "lk-center". */
   component: string;
   props: Props;
   /** Native CSS declarations, e.g. "display: flex; flex-direction: column; gap: 1rem". */
   css: string;
   /** Number of CSS declarations produced. */
   declarations: number;
+  /** The element with its computed inline style, e.g. `<lk-center style="display: flex; …">`. */
   htmlOutput: string;
 }
 
@@ -131,37 +168,28 @@ export interface LintWarning {
 
 function findAllTagMatches(input: string): Array<{ tagName: string; propsStr: string; index: number }> {
   const matches: Array<{ tagName: string; propsStr: string; index: number }> = [];
-  const allMatches = input.matchAll(/<(\w+)([^>]*)>/g);
+  // Match opening tags only (skip closing </lk-*> tags).
+  const allMatches = input.matchAll(/<([a-z][\w-]*)((?:[^>"]|"[^"]*")*?)\/?>/g);
   for (const m of allMatches) {
+    if (m[0].startsWith("</")) continue;
     matches.push({ tagName: m[1], propsStr: m[2], index: m.index ?? 0 });
   }
   return matches;
 }
 
-function parseBooleanProps(propsStr: string): string[] {
+function parseBooleanAttrs(propsStr: string): string[] {
   const found: string[] = [];
-  // Match standalone words that aren't part of key="value" or key={value} patterns
-  const allMatches = propsStr.matchAll(/\b(\w+)\b(?!\s*=)/g);
-  for (const m of allMatches) {
+  // Standalone kebab-case words that aren't part of key="value".
+  for (const m of propsStr.matchAll(/(?:^|\s)([a-z][\w-]*)(?!\s*=)\b/g)) {
     found.push(m[1]);
   }
   return found;
 }
 
-function parseStringProps(propsStr: string): Array<[string, string]> {
+function parseStringAttrs(propsStr: string): Array<[string, string]> {
   const found: Array<[string, string]> = [];
-  const allMatches = propsStr.matchAll(/(\w+)="([^"]+)"/g);
-  for (const m of allMatches) {
+  for (const m of propsStr.matchAll(/([a-z][\w-]*)="([^"]*)"/g)) {
     found.push([m[1], m[2]]);
-  }
-  return found;
-}
-
-function parseNumericProps(propsStr: string): Array<[string, number]> {
-  const found: Array<[string, number]> = [];
-  const allMatches = propsStr.matchAll(/(\w+)=\{(\d+)\}/g);
-  for (const m of allMatches) {
-    found.push([m[1], parseInt(m[2])]);
   }
   return found;
 }
@@ -176,44 +204,42 @@ export function parseJSXToCSS(input: string): { results: CompilerResult[]; lintW
     if (!build) continue;
 
     const propsFound: Props = {};
-    for (const prop of parseBooleanProps(propsStr)) propsFound[prop] = true;
-    for (const [prop, val] of parseStringProps(propsStr)) propsFound[prop] = val;
-    for (const [prop, val] of parseNumericProps(propsStr)) propsFound[prop] = val;
+    for (const attr of parseBooleanAttrs(propsStr)) propsFound[attr] = true;
+    for (const [attr, val] of parseStringAttrs(propsStr)) propsFound[attr] = val;
 
     const decls = build(propsFound).filter(([, v]) => v != null && v !== "");
     const css = decls.map(([k, v]) => `${k}: ${v}`).join("; ");
-    const styleAttr = decls.map(([k, v]) => `${k}: ${v}`).join("; ");
 
-    // Linting — prop-usage hygiene, unchanged by the native-CSS switch.
+    // Linting — a couple of useful hygiene hints.
     const lineNum = input.substring(0, index).split("\n").length;
 
-    if (tagName === "Center" && propsFound.horizontal && propsFound.vertical) {
+    if (tagName === "lk-center" && propsFound.horizontal && propsFound.vertical) {
       lintWarnings.push({
         line: lineNum,
-        message: "Redundant props: <Center horizontal vertical> is the same as <Center>. Remove both props.",
+        message: "Redundant attributes: <lk-center horizontal vertical> is the same as <lk-center>. Remove both.",
         severity: "warning",
-        fix: `<Center${propsFound.fill ? " fill" : ""}>`,
+        fix: `<lk-center${propsFound.fill ? " fill" : ""}>`,
       });
     }
-    if (tagName === "Row" && propsFound.justify === "between") {
+    if (tagName === "lk-row" && propsFound.justify === "between") {
       lintWarnings.push({
         line: lineNum,
-        message: 'Consider using <Spread> instead of <Row justify="between"> for better semantics.',
+        message: 'Consider <lk-spread> instead of <lk-row justify="between"> for better semantics.',
         severity: "suggestion",
-        fix: "<Spread>",
+        fix: "<lk-spread>",
       });
     }
-    if (tagName === "Stack" && propsFound.center && propsFound.align) {
+    if ((tagName === "lk-stack" || tagName === "lk-row") && propsFound.center && propsFound.align) {
       lintWarnings.push({
         line: lineNum,
-        message: 'Conflicting props: "center" overrides "align". Remove one.',
+        message: 'Conflicting attributes: "center" overrides "align". Remove one.',
         severity: "warning",
       });
     }
-    if ((tagName === "Stack" || tagName === "Row") && propsFound.gap === "none") {
+    if ((tagName === "lk-stack" || tagName === "lk-row" || tagName === "lk-grid") && propsFound.gap === "none") {
       lintWarnings.push({
         line: lineNum,
-        message: 'Unnecessary prop: gap="none" resolves to gap: 0, which has no visual effect. Remove it.',
+        message: 'Unnecessary attribute: gap="none" resolves to gap: 0, which has no visual effect. Remove it.',
         severity: "suggestion",
       });
     }
@@ -223,7 +249,7 @@ export function parseJSXToCSS(input: string): { results: CompilerResult[]; lintW
       props: propsFound,
       css,
       declarations: decls.length,
-      htmlOutput: `<div style="${styleAttr}">`,
+      htmlOutput: `<${tagName} style="${css}">`,
     });
   }
 
