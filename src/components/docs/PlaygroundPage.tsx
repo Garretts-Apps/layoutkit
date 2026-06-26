@@ -25,19 +25,19 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
   return (
     <div className="flex h-[calc(100vh-49px)] flex-col">
       {/* Toolbar */}
-      <div className="flex items-center justify-between border-b border-border px-6 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <span className="text-sm font-bold text-zinc-100">Interactive Compiler</span>
-          <span className="text-[11px] text-zinc-600">
+          <span className="hidden text-[11px] text-zinc-600 sm:inline">
             Type LayoutKit HTML &rarr; see the CSS it&apos;s styled with
           </span>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {PRESETS.map((preset) => (
             <button
               key={preset.label}
               onClick={() => onCodeChange(preset.code)}
-              className="rounded border border-zinc-700 bg-surface px-2.5 py-1 text-[11px] font-semibold text-zinc-400 transition-colors hover:border-zinc-500 hover:text-zinc-200"
+              className="shrink-0 rounded border border-zinc-700 bg-surface px-2.5 py-1 text-[11px] font-semibold text-zinc-400 transition-colors hover:border-zinc-500 hover:text-zinc-200"
             >
               {preset.label}
             </button>
@@ -45,10 +45,10 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
         </div>
       </div>
 
-      {/* Split pane */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* Split pane — stacks vertically on mobile, side-by-side on desktop */}
+      <div className="flex flex-1 flex-col overflow-hidden md:flex-row">
         {/* Input */}
-        <div className="flex flex-1 flex-col border-r border-border">
+        <div className="flex min-h-0 flex-1 flex-col border-b border-border md:border-b-0 md:border-r">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
             <span className="h-2 w-2 rounded-full bg-accent" />
             LayoutKit HTML
@@ -62,7 +62,7 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
         </div>
 
         {/* Output */}
-        <div className="flex flex-1 flex-col">
+        <div className="flex min-h-0 flex-1 flex-col">
           <div className="flex items-center justify-between border-b border-border px-4 py-2">
             <div className="flex items-center gap-3">
               <button

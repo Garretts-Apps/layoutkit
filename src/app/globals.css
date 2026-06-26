@@ -31,6 +31,17 @@ textarea:focus {
   outline: none;
 }
 
+/* Code samples must wrap (incl. long unbreakable URLs/import paths) instead
+   of forcing horizontal page scroll on mobile. Unlayered so it beats the
+   Tailwind utilities; `anywhere` (unlike `break-word`) also shrinks
+   min-content so the element can't push the viewport wider. */
+pre,
+pre code {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word;
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;

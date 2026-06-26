@@ -19,32 +19,34 @@ export function DocsPage({
   const comp = COMPONENT_DOCS[selectedComponent];
 
   return (
-    <div className="flex min-h-[calc(100vh-49px)]">
-      {/* Sidebar */}
-      <div className="sticky top-[49px] h-[calc(100vh-49px)] w-[220px] shrink-0 overflow-y-auto border-r border-border py-5">
-        <div className="mb-2 px-4 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+    <div className="flex min-h-[calc(100vh-49px)] flex-col md:flex-row">
+      {/* Sidebar — horizontal scroller on mobile, vertical rail on desktop */}
+      <div className="shrink-0 border-b border-border md:sticky md:top-[49px] md:h-[calc(100vh-49px)] md:w-[220px] md:overflow-y-auto md:border-b-0 md:border-r md:py-5">
+        <div className="mb-2 hidden px-4 text-[10px] font-bold uppercase tracking-widest text-zinc-600 md:block">
           Components
         </div>
-        {COMPONENT_DOCS.map((c, i) => (
-          <button
-            key={c.name}
-            onClick={() => onSelectComponent(i)}
-            className={`block w-full border-l-2 px-4 py-2 text-left text-[13px] ${
-              selectedComponent === i
-                ? "border-accent bg-border font-bold text-accent"
-                : "border-transparent text-muted hover:text-foreground"
-            }`}
-          >
-            {c.name}
-          </button>
-        ))}
-        <div className="mt-5 px-4 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+        <div className="flex overflow-x-auto [scrollbar-width:none] md:block [&::-webkit-scrollbar]:hidden">
+          {COMPONENT_DOCS.map((c, i) => (
+            <button
+              key={c.name}
+              onClick={() => onSelectComponent(i)}
+              className={`shrink-0 whitespace-nowrap border-b-2 px-4 py-2.5 text-left text-[13px] md:w-full md:border-b-0 md:border-l-2 md:py-2 ${
+                selectedComponent === i
+                  ? "border-accent bg-border font-bold text-accent"
+                  : "border-transparent text-muted hover:text-foreground"
+              }`}
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+        <div className="mt-5 hidden px-4 text-[10px] font-bold uppercase tracking-widest text-zinc-600 md:block">
           Attribute Values
         </div>
         {["gap / size", "padding", "align", "justify"].map((t) => (
           <div
             key={t}
-            className="border-l-2 border-transparent px-4 py-1.5 text-xs text-zinc-600"
+            className="hidden border-l-2 border-transparent px-4 py-1.5 text-xs text-zinc-600 md:block"
           >
             {t}
           </div>
@@ -56,7 +58,7 @@ export function DocsPage({
         <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
           Tag
         </div>
-        <h1 className="mb-2 text-4xl font-extrabold tracking-tight text-zinc-100">
+        <h1 className="mb-2 break-all text-2xl font-extrabold tracking-tight text-zinc-100 sm:text-4xl">
           &lt;{comp.name}&gt;
         </h1>
         <p className="mb-9 font-sans text-[15px] leading-relaxed text-muted">
