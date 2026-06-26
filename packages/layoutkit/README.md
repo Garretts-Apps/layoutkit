@@ -48,6 +48,14 @@ Attributes are kebab-case: `gap`, `padding`, `align`, `justify`, `center`, `fill
 
 Centering a div: the CSS final boss, defeated in one tag.
 
+## Good to know
+
+Pure CSS means there's no JavaScript to add semantics or fill children — a deliberate trade for zero runtime and no FOUC:
+
+- **Accessibility.** `lk-divider`/`lk-spacer` are presentational by default. If a divider needs to be announced, add the role yourself: `<lk-divider role="separator" aria-orientation="vertical">`.
+- **AspectRatio children.** The box sizes itself via `aspect-ratio`; size the child to fill it, e.g. `<lk-aspect-ratio style="--lk-ratio: 16/9"><img style="width:100%;height:100%;object-fit:cover"></lk-aspect-ratio>`.
+- **Grid range.** `cols` and `rows` are enumerated 1–12. For more columns, use `responsive` (`auto-fit`) with `--lk-min-child-width`.
+
 ## Build
 
 The stylesheet is generated from `gen.mjs` (the spacing scale and selectors are computed, not hand-listed):
