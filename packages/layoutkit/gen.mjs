@@ -80,7 +80,7 @@ rule("lk-center[vertical]:not([horizontal])", "align-items: stretch;");
 
 section("Grid columns / rows / flow / placement");
 for (let n = 1; n <= 12; n++) rule(`lk-grid[cols="${n}"]`, `grid-template-columns: repeat(${n}, minmax(0, 1fr));`);
-for (let n = 1; n <= 6; n++) rule(`lk-grid[rows="${n}"]`, `grid-template-rows: repeat(${n}, minmax(0, 1fr));`);
+for (let n = 1; n <= 12; n++) rule(`lk-grid[rows="${n}"]`, `grid-template-rows: repeat(${n}, minmax(0, 1fr));`);
 rule("lk-grid[responsive]", "grid-template-columns: repeat(auto-fit, minmax(var(--lk-min-child-width, 250px), 1fr));");
 variants(["lk-grid"], "col-gap", SPACE, (v) => `column-gap: ${v};`);
 variants(["lk-grid"], "row-gap", SPACE, (v) => `row-gap: ${v};`);
@@ -106,6 +106,13 @@ rule('lk-scroll-area[direction="horizontal"]', "overflow-x: auto; overflow-y: hi
 rule('lk-scroll-area[direction="both"]', "overflow: auto;");
 
 const css = out.join("\n") + "\n";
-writeFileSync(join(dirname(fileURLToPath(import.meta.url)), "layoutkit.css"), css);
+const pkgDir = dirname(fileURLToPath(import.meta.url));
+// Write the canonical package copy AND the docs-site download copy from the
+// same source so they can never drift.
+const targets = [
+  join(pkgDir, "layoutkit.css"),
+  join(pkgDir, "..", "..", "public", "layoutkit.css"),
+];
+for (const target of targets) writeFileSync(target, css);
 const kb = (Buffer.byteLength(css, "utf8") / 1024).toFixed(1);
-console.log(`Wrote layoutkit.css (${kb} KB, ${out.filter((l) => l.includes("{")).length} rules)`);
+console.log(`Wrote layoutkit.css (${kb} KB, ${out.filter((l) => l.includes("{")).length} rules) -> ${targets.length} targets`);

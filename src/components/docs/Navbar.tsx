@@ -24,7 +24,7 @@ export function Navbar({ section, onNavigate }: NavbarProps) {
         </div>
         <span className="text-base font-bold tracking-tight">LayoutKit</span>
         <span className="rounded bg-border px-1.5 py-0.5 text-[10px] font-semibold text-muted">
-          v1.0
+          CSS
         </span>
       </div>
       <div className="flex gap-1">
