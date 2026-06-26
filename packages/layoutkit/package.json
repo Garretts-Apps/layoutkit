@@ -8,7 +8,7 @@
     "url": "https://github.com/garrett-s-apps/layoutkit.git",
     "directory": "packages/layoutkit"
   },
-  "keywords": ["layout", "css", "flexbox", "grid", "design-system", "zero-dependency", "no-build", "web-components", "custom-elements", "html"],
+  "keywords": ["layout", "css", "flexbox", "grid", "design-system", "zero-dependency", "no-build", "custom-tags", "semantic-html", "html"],
   "exports": {
     ".": "./layoutkit.css",
     "./layoutkit.css": "./layoutkit.css"

@@ -73,12 +73,17 @@ Centering a div: the CSS final boss, defeated in one tag.
 
 ## The docs website (this repo)
 
-This repository hosts the LayoutKit docs site, a [Next.js](https://nextjs.org) app. The website happens to style itself with Tailwind CSS — that's the *site's* own implementation and has nothing to do with what the LayoutKit library requires. The library is just a stylesheet.
+This repository also hosts the LayoutKit docs site — and it **dogfoods the library**: it's plain static HTML whose own layout is done with `<lk-*>` tags + `layoutkit.css`. No framework, no React, no build step, no client-side router. Navigation is real `<a href>` links between real HTML documents (hypermedia, the way the web intended); the only JavaScript on the whole site is the optional live editor on the Playground page, and that page works without it.
 
-Run the dev server:
+- `index.html`, `install.html`, `docs.html`, `playground.html`, `tutorial.html` — the pages.
+- `assets/site.css` — the site's skin (color/type); **layout is `layoutkit.css`**.
+- `assets/playground.js` — the only script (progressive enhancement for the Playground).
+- `vercel.json` — static deploy: clean URLs + cache headers, no framework.
+
+Preview locally with any static server:
 
 ```bash
-npm run dev
+npx serve .      # or: python3 -m http.server
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the result.
+`npm run build` just regenerates `layoutkit.css` from `packages/layoutkit/gen.mjs`.

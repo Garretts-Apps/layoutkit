@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LayoutKit — The first layout language for the web, as pure CSS</title>
+  <meta name="description" content="A pure-CSS stylesheet that styles semantic <lk-*> tags through attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC, ~2 KB brotli. You can finally center a div.">
+  <!-- LayoutKit styles itself with LayoutKit. The library stylesheet does the layout; -->
+  <link rel="stylesheet" href="/layoutkit.css">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <!-- Nav (dogfooded: lk-spread = space-between row) -->
+  <header>
+    <nav class="nav" aria-label="Primary">
+      <lk-spread align="center">
+        <a href="/" aria-label="LayoutKit home">
+          <lk-row gap="2" align="center">
+            <lk-center class="brand-mark">L</lk-center>
+            <span class="brand brand-name">LayoutKit</span>
+            <span class="badge">CSS</span>
+          </lk-row>
+        </a>
+        <lk-row class="navlinks" gap="1">
+          <a class="navlink" href="/" aria-current="page">Home</a>
+          <a class="navlink" href="/install">Install</a>
+          <a class="navlink" href="/docs">Docs</a>
+          <a class="navlink" href="/playground">Playground</a>
+          <a class="navlink" href="/tutorial">Tutorial</a>
+        </lk-row>
+      </lk-spread>
+    </nav>
+  </header>
+
+  <main id="main" class="container">
+    <!-- Hero -->
+    <lk-stack class="center-text" align="center" gap="5" padding="none" style="padding-block: 56px 40px;">
+      <span class="pill">YOU CAN FINALLY CENTER A DIV</span>
+      <h1 class="hero-title">10 semantic tags.<br>One pure-CSS stylesheet.</h1>
+      <p class="lead sans" style="max-width: 560px;">
+        Zero dependencies. Zero JavaScript. No build. No FOUC.<br>
+        Centering a div: the CSS final boss, defeated in one tag.
+      </p>
+      <lk-row gap="3" justify="center" wrap>
+        <a class="btn btn-primary" href="/playground">Open the Playground &rarr;</a>
+        <a class="btn" href="https://github.com/Garrett-s-Apps/layoutkit" target="_blank" rel="noopener">View on GitHub</a>
+      </lk-row>
+    </lk-stack>
+
+    <!-- Drop in one link tag -->
+    <lk-box class="card" padding="8" style="border-color: color-mix(in srgb, var(--purple) 30%, transparent); background: color-mix(in srgb, var(--purple) 5%, transparent); margin-bottom: 32px;">
+      <lk-stack gap="4">
+        <span class="pill pill-purple">NO BUILD · NO JAVASCRIPT · NO FOUC</span>
+        <h2 class="h2">Link one stylesheet, write tags</h2>
+        <p class="sans muted">A render-blocking stylesheet styles the tags before first paint. Works in plain HTML or any framework — server-render the markup and it just works.</p>
+        <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span>
+
+<span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span> <span class="tok-attr">padding</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">full-height</span><span class="tok-tag">&gt;</span>You can finally center a div.<span class="tok-tag">&lt;/lk-center&gt;</span>
+  <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>...<span class="tok-tag">&lt;/lk-grid&gt;</span>
+<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
+      </lk-stack>
+    </lk-box>
+
+    <!-- npm -->
+    <lk-box class="card" padding="8" style="border-color: color-mix(in srgb, var(--green) 30%, transparent); background: color-mix(in srgb, var(--green) 5%, transparent); margin-bottom: 64px;">
+      <lk-stack gap="4">
+        <span class="pill pill-green">ON NPM</span>
+        <h2 class="h2">Or install the CSS package</h2>
+        <div class="code"><pre><span class="tok-com"># it's a CSS package — import the stylesheet</span>
+npm install layoutkit-css</pre></div>
+        <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
+      </lk-stack>
+    </lk-box>
+
+    <!-- Why -->
+    <lk-stack gap="5" style="margin-bottom: 64px;">
+      <h2 class="h2">Why pure CSS</h2>
+      <lk-grid responsive gap="3" style="--lk-min-child-width: 240px;">
+        <lk-box class="card"><div class="accent" style="font-weight:700; font-size:13px;">Pure CSS</div><div class="muted sans" style="font-size:12px;">No JavaScript, no runtime, nothing to hydrate</div></lk-box>
+        <lk-box class="card"><div class="accent" style="font-weight:700; font-size:13px;">Zero dependencies</div><div class="muted sans" style="font-size:12px;">One stylesheet — that's the whole supply chain</div></lk-box>
+        <lk-box class="card"><div class="accent" style="font-weight:700; font-size:13px;">No build step</div><div class="muted sans" style="font-size:12px;">Link it and write tags</div></lk-box>
+        <lk-box class="card"><div class="accent" style="font-weight:700; font-size:13px;">No FOUC</div><div class="muted sans" style="font-size:12px;">Render-blocking CSS styles tags before first paint</div></lk-box>
+        <lk-box class="card"><div class="accent" style="font-weight:700; font-size:13px;">Works anywhere</div><div class="muted sans" style="font-size:12px;">Any server-rendered HTML — plain HTML, Rails, Django, htmx</div></lk-box>
+        <lk-box class="card"><div class="accent" style="font-weight:700; font-size:13px;">~2 KB brotli</div><div class="muted sans" style="font-size:12px;">The entire layout vocabulary, gzipped tiny</div></lk-box>
+      </lk-grid>
+    </lk-stack>
+  </main>
+
+  <footer class="footer">
+    <lk-spread class="container" align="center">
+      <span>LayoutKit — pure-CSS layout. MIT.</span>
+      <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garrett-s-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
+    </lk-spread>
+  </footer>
+</body>
+</html>
