@@ -7,9 +7,12 @@ on:
     types: [published]
   workflow_dispatch:
 
+# Auth is via npm trusted publishing (OIDC) — no NPM_TOKEN needed.
+# Requires this workflow to be registered as a trusted publisher for
+# layoutkit-css on npmjs.com (repo + workflow filename must match).
 permissions:
   contents: read
-  id-token: write # required for npm provenance
+  id-token: write # OIDC token npm exchanges for short-lived publish auth
 
 jobs:
   publish:
@@ -25,6 +28,10 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
+      # Trusted publishing needs npm >= 11.5.1; Node 20 ships npm 10.
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
       # Regenerate the stylesheet from source so the published file always
       # matches gen.mjs. (gen.mjs resolves its own paths, so cwd is fine.)
       - name: Generate stylesheet
@@ -34,7 +41,7 @@ jobs:
       - name: Verify generated CSS is committed
         run: git diff --exit-code -- layoutkit.css ../../layoutkit.css
 
+      # No token: OIDC trusted publishing authenticates and adds provenance
+      # automatically.
       - name: Publish
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
