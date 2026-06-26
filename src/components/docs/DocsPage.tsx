@@ -52,7 +52,7 @@ export function DocsPage({
       </div>
 
       {/* Main content */}
-      <div className="max-w-[760px] flex-1 px-12 py-10">
+      <div className="min-w-0 max-w-[760px] flex-1 px-5 py-10 sm:px-12">
         <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
           Component
         </div>
@@ -64,7 +64,7 @@ export function DocsPage({
         </p>
 
         {/* Import */}
-        <div className="mb-8 rounded-lg border border-border bg-surface px-4 py-3 text-xs">
+        <div className="mb-8 overflow-x-auto whitespace-nowrap rounded-lg border border-border bg-surface px-4 py-3 text-xs">
           <span className="text-purple">import</span>
           <span className="text-foreground">{" { "}</span>
           <span className="text-accent">{comp.name}</span>
@@ -77,8 +77,8 @@ export function DocsPage({
         <h3 className="mb-3 text-base font-bold tracking-tight text-zinc-100">
           Props
         </h3>
-        <div className="mb-9 overflow-hidden rounded-lg border border-border bg-surface">
-          <div className="grid grid-cols-[120px_140px_80px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+        <div className="mb-9 overflow-x-auto rounded-lg border border-border bg-surface">
+          <div className="grid min-w-[520px] grid-cols-[120px_140px_80px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
             <div>Prop</div>
             <div>Type</div>
             <div>Default</div>
@@ -87,7 +87,7 @@ export function DocsPage({
           {comp.props.map((p, i) => (
             <div
               key={p.name}
-              className={`grid grid-cols-[120px_140px_80px_1fr] items-center px-4 py-2.5 text-xs ${
+              className={`grid min-w-[520px] grid-cols-[120px_140px_80px_1fr] items-center px-4 py-2.5 text-xs ${
                 i < comp.props.length - 1 ? "border-b border-border" : ""
               }`}
             >
@@ -111,8 +111,8 @@ export function DocsPage({
             <div className="border-b border-border px-4 py-2.5 text-[11px] font-semibold text-muted">
               {ex.label}
             </div>
-            <div className="grid grid-cols-2">
-              <div className="border-r border-border p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2">
+              <div className="border-b border-border p-4 sm:border-b-0 sm:border-r">
                 <div className="mb-2 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
                   LayoutKit
                 </div>
@@ -150,8 +150,8 @@ export function DocsPage({
         <p className="mb-4 font-sans text-[13px] leading-relaxed text-zinc-500">
           Exact native CSS generated for each prop value — applied via the inline style prop, no classes.
         </p>
-        <div className="mb-9 overflow-hidden rounded-lg border border-border bg-surface">
-          <div className="grid grid-cols-[140px_180px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+        <div className="mb-9 overflow-x-auto rounded-lg border border-border bg-surface">
+          <div className="grid min-w-[520px] grid-cols-[140px_180px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
             <div>Prop</div>
             <div>Value</div>
             <div>Generated CSS</div>
@@ -159,7 +159,7 @@ export function DocsPage({
           {comp.classMap.map((mapping, i) => (
             <div
               key={`${mapping.prop}-${mapping.value}-${i}`}
-              className={`grid grid-cols-[140px_180px_1fr] items-center px-4 py-2.5 text-xs ${
+              className={`grid min-w-[520px] grid-cols-[140px_180px_1fr] items-center px-4 py-2.5 text-xs ${
                 i < comp.classMap.length - 1 ? "border-b border-border" : ""
               }`}
             >
@@ -189,7 +189,7 @@ export function DocsPage({
             <h3 className="mb-3 mt-9 text-base font-bold tracking-tight text-zinc-100">
               Type Reference
             </h3>
-            <div className="rounded-lg border border-border bg-surface p-4 text-xs leading-7">
+            <div className="overflow-x-auto break-words rounded-lg border border-border bg-surface p-4 text-xs leading-7">
               <div>
                 <span className="text-purple">type</span>{" "}
                 <span className="text-accent">GapSize</span> ={" "}

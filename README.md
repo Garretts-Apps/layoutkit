@@ -11,7 +11,7 @@ LayoutKit emits native CSS through React's inline `style` prop. There's no Tailw
 - **Zero runtime dependencies.** No `clsx`, no `tailwind-merge`, nothing.
 - **No Tailwind required.** Components render plain inline styles.
 - **No build step, no config.** It works the moment you import it.
-- **Tiny over the wire.** ~1.4 KB brotli / ~1.7 KB gzip (~4.4 KB minified).
+- **Tiny over the wire.** ~1.5 KB brotli / ~1.7 KB gzip (~4.3 KB minified).
 - **Full IntelliSense.** Typed props for every component.
 
 ## Install
@@ -49,6 +49,21 @@ Prefer to own the source? Copy all 10 components into your project (shadcn-style
 ```bash
 npx layoutkit init
 ```
+
+## No build? No React? No problem.
+
+The same 10 primitives also ship as native **web components** in a single vanilla-JS file — no npm, no bundler, no React. Drop one `<script>` into any HTML page or framework:
+
+```html
+<script src="https://layoutkit.dev/layoutkit.js"></script>
+
+<lk-stack gap="lg" padding="md">
+  <lk-center full-height>You can finally center a div.</lk-center>
+  <lk-grid cols="3" gap="md"><div>1</div><div>2</div><div>3</div></lk-grid>
+</lk-stack>
+```
+
+Tags are `lk-stack`, `lk-row`, `lk-center`, `lk-box`, `lk-spread`, `lk-grid`, `lk-spacer`, `lk-divider`, `lk-aspect-ratio`, `lk-scroll-area`. Attributes are kebab-case (`full-height`, `min-child-width`). ~1.5 KB gzipped, zero dependencies. Download it from [layoutkit.dev](https://layoutkit.dev) and vendor it, or hotlink the CDN above.
 
 ---
 

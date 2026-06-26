@@ -7,7 +7,7 @@ function VendorSection() {
 
   async function copyFile() {
     try {
-      const res = await fetch("/layoutkit.tsx");
+      const res = await fetch("/layoutkit.js");
       await navigator.clipboard.writeText(await res.text());
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -19,21 +19,22 @@ function VendorSection() {
   return (
     <section className="mb-12 rounded-xl border border-accent/30 bg-accent/5 p-6">
       <h2 className="mb-2 text-2xl font-extrabold tracking-tight text-zinc-100">
-        Vendor it — no package manager
+        Vendor it — no package manager, no build, no React
       </h2>
       <p className="mb-4 font-sans text-[14px] text-muted">
-        LayoutKit is zero-dependency native CSS, so the whole library fits in one
-        file. Download it, drop it in your project, and import — no npm, no
-        Tailwind, no build config. You own the code and can edit it freely.
+        One vanilla-JS file of native layout <em>web components</em>. Drop a single{" "}
+        <code className="rounded bg-zinc-800 px-1.5 text-accent">&lt;script&gt;</code> tag into
+        any HTML page — or any framework — and use the tags. No npm, no bundler, no
+        Tailwind, no React. You own the file and can edit it freely.
       </p>
 
       <div className="mb-4 flex flex-wrap gap-3">
         <a
-          href="/layoutkit.tsx"
-          download="layoutkit.tsx"
+          href="/layoutkit.js"
+          download="layoutkit.js"
           className="rounded-lg bg-accent px-4 py-2 text-[13px] font-bold text-background transition-opacity hover:opacity-90"
         >
-          Download layoutkit.tsx
+          Download layoutkit.js
         </a>
         <button
           onClick={copyFile}
@@ -43,27 +44,33 @@ function VendorSection() {
         </button>
       </div>
 
-      <p className="mb-2 font-sans text-[13px] text-muted">Or pull it from the command line:</p>
-      <div className="mb-4 rounded-lg border border-zinc-700 bg-background p-4">
-        <code className="text-[14px] text-green-400">curl -O https://layoutkit.dev/layoutkit.tsx</code>
-      </div>
+      <p className="mb-2 font-sans text-[13px] text-muted">
+        Use it straight from the CDN — nothing to install:
+      </p>
+      <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+        <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
+          <code>{`<script src="https://layoutkit.dev/layoutkit.js"></script>
 
-      <p className="mb-2 font-sans text-[13px] text-muted">Then import from wherever you put it:</p>
-      <div className="rounded-lg border border-zinc-700 bg-background p-4">
-        <pre className="text-[13px] leading-relaxed text-zinc-300">
-          <code>{`import { Stack, Row, Center, Grid } from "./layoutkit"
-
-export default function App() {
-  return (
-    <Stack gap="lg" padding="md">
-      <Center fill>Centered — works on import</Center>
-    </Stack>
-  )
-}`}</code>
+<lk-stack gap="lg" padding="md">
+  <lk-row gap="sm" justify="between">
+    <span>Logo</span>
+    <nav>…</nav>
+  </lk-row>
+  <lk-center full-height>You can finally center a div.</lk-center>
+  <lk-grid cols="3" gap="md">
+    <div>1</div><div>2</div><div>3</div>
+  </lk-grid>
+</lk-stack>`}</code>
         </pre>
       </div>
-      <p className="mt-3 font-sans text-[12px] text-zinc-500">
-        One file, ~1.4 KB over the wire (brotli), zero runtime dependencies. Requires React 18+.
+      <p className="font-sans text-[12px] text-zinc-500">
+        Ten custom elements (<code className="rounded bg-zinc-800 px-1 text-zinc-300">lk-stack</code>,{" "}
+        <code className="rounded bg-zinc-800 px-1 text-zinc-300">lk-row</code>,{" "}
+        <code className="rounded bg-zinc-800 px-1 text-zinc-300">lk-center</code>, …). Attributes are
+        kebab-case (<code className="rounded bg-zinc-800 px-1 text-zinc-300">full-height</code>,{" "}
+        <code className="rounded bg-zinc-800 px-1 text-zinc-300">min-child-width</code>). Each styles
+        itself with native CSS. Zero dependencies, ~1.5 KB gzipped. Prefer React? Use the{" "}
+        <code className="rounded bg-zinc-800 px-1 text-accent">layoutkit-css</code> npm package above.
       </p>
     </section>
   );
@@ -90,14 +97,14 @@ export function InstallPage() {
         <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
           npm Package
         </h2>
-        <div className="mb-4 rounded-lg border border-zinc-700 bg-background p-4">
-          <code className="text-[14px] text-green-400">npm install layoutkit-css</code>
+        <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <code className="text-[14px] text-green-400 break-all">npm install layoutkit-css</code>
         </div>
         <p className="mb-4 font-sans text-[14px] text-muted">
           Then import and use — TypeScript IntelliSense works out of the box:
         </p>
-        <div className="rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="text-[13px] leading-relaxed text-zinc-300">
+        <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
             <code>{`import { Stack, Row, Center, Grid } from "layoutkit-css"
 
 export default function App() {
@@ -133,8 +140,8 @@ export default function App() {
         <h3 className="mb-3 text-lg font-bold text-zinc-100">
           Alternative: Scaffold components (shadcn-style)
         </h3>
-        <div className="mb-3 rounded-lg border border-zinc-700 bg-background p-4">
-          <code className="text-[14px] text-accent">npx layoutkit init</code>
+        <div className="mb-3 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <code className="text-[14px] text-accent break-all">npx layoutkit init</code>
         </div>
         <p className="font-sans text-[13px] text-muted">
           Copies all 10 components into your project. You own the source code and can customize freely.
@@ -151,8 +158,8 @@ export default function App() {
           {/* macOS */}
           <div className="rounded-xl border border-zinc-700 bg-surface p-6">
             <h3 className="mb-3 text-lg font-bold text-accent">macOS</h3>
-            <div className="rounded-lg border border-zinc-700 bg-background p-4">
-              <pre className="text-[13px] leading-relaxed text-zinc-300">
+            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+              <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
                 <code>{`# Install Node.js (if you don't have it)
 brew install node
 
@@ -165,8 +172,8 @@ npm install layoutkit-css`}</code>
           {/* Windows */}
           <div className="rounded-xl border border-zinc-700 bg-surface p-6">
             <h3 className="mb-3 text-lg font-bold text-accent">Windows</h3>
-            <div className="rounded-lg border border-zinc-700 bg-background p-4">
-              <pre className="text-[13px] leading-relaxed text-zinc-300">
+            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+              <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
                 <code>{`# 1. Install Node.js from https://nodejs.org (LTS recommended)
 # 2. Open PowerShell or Command Prompt
 # 3. In your project directory:
@@ -178,8 +185,8 @@ npm install layoutkit-css`}</code>
           {/* Linux */}
           <div className="rounded-xl border border-zinc-700 bg-surface p-6">
             <h3 className="mb-3 text-lg font-bold text-accent">Linux</h3>
-            <div className="rounded-lg border border-zinc-700 bg-background p-4">
-              <pre className="text-[13px] leading-relaxed text-zinc-300">
+            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+              <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
                 <code>{`# Install Node.js (Ubuntu/Debian)
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
@@ -202,8 +209,8 @@ npm install layoutkit-css`}</code>
         </p>
 
         <h3 className="mb-3 text-lg font-bold text-zinc-200">Install</h3>
-        <div className="mb-6 rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="text-[13px] leading-relaxed text-zinc-300">
+        <div className="mb-6 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
             <code>{`# Clone the repo
 git clone https://github.com/Garrett-s-Apps/layoutkit.git
 cd layoutkit/vscode-extension
@@ -219,7 +226,7 @@ code --install-extension layoutkit-0.1.0.vsix`}</code>
         <p className="mb-3 font-sans text-[13px] text-muted">
           Open any <code className="rounded bg-zinc-800 px-1.5 text-accent">.tsx</code> or <code className="rounded bg-zinc-800 px-1.5 text-accent">.jsx</code> file and start typing:
         </p>
-        <div className="overflow-hidden rounded-lg border border-zinc-700">
+        <div className="overflow-x-auto rounded-lg border border-zinc-700">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-zinc-700 bg-zinc-800/50">
@@ -274,8 +281,8 @@ code --install-extension layoutkit-0.1.0.vsix`}</code>
         </p>
 
         <h3 className="mb-3 text-lg font-bold text-zinc-200">Install with lazy.nvim</h3>
-        <div className="mb-6 rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="text-[13px] leading-relaxed text-zinc-300">
+        <div className="mb-6 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
             <code>{`-- Add to your lazy.nvim plugin spec:
 {
   "Garrett-s-Apps/layoutkit",
@@ -289,8 +296,8 @@ code --install-extension layoutkit-0.1.0.vsix`}</code>
         </div>
 
         <h3 className="mb-3 text-lg font-bold text-zinc-200">Manual Install</h3>
-        <div className="mb-6 rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="text-[13px] leading-relaxed text-zinc-300">
+        <div className="mb-6 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
             <code>{`# Clone the repo
 git clone https://github.com/Garrett-s-Apps/layoutkit.git \\
   ~/.local/share/nvim/layoutkit
@@ -304,7 +311,7 @@ require("layoutkit").setup()`}</code>
         </div>
 
         <h3 className="mb-3 text-lg font-bold text-zinc-200">Snippets (LuaSnip)</h3>
-        <div className="overflow-hidden rounded-lg border border-zinc-700">
+        <div className="overflow-x-auto rounded-lg border border-zinc-700">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-zinc-700 bg-zinc-800/50">
@@ -336,7 +343,7 @@ require("layoutkit").setup()`}</code>
         </div>
 
         <h3 className="mb-3 mt-6 text-lg font-bold text-zinc-200">Commands</h3>
-        <div className="overflow-hidden rounded-lg border border-zinc-700">
+        <div className="overflow-x-auto rounded-lg border border-zinc-700">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-zinc-700 bg-zinc-800/50">
@@ -370,7 +377,7 @@ require("layoutkit").setup()`}</code>
         <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-zinc-100">
           All Components
         </h2>
-        <div className="overflow-hidden rounded-lg border border-zinc-700">
+        <div className="overflow-x-auto rounded-lg border border-zinc-700">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-zinc-700 bg-zinc-800/50">
@@ -418,10 +425,10 @@ require("layoutkit").setup()`}</code>
           Used for <code className="rounded bg-zinc-800 px-1.5 text-zinc-300">gap</code> and{" "}
           <code className="rounded bg-zinc-800 px-1.5 text-zinc-300">padding</code> props:
         </p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <div className="mb-2 text-[12px] font-bold text-zinc-400">SEMANTIC</div>
-            <div className="rounded-lg border border-zinc-700 bg-background p-3">
+            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-3">
               <pre className="text-[12px] leading-relaxed text-zinc-300">
                 <code>{`"xs"  → 0.25rem (4px)
 "sm"  → 0.5rem  (8px)
@@ -435,7 +442,7 @@ require("layoutkit").setup()`}</code>
           </div>
           <div>
             <div className="mb-2 text-[12px] font-bold text-zinc-400">NUMERIC</div>
-            <div className="rounded-lg border border-zinc-700 bg-background p-3">
+            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-3">
               <pre className="text-[12px] leading-relaxed text-zinc-300">
                 <code>{`"none" "px" "0.5"
 "1" "1.5" "2" "2.5"
@@ -453,7 +460,7 @@ require("layoutkit").setup()`}</code>
         <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
           Links
         </h2>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {[
             { label: "npm", url: "https://www.npmjs.com/package/layoutkit-css", desc: "layoutkit-css on npm" },
             { label: "GitHub", url: "https://github.com/Garrett-s-Apps/layoutkit", desc: "Source code + extensions" },

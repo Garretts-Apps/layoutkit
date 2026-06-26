@@ -90,8 +90,8 @@ export function TutorialPage() {
 
       {/* Current step */}
       <div className="mb-6 overflow-hidden rounded-xl border border-border bg-surface">
-        <div className="flex items-center justify-between border-b border-border px-5 py-4">
-          <div>
+        <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
+          <div className="min-w-0">
             <h3 className="mb-1 text-base font-bold text-zinc-100">
               Step {step + 1}: {TUTORIAL_STEPS[step].title}
             </h3>
@@ -108,8 +108,8 @@ export function TutorialPage() {
         </div>
 
         {/* Code + Output */}
-        <div className="grid grid-cols-2">
-          <div className="border-r border-border">
+        <div className="grid grid-cols-1 sm:grid-cols-2">
+          <div className="border-b border-border sm:border-b-0 sm:border-r">
             <div className="border-b border-border px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
               LayoutKit Code
             </div>
@@ -147,7 +147,7 @@ export function TutorialPage() {
                         </span>
                       ))}
                   </div>
-                  <code className="mt-1.5 block text-[11px] text-green">
+                  <code className="mt-1.5 block break-words text-[11px] text-green">
                     {r.htmlOutput}
                   </code>
                 </div>
@@ -165,8 +165,8 @@ export function TutorialPage() {
 
         {/* Challenge */}
         <div className="border-t border-border bg-accent/[0.03] px-5 py-3.5">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
               <span className="text-[11px] font-bold text-accent">
                 Challenge:{" "}
               </span>

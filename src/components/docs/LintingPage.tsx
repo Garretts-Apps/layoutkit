@@ -36,18 +36,18 @@ export function LintingPage() {
             <p className="mb-3.5 mt-0 font-sans text-[13px] leading-relaxed text-zinc-400">
               {rule.description}
             </p>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               <div className="rounded-md border border-red/15 bg-red/5 p-3">
                 <div className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-red">
                   Bad
                 </div>
-                <code className="text-xs text-red/70">{rule.example.bad}</code>
+                <code className="block break-words text-xs text-red/70">{rule.example.bad}</code>
               </div>
               <div className="rounded-md border border-green/60 bg-green/5 p-3">
                 <div className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-green">
                   Good
                 </div>
-                <code className="text-xs text-green">{rule.example.good}</code>
+                <code className="block break-words text-xs text-green">{rule.example.good}</code>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@ export function LintingPage() {
         <div className="border-b border-border px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
           eslint.config.js
         </div>
-        <pre className="m-0 overflow-auto p-4 text-xs leading-7 text-zinc-400">
+        <pre className="m-0 overflow-auto whitespace-pre-wrap break-words p-4 text-xs leading-7 text-zinc-400">
           {`import layoutkit from "eslint-plugin-layoutkit";
 
 export default [

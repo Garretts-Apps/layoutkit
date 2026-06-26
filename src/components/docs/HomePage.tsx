@@ -52,14 +52,14 @@ export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
         <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
           Install as a package
         </h2>
-        <div className="mb-4 rounded-lg border border-zinc-700 bg-background p-4">
-          <code className="text-[13px] text-green-400">npm install layoutkit-css</code>
+        <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <code className="text-[13px] text-green-400 break-all">npm install layoutkit-css</code>
         </div>
         <p className="mb-4 font-sans text-[14px] text-muted">
           Then import and use — auto-complete works out of the box:
         </p>
-        <div className="rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="text-[12px] leading-relaxed text-zinc-300">
+        <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300">
             <code>{`import { Stack, Center, Row, Grid } from "layoutkit-css"
 
 <Stack gap="lg" padding="md">
@@ -74,6 +74,34 @@ export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
         </p>
       </div>
 
+      {/* No build, no React — web components */}
+      <div className="mb-8 rounded-xl border border-purple/30 bg-purple/5 p-8">
+        <div className="mb-2 inline-block rounded-full border border-purple/20 bg-purple/10 px-3 py-1 text-[11px] font-semibold text-purple">
+          NO BUILD · NO REACT
+        </div>
+        <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
+          Or drop in a script tag
+        </h2>
+        <p className="mb-4 font-sans text-[14px] text-muted">
+          Not using React? Same 10 primitives ship as native web components. One{" "}
+          <code className="rounded bg-zinc-800 px-1.5 text-purple">&lt;script&gt;</code>, zero build,
+          zero dependencies — usable in plain HTML or any framework.
+        </p>
+        <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`<script src="https://layoutkit.dev/layoutkit.js"></script>
+
+<lk-center full-height>
+  <h1>You can finally center a div.</h1>
+</lk-center>`}</code></pre>
+        </div>
+        <button
+          onClick={() => onNavigate("install")}
+          className="mt-4 text-[13px] font-semibold text-purple hover:underline"
+        >
+          Vendor it — no package manager &rarr;
+        </button>
+      </div>
+
       {/* Platform install instructions */}
       <div className="mb-8 rounded-xl border border-zinc-700 bg-surface p-8">
         <h3 className="mb-4 text-lg font-extrabold tracking-tight text-zinc-100">
@@ -82,8 +110,8 @@ export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
         <div className="space-y-4">
           <div>
             <div className="mb-2 text-[13px] font-bold text-accent">macOS</div>
-            <div className="rounded-lg border border-zinc-700 bg-background p-3">
-              <pre className="text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js (if needed)
+            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-3">
+              <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js (if needed)
 brew install node
 
 # In any React project:
@@ -92,16 +120,16 @@ npm install layoutkit-css`}</code></pre>
           </div>
           <div>
             <div className="mb-2 text-[13px] font-bold text-accent">Windows</div>
-            <div className="rounded-lg border border-zinc-700 bg-background p-3">
-              <pre className="text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js from https://nodejs.org
+            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-3">
+              <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js from https://nodejs.org
 # Then in PowerShell or CMD:
 npm install layoutkit-css`}</code></pre>
             </div>
           </div>
           <div>
             <div className="mb-2 text-[13px] font-bold text-accent">Linux</div>
-            <div className="rounded-lg border border-zinc-700 bg-background p-3">
-              <pre className="text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js
+            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-3">
+              <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 
@@ -117,8 +145,8 @@ npm install layoutkit-css`}</code></pre>
         <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
           Or scaffold components directly
         </h2>
-        <div className="mb-4 rounded-lg border border-zinc-700 bg-background p-4">
-          <code className="text-[13px] text-accent">npx layoutkit init</code>
+        <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <code className="text-[13px] text-accent break-all">npx layoutkit init</code>
         </div>
         <p className="font-sans text-[14px] text-muted">
           This copies all 10 components into your project (shadcn-style). You own the source code and can customize freely.
@@ -129,7 +157,7 @@ npm install layoutkit-css`}</code></pre>
       <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-zinc-100">
         Complete tooling ecosystem
       </h2>
-      <div className="mb-16 grid grid-cols-2 gap-3">
+      <div className="mb-16 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {[
           { name: "Compiler + Playground", desc: "Real-time compilation in your browser" },
           { name: "Linter", desc: "6 semantic rules for layout quality" },
@@ -153,7 +181,7 @@ npm install layoutkit-css`}</code></pre>
       </div>
 
       {/* Comparison grid */}
-      <div className="mb-16 grid grid-cols-3 gap-4">
+      <div className="mb-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
           {
             label: "Inline styles",
@@ -220,7 +248,7 @@ npm install layoutkit-css`}</code></pre>
       <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-zinc-100">
         10 components. Every layout.
       </h2>
-      <div className="grid grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
         {COMPONENT_DOCS.map((comp, i) => (
           <button
             key={comp.name}

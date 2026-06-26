@@ -139,7 +139,7 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
                       <div className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
                         HTML Output
                       </div>
-                      <code className="text-xs text-green">{r.htmlOutput}</code>
+                      <code className="block break-words text-xs text-green">{r.htmlOutput}</code>
                     </div>
                   </div>
                 ))}
