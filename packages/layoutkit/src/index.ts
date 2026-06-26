@@ -10,5 +10,5 @@ export { AspectRatio } from "./AspectRatio";
 export { ScrollArea } from "./ScrollArea";
 
 export type { GapSize, Padding, Align, Justify } from "./types";
-export { gapMap, paddingMap, alignMap, justifyMap } from "./types";
-export { cn } from "./utils";
+export { space, alignItems, justifyContent } from "./types";
+export { mergeStyles } from "./utils";

@@ -1,40 +1,29 @@
-import { forwardRef, type ComponentPropsWithoutRef } from "react";
-import { cn } from "./utils";
+import { forwardRef, type CSSProperties, type ComponentPropsWithoutRef } from "react";
+import { mergeStyles } from "./utils";
 
-const thicknessMap = {
-  thin: "border-t",
-  medium: "border-t-2",
-  thick: "border-t-4",
-} as const;
-
-const verticalThicknessMap = {
-  thin: "border-l",
-  medium: "border-l-2",
-  thick: "border-l-4",
-} as const;
+const thicknessWidth = { thin: "1px", medium: "2px", thick: "4px" } as const;
 
 interface DividerProps extends ComponentPropsWithoutRef<"div"> {
   orientation?: "horizontal" | "vertical";
+  /** Any CSS color. Defaults to a light gray. */
   color?: string;
   thickness?: "thin" | "medium" | "thick";
 }
 
 export const Divider = forwardRef<HTMLDivElement, DividerProps>(
-  ({ orientation = "horizontal", color = "border-gray-200", thickness = "thin", className, ...props }, ref) => {
-    const isHorizontal = orientation === "horizontal";
+  ({ orientation = "horizontal", color = "#e5e7eb", thickness = "thin", style, ...props }, ref) => {
+    const width = thicknessWidth[thickness];
+    const dividerStyle: CSSProperties =
+      orientation === "horizontal"
+        ? { width: "100%", borderTopStyle: "solid", borderTopWidth: width, borderTopColor: color }
+        : { height: "100%", alignSelf: "stretch", borderLeftStyle: "solid", borderLeftWidth: width, borderLeftColor: color };
 
     return (
       <div
         ref={ref}
         role="separator"
         aria-orientation={orientation}
-        className={cn(
-          isHorizontal
-            ? cn("w-full", thicknessMap[thickness])
-            : cn("h-full self-stretch", verticalThicknessMap[thickness]),
-          color,
-          className
-        )}
+        style={mergeStyles(dividerStyle, style)}
         {...props}
       />
     );

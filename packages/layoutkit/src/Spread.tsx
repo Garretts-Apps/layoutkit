@@ -1,6 +1,6 @@
-import { forwardRef, type ElementType, type ReactNode, type ComponentPropsWithoutRef } from "react";
-import { cn } from "./utils";
-import { alignMap, paddingMap, type Align, type Padding } from "./types";
+import { forwardRef, type CSSProperties, type ElementType, type ReactNode, type ComponentPropsWithoutRef } from "react";
+import { mergeStyles } from "./utils";
+import { space, alignItems, type Align, type Padding } from "./types";
 
 interface SpreadProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
@@ -10,19 +10,17 @@ interface SpreadProps extends ComponentPropsWithoutRef<"div"> {
 }
 
 export const Spread = forwardRef<HTMLElement, SpreadProps>(
-  ({ children, align = "center", padding = "none", as: Tag = "div", className, ...props }, ref) => {
+  ({ children, align = "center", padding = "none", as: Tag = "div", style, ...props }, ref) => {
+    const containerStyle: CSSProperties = {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: alignItems[align],
+      padding: padding !== "none" ? space[padding] : undefined,
+    };
+
     return (
-      <Tag
-        ref={ref}
-        className={cn(
-          "flex flex-row",
-          "justify-between",
-          alignMap[align],
-          padding !== "none" && paddingMap[padding],
-          className
-        )}
-        {...props}
-      >
+      <Tag ref={ref} style={mergeStyles(containerStyle, style)} {...props}>
         {children}
       </Tag>
     );
