@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LayoutKit
 
-## Getting Started
+**10 semantic layout components that compile to native CSS.** Zero dependencies, no Tailwind, no build step, no config — works on import in any React 18+ app.
 
-First, run the development server:
+You can finally center a div. We're as shocked as you are.
+
+## Why
+
+LayoutKit emits native CSS through React's inline `style` prop. There's no Tailwind to install, no runtime to ship, and nothing to configure. Import a component and it works — in Next.js, Vite, Remix, or any React framework.
+
+- **Zero runtime dependencies.** No `clsx`, no `tailwind-merge`, nothing.
+- **No Tailwind required.** Components render plain inline styles.
+- **No build step, no config.** It works the moment you import it.
+- **Tiny over the wire.** ~1.4 KB brotli / ~1.7 KB gzip (~4.4 KB minified).
+- **Full IntelliSense.** Typed props for every component.
+
+## Install
+
+```bash
+npm install layoutkit-css
+```
+
+Requires React 18+. That's the whole list of requirements.
+
+## Usage
+
+```tsx
+import { Stack, Center, Row, Grid } from "layoutkit-css";
+
+<Stack gap="lg" padding="md">
+  <Center fill>
+    <h1>Hello World</h1>
+  </Center>
+</Stack>
+```
+
+## Components
+
+All 10 semantic components:
+
+`Stack` · `Row` · `Center` · `Box` · `Spread` · `Grid` · `Spacer` · `Divider` · `AspectRatio` · `ScrollArea`
+
+Centering a div: the CSS final boss, defeated in one component.
+
+## Scaffold instead
+
+Prefer to own the source? Copy all 10 components into your project (shadcn-style):
+
+```bash
+npx layoutkit init
+```
+
+---
+
+## The docs website (this repo)
+
+This repository hosts the LayoutKit docs site, a [Next.js](https://nextjs.org) app. The website styles itself with Tailwind CSS — that's the *site's* own styling and has nothing to do with what the LayoutKit library requires.
+
+Run the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000) to see the result.

@@ -70,7 +70,7 @@ export function DocsPage({
           <span className="text-accent">{comp.name}</span>
           <span className="text-foreground">{" } "}</span>
           <span className="text-purple">from</span>
-          <span className="text-green"> &quot;@/components/layout&quot;</span>
+          <span className="text-green"> &quot;layoutkit-css&quot;</span>
         </div>
 
         {/* Props table */}
@@ -122,7 +122,7 @@ export function DocsPage({
               </div>
               <div className="p-4">
                 <div className="mb-2 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
-                  Compiled Tailwind
+                  Compiled CSS
                 </div>
                 <div className="rounded-md bg-background px-3 py-2 text-xs font-medium leading-relaxed text-purple">
                   {ex.output}
@@ -143,18 +143,18 @@ export function DocsPage({
           </div>
         ))}
 
-        {/* Tailwind Class Map */}
+        {/* CSS Property Map */}
         <h3 className="mb-3 mt-9 text-base font-bold tracking-tight text-zinc-100">
-          Tailwind Class Map
+          CSS Property Map
         </h3>
         <p className="mb-4 font-sans text-[13px] leading-relaxed text-zinc-500">
-          Exact Tailwind classes generated for each prop value.
+          Exact native CSS generated for each prop value — applied via the inline style prop, no classes.
         </p>
         <div className="mb-9 overflow-hidden rounded-lg border border-border bg-surface">
           <div className="grid grid-cols-[140px_180px_1fr] border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
             <div>Prop</div>
             <div>Value</div>
-            <div>Generated Classes</div>
+            <div>Generated CSS</div>
           </div>
           {comp.classMap.map((mapping, i) => (
             <div
@@ -166,14 +166,18 @@ export function DocsPage({
               <div className="font-semibold text-accent">{mapping.prop}</div>
               <div className="text-[11px] text-muted">{mapping.value}</div>
               <div className="flex flex-wrap gap-1.5">
-                {mapping.classes.split(" ").map((cls, idx) => (
-                  <span
-                    key={idx}
-                    className="rounded bg-purple/10 px-2 py-0.5 text-[11px] font-medium text-purple"
-                  >
-                    {cls}
-                  </span>
-                ))}
+                {mapping.classes
+                  .split(";")
+                  .map((decl) => decl.trim())
+                  .filter(Boolean)
+                  .map((decl, idx) => (
+                    <span
+                      key={idx}
+                      className="rounded bg-purple/10 px-2 py-0.5 text-[11px] font-medium text-purple"
+                    >
+                      {decl}
+                    </span>
+                  ))}
               </div>
             </div>
           ))}
@@ -222,23 +226,23 @@ export function DocsPage({
               </div>
               <div className="mt-3">
                 <div className="mb-1 text-[11px] text-zinc-600">
-                  // Gap size &rarr; Tailwind class mapping
+                  // Gap size &rarr; CSS length
                 </div>
                 <div>
                   <span className="text-muted">xs</span> &rarr;{" "}
-                  <span className="text-purple">gap-1</span> (4px)&nbsp;&nbsp;
+                  <span className="text-purple">0.25rem</span> (4px)&nbsp;&nbsp;
                   <span className="text-muted">sm</span> &rarr;{" "}
-                  <span className="text-purple">gap-2</span> (8px)&nbsp;&nbsp;
+                  <span className="text-purple">0.5rem</span> (8px)&nbsp;&nbsp;
                   <span className="text-muted">md</span> &rarr;{" "}
-                  <span className="text-purple">gap-4</span> (16px)
+                  <span className="text-purple">1rem</span> (16px)
                 </div>
                 <div>
                   <span className="text-muted">lg</span> &rarr;{" "}
-                  <span className="text-purple">gap-6</span> (24px)&nbsp;&nbsp;
+                  <span className="text-purple">1.5rem</span> (24px)&nbsp;&nbsp;
                   <span className="text-muted">xl</span> &rarr;{" "}
-                  <span className="text-purple">gap-8</span> (32px)&nbsp;&nbsp;
+                  <span className="text-purple">2rem</span> (32px)&nbsp;&nbsp;
                   <span className="text-muted">2xl</span> &rarr;{" "}
-                  <span className="text-purple">gap-12</span> (48px)
+                  <span className="text-purple">3rem</span> (48px)
                 </div>
               </div>
             </div>

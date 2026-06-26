@@ -1,6 +1,6 @@
-import { forwardRef, type ElementType, type ReactNode, type ComponentPropsWithoutRef } from "react";
-import { cn } from "./utils";
-import { paddingMap, type Padding } from "./types";
+import { forwardRef, type CSSProperties, type ElementType, type ReactNode, type ComponentPropsWithoutRef } from "react";
+import { mergeStyles } from "./utils";
+import { space, type Padding } from "./types";
 
 interface BoxProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
@@ -11,18 +11,17 @@ interface BoxProps extends ComponentPropsWithoutRef<"div"> {
 }
 
 export const Box = forwardRef<HTMLElement, BoxProps>(
-  ({ children, fill, padding = "none", center, as: Tag = "div", className, ...props }, ref) => {
+  ({ children, fill, padding = "none", center, as: Tag = "div", style, ...props }, ref) => {
+    const containerStyle: CSSProperties = {
+      flex: fill ? "1 1 0%" : undefined,
+      display: center ? "flex" : undefined,
+      alignItems: center ? "center" : undefined,
+      justifyContent: center ? "center" : undefined,
+      padding: padding !== "none" ? space[padding] : undefined,
+    };
+
     return (
-      <Tag
-        ref={ref}
-        className={cn(
-          fill && "flex-1",
-          center && "flex items-center justify-center",
-          padding !== "none" && paddingMap[padding],
-          className
-        )}
-        {...props}
-      >
+      <Tag ref={ref} style={mergeStyles(containerStyle, style)} {...props}>
         {children}
       </Tag>
     );

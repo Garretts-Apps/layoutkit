@@ -1,93 +1,124 @@
-const COMPONENT_MAP: Record<string, {
-  base: string;
-  props: Record<string, string | { replace: [string, string] }>;
-  gapDefault?: string;
-  alignDefault?: string;
-  justifyDefault?: string;
-  defaults?: Record<string, string>;
-}> = {
-  Center: {
-    base: "flex flex-col",
-    props: {
-      fill: "min-h-screen",
-      horizontal: "items-center",
-      vertical: "justify-center",
-      inline: { replace: ["flex", "inline-flex"] },
-    },
-    defaults: { both: "items-center justify-center" },
-  },
-  Stack: {
-    base: "flex flex-col",
-    props: {
-      fill: "min-h-screen",
-      center: "items-center justify-center",
-      wrap: "flex-wrap",
-    },
-    gapDefault: "md",
-    alignDefault: "stretch",
-    justifyDefault: "start",
-  },
-  Row: {
-    base: "flex flex-row",
-    props: {
-      fill: "min-h-screen",
-      center: "items-center justify-center",
-      wrap: "flex-wrap",
-      reverse: { replace: ["flex-row", "flex-row-reverse"] },
-    },
-    gapDefault: "md",
-    alignDefault: "center",
-    justifyDefault: "start",
-  },
-  Box: {
-    base: "",
-    props: {
-      fill: "flex-1",
-      center: "flex items-center justify-center",
-    },
-  },
-  Spread: {
-    base: "flex flex-row justify-between",
-    props: {},
-    alignDefault: "center",
-  },
-  Grid: {
-    base: "grid",
-    props: {},
-    gapDefault: "md",
-  },
-  Spacer: { base: "flex-1", props: {} },
-  Divider: { base: "w-full border-t border-gray-200", props: {} },
-  ScrollArea: { base: "overflow-y-auto", props: {} },
-  AspectRatio: { base: "relative", props: {} },
+// Compiles LayoutKit JSX to the native CSS the components actually emit (via
+// the inline `style` prop). Mirrors packages/layoutkit/src so the Playground
+// and Tutorial show exactly what ships — no Tailwind, no classes.
+
+const SPACE: Record<string, string> = {
+  none: "0", px: "1px", "0.5": "0.125rem", "1": "0.25rem", "1.5": "0.375rem",
+  "2": "0.5rem", "2.5": "0.625rem", "3": "0.75rem", "3.5": "0.875rem", "4": "1rem",
+  "5": "1.25rem", "6": "1.5rem", "7": "1.75rem", "8": "2rem", "9": "2.25rem",
+  "10": "2.5rem", "11": "2.75rem", "12": "3rem", "14": "3.5rem", "16": "4rem",
+  xs: "0.25rem", sm: "0.5rem", md: "1rem", lg: "1.5rem", xl: "2rem", "2xl": "3rem", "3xl": "4rem",
+};
+const ALIGN: Record<string, string> = {
+  start: "flex-start", center: "center", end: "flex-end", stretch: "stretch", baseline: "baseline",
+};
+const JUSTIFY: Record<string, string> = {
+  start: "flex-start", center: "center", end: "flex-end",
+  between: "space-between", around: "space-around", evenly: "space-evenly",
 };
 
-const GAP_MAP: Record<string, string> = {
-  none: "gap-0", xs: "gap-1", sm: "gap-2", md: "gap-4",
-  lg: "gap-6", xl: "gap-8", "2xl": "gap-12", "3xl": "gap-16",
-};
-const PADDING_MAP: Record<string, string> = {
-  none: "", xs: "p-1", sm: "p-2", md: "p-4",
-  lg: "p-6", xl: "p-8", "2xl": "p-12",
-};
-const ALIGN_MAP: Record<string, string> = {
-  start: "items-start", center: "items-center", end: "items-end",
-  stretch: "items-stretch", baseline: "items-baseline",
-};
-const JUSTIFY_MAP: Record<string, string> = {
-  start: "justify-start", center: "justify-center", end: "justify-end",
-  between: "justify-between", around: "justify-around", evenly: "justify-evenly",
-};
-const COLS_MAP: Record<string, string> = {
-  "1": "grid-cols-1", "2": "grid-cols-2", "3": "grid-cols-3", "4": "grid-cols-4",
-  "5": "grid-cols-5", "6": "grid-cols-6", "7": "grid-cols-7", "8": "grid-cols-8",
-  "9": "grid-cols-9", "10": "grid-cols-10", "11": "grid-cols-11", "12": "grid-cols-12",
+type Props = Record<string, string | number | boolean>;
+type Decl = [string, string];
+
+const has = (p: Props, k: string) => Boolean(p[k]);
+const str = (p: Props, k: string, fallback: string) => (typeof p[k] === "string" ? (p[k] as string) : fallback);
+
+// One builder per component, returning ordered CSS declarations that match the
+// real component output in packages/layoutkit/src.
+const STYLE_BUILDERS: Record<string, (p: Props) => Decl[]> = {
+  Center(p) {
+    const both = !has(p, "horizontal") && !has(p, "vertical");
+    const d: Decl[] = [
+      ["display", has(p, "inline") ? "inline-flex" : "flex"],
+      ["flex-direction", "column"],
+    ];
+    if (both || has(p, "horizontal")) d.push(["align-items", "center"]);
+    if (both || has(p, "vertical")) d.push(["justify-content", "center"]);
+    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+    if (has(p, "fullHeight")) d.push(["min-height", "100vh"]);
+    return d;
+  },
+  Stack(p) {
+    const d: Decl[] = [
+      ["display", "flex"],
+      ["flex-direction", "column"],
+      ["gap", SPACE[str(p, "gap", "md")]],
+      ["align-items", has(p, "center") ? "center" : ALIGN[str(p, "align", "stretch")]],
+      ["justify-content", has(p, "center") ? "center" : JUSTIFY[str(p, "justify", "start")]],
+    ];
+    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+    if (has(p, "fullHeight")) d.push(["min-height", "100vh"]);
+    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
+    if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
+    return d;
+  },
+  Row(p) {
+    const d: Decl[] = [
+      ["display", "flex"],
+      ["flex-direction", has(p, "reverse") ? "row-reverse" : "row"],
+      ["gap", SPACE[str(p, "gap", "md")]],
+      ["align-items", has(p, "center") ? "center" : ALIGN[str(p, "align", "center")]],
+      ["justify-content", has(p, "center") ? "center" : JUSTIFY[str(p, "justify", "start")]],
+    ];
+    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+    if (has(p, "fullHeight")) d.push(["min-height", "100vh"]);
+    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
+    if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
+    return d;
+  },
+  Box(p) {
+    const d: Decl[] = [];
+    if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+    if (has(p, "center")) d.push(["display", "flex"], ["align-items", "center"], ["justify-content", "center"]);
+    if (p.padding && p.padding !== "none") d.push(["padding", SPACE[str(p, "padding", "none")]]);
+    return d;
+  },
+  Spread(p) {
+    return [
+      ["display", "flex"],
+      ["flex-direction", "row"],
+      ["justify-content", "space-between"],
+      ["align-items", ALIGN[str(p, "align", "center")]],
+      ...(p.padding && p.padding !== "none" ? [["padding", SPACE[str(p, "padding", "none")]] as Decl] : []),
+    ];
+  },
+  Grid(p) {
+    const cols = typeof p.cols === "number" ? p.cols : 1;
+    return [
+      ["display", "grid"],
+      ["grid-template-columns", `repeat(${cols}, minmax(0, 1fr))`],
+      ["gap", SPACE[str(p, "gap", "md")]],
+    ];
+  },
+  Spacer(p) {
+    const size = str(p, "size", "auto");
+    return size === "auto" ? [["flex", "1 1 0%"]] : [["height", SPACE[size] ?? "0"]];
+  },
+  Divider() {
+    return [
+      ["width", "100%"],
+      ["border-top", "1px solid #e5e7eb"],
+    ];
+  },
+  ScrollArea() {
+    return [["overflow-y", "auto"]];
+  },
+  AspectRatio(p) {
+    const ratio = typeof p.ratio === "number" ? p.ratio : 1;
+    return [
+      ["position", "relative"],
+      ["padding-bottom", `${((1 / ratio) * 100).toFixed(4).replace(/\.?0+$/, "")}%`],
+    ];
+  },
 };
 
 export interface CompilerResult {
   component: string;
-  props: Record<string, string | number | boolean>;
-  tailwindClasses: string;
+  props: Props;
+  /** Native CSS declarations, e.g. "display: flex; flex-direction: column; gap: 1rem". */
+  css: string;
+  /** Number of CSS declarations produced. */
+  declarations: number;
   htmlOutput: string;
 }
 
@@ -135,64 +166,25 @@ function parseNumericProps(propsStr: string): Array<[string, number]> {
   return found;
 }
 
-export function parseJSXToTailwind(input: string): { results: CompilerResult[]; lintWarnings: LintWarning[] } {
+export function parseJSXToCSS(input: string): { results: CompilerResult[]; lintWarnings: LintWarning[] } {
   const results: CompilerResult[] = [];
   const lintWarnings: LintWarning[] = [];
   const tagMatches = findAllTagMatches(input);
 
   for (const { tagName, propsStr, index } of tagMatches) {
-    const comp = COMPONENT_MAP[tagName];
-    if (!comp) continue;
+    const build = STYLE_BUILDERS[tagName];
+    if (!build) continue;
 
-    let classes = comp.base ? comp.base.split(" ") : [];
-    const propsFound: Record<string, string | number | boolean> = {};
+    const propsFound: Props = {};
+    for (const prop of parseBooleanProps(propsStr)) propsFound[prop] = true;
+    for (const [prop, val] of parseStringProps(propsStr)) propsFound[prop] = val;
+    for (const [prop, val] of parseNumericProps(propsStr)) propsFound[prop] = val;
 
-    // Boolean props
-    for (const prop of parseBooleanProps(propsStr)) {
-      if (comp.props[prop]) {
-        propsFound[prop] = true;
-        const val = comp.props[prop];
-        if (typeof val === "string") {
-          classes.push(val);
-        } else if (val.replace) {
-          classes = classes.map(c => c === val.replace[0] ? val.replace[1] : c);
-        }
-      }
-    }
+    const decls = build(propsFound).filter(([, v]) => v != null && v !== "");
+    const css = decls.map(([k, v]) => `${k}: ${v}`).join("; ");
+    const styleAttr = decls.map(([k, v]) => `${k}: ${v}`).join("; ");
 
-    // String props
-    for (const [prop, val] of parseStringProps(propsStr)) {
-      propsFound[prop] = val;
-      if (prop === "gap" && GAP_MAP[val]) classes.push(GAP_MAP[val]);
-      else if (prop === "align" && ALIGN_MAP[val]) classes.push(ALIGN_MAP[val]);
-      else if (prop === "justify" && JUSTIFY_MAP[val]) classes.push(JUSTIFY_MAP[val]);
-      else if (prop === "padding" && PADDING_MAP[val]) classes.push(PADDING_MAP[val]);
-      else if (prop === "className") classes.push(val);
-    }
-
-    // Numeric props
-    for (const [prop, val] of parseNumericProps(propsStr)) {
-      propsFound[prop] = val;
-      if (prop === "cols" && COLS_MAP[String(val)]) classes.push(COLS_MAP[String(val)]);
-    }
-
-    // Apply defaults
-    if (tagName === "Center" && !propsFound.horizontal && !propsFound.vertical) {
-      classes.push("items-center", "justify-center");
-    }
-    if (comp.gapDefault && !propsFound.gap && !propsFound.center) {
-      classes.push(GAP_MAP[comp.gapDefault]);
-    }
-    if (comp.alignDefault && !propsFound.align && !propsFound.center) {
-      classes.push(ALIGN_MAP[comp.alignDefault]);
-    }
-    if (comp.justifyDefault && !propsFound.justify && !propsFound.center) {
-      classes.push(JUSTIFY_MAP[comp.justifyDefault]);
-    }
-
-    classes = [...new Set(classes.filter(Boolean))];
-
-    // Linting
+    // Linting — prop-usage hygiene, unchanged by the native-CSS switch.
     const lineNum = input.substring(0, index).split("\n").length;
 
     if (tagName === "Center" && propsFound.horizontal && propsFound.vertical) {
@@ -221,7 +213,7 @@ export function parseJSXToTailwind(input: string): { results: CompilerResult[]; 
     if ((tagName === "Stack" || tagName === "Row") && propsFound.gap === "none") {
       lintWarnings.push({
         line: lineNum,
-        message: 'Unnecessary prop: gap="none" adds gap-0 which has no visual effect. Remove it.',
+        message: 'Unnecessary prop: gap="none" resolves to gap: 0, which has no visual effect. Remove it.',
         severity: "suggestion",
       });
     }
@@ -229,8 +221,9 @@ export function parseJSXToTailwind(input: string): { results: CompilerResult[]; 
     results.push({
       component: tagName,
       props: propsFound,
-      tailwindClasses: classes.join(" "),
-      htmlOutput: `<div class="${classes.join(" ")}">`,
+      css,
+      declarations: decls.length,
+      htmlOutput: `<div style="${styleAttr}">`,
     });
   }
 

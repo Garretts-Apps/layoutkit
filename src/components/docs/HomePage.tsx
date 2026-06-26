@@ -14,17 +14,17 @@ export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
       {/* Hero */}
       <div className="mb-20 text-center">
         <div className="mb-6 inline-block rounded-full border border-accent/20 bg-gradient-to-r from-accent/15 to-purple/15 px-3 py-1 text-[11px] font-semibold text-accent">
-          THE FIRST LAYOUT LANGUAGE FOR THE WEB
+          YOU CAN FINALLY CENTER A DIV
         </div>
         <h1 className="mb-5 bg-gradient-to-br from-zinc-100 to-zinc-400 bg-clip-text text-[56px] font-extrabold leading-[1.05] tracking-tighter text-transparent">
           10 semantic components
           <br />
-          that compile to Tailwind CSS.
+          that compile to native CSS.
         </h1>
         <p className="mx-auto mb-10 max-w-[560px] font-sans text-[17px] leading-relaxed text-muted">
-          Zero runtime. Full IntelliSense. Framework-agnostic.
+          Zero dependencies. Full IntelliSense. Framework-agnostic.
           <br />
-          The only layout system that feels like a native language.
+          Centering a div: the CSS final boss, defeated in one component.
         </p>
         <div className="flex justify-center gap-3">
           <button
@@ -70,7 +70,7 @@ export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
           </pre>
         </div>
         <p className="mt-4 font-sans text-[12px] text-zinc-500">
-          Requires React 18+ and Tailwind CSS. Works with Next.js, Vite, Remix, and any React framework.
+          Requires React 18+. Zero dependencies, no Tailwind, no build step. Works with Next.js, Vite, Remix, and any React framework.
         </p>
       </div>
 
@@ -86,7 +86,7 @@ export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
               <pre className="text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js (if needed)
 brew install node
 
-# In your React + Tailwind project:
+# In any React project:
 npm install layoutkit-css`}</code></pre>
             </div>
           </div>
@@ -136,7 +136,7 @@ npm install layoutkit-css`}</code></pre>
           { name: "ESLint Plugin", desc: "Catch layout mistakes during development" },
           { name: "HTML Compiler", desc: "Works with any framework or vanilla HTML" },
           { name: "VS Code Extension", desc: "Full IntelliSense and autocomplete" },
-          { name: "Tailwind Safelist", desc: "Auto-generated class preservation" },
+          { name: "Zero Dependencies", desc: "Native inline styles — no Tailwind, no runtime" },
         ].map((feature) => (
           <div
             key={feature.name}
@@ -156,25 +156,25 @@ npm install layoutkit-css`}</code></pre>
       <div className="mb-16 grid grid-cols-3 gap-4">
         {[
           {
-            label: "Raw CSS",
+            label: "Inline styles",
             lines: [
-              "display: flex;",
-              "flex-direction: column;",
-              "align-items: center;",
-              "justify-content: center;",
-              "min-height: 100vh;",
+              "display: flex,",
+              "flexDirection: column,",
+              "alignItems: center,",
+              "justifyContent: center,",
+              "minHeight: 100vh,",
             ],
             count: "5 properties",
           },
           {
-            label: "Tailwind",
+            label: "Tailwind utilities",
             lines: ["flex flex-col", "items-center", "justify-center", "min-h-screen"],
             count: "4 classes",
           },
           {
             label: "LayoutKit",
-            lines: ["<Center fill>"],
-            count: "2 words",
+            lines: ["<Center fullHeight>"],
+            count: "1 prop",
             highlight: true,
           },
         ].map((col) => (
