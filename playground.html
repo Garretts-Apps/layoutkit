@@ -4,7 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Playground — LayoutKit</title>
-  <meta name="description" content="Type LayoutKit markup and see the native CSS the stylesheet applies, with a live preview. Pure CSS, no build.">
+  <meta name="description" content="Type LayoutKit markup, see it rendered live, and the hand-written CSS it replaces. Pure CSS, no build.">
+  <link rel="canonical" href="https://layoutkit.dev/playground">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0a0a0b">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="LayoutKit">
+  <meta property="og:title" content="Playground — LayoutKit">
+  <meta property="og:description" content="Type LayoutKit markup, see it rendered live, and the hand-written CSS it replaces. Pure CSS, no build.">
+  <meta property="og:url" content="https://layoutkit.dev/playground">
+  <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="LayoutKit — the first layout language for the web, as pure CSS.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Playground — LayoutKit">
+  <meta name="twitter:description" content="Type LayoutKit markup, see it rendered live, and the hand-written CSS it replaces.">
+  <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
   <link rel="stylesheet" href="/assets/site.css">
 </head>
@@ -34,7 +50,7 @@
   <main id="main" class="container" style="padding-block: 40px;">
     <lk-stack gap="2" style="margin-bottom: 20px;">
       <h1 class="h2">Playground</h1>
-      <p class="sans muted">Type LayoutKit markup &rarr; see the native CSS the stylesheet applies, plus a live preview. Nothing is compiled — these are just the attribute-selector rules that match.</p>
+      <p class="sans muted">Type LayoutKit markup &rarr; see it rendered live, and the CSS you&rsquo;d have written by hand to get the same layout. That hand-written CSS is what LayoutKit saves you.</p>
       <lk-row id="pg-presets" class="navlinks" gap="2" style="margin-top: 4px;"></lk-row>
     </lk-stack>
 
@@ -48,20 +64,27 @@
 </lk-center></textarea>
       </div>
 
-      <!-- Output -->
+      <!-- Output: live preview (rendered by layoutkit.css) -->
       <div class="editor">
-        <div class="tabs" role="tablist">
-          <button class="tab" data-tab="preview" role="tab" aria-selected="true">Live preview</button>
-          <button class="tab" data-tab="applied" role="tab" aria-selected="false">Applied CSS</button>
-        </div>
+        <div class="panel-label">Live preview</div>
         <div class="preview-frame">
           <div id="pg-preview"><lk-center full-height><h2>Hello World</h2><p>Centered perfectly</p></lk-center></div>
-          <noscript><p class="sans muted">The live editor needs JavaScript, but the preview above is rendered by pure CSS — no JS required.</p></noscript>
-        </div>
-        <div class="preview-frame" hidden>
-          <div id="pg-applied"></div>
+          <noscript><p class="sans muted">The live editor needs JavaScript, but this preview is rendered by pure CSS — no JS required.</p></noscript>
         </div>
       </div>
+    </div>
+
+    <!-- The CSS you'd write by hand to get the same layout — what LayoutKit replaces -->
+    <div class="editor" style="margin-top: 16px;">
+      <div class="panel-label">The CSS you'd write by hand</div>
+      <pre id="pg-css" class="pg-css code"><span class="tok-com">/* &lt;lk-center full-height&gt; */</span>
+<span class="tok-tag">.center {</span>
+  <span class="tok-attr">display</span>: <span class="tok-str">flex</span>;
+  <span class="tok-attr">flex-direction</span>: <span class="tok-str">column</span>;
+  <span class="tok-attr">align-items</span>: <span class="tok-str">center</span>;
+  <span class="tok-attr">justify-content</span>: <span class="tok-str">center</span>;
+  <span class="tok-attr">min-height</span>: <span class="tok-str">100vh</span>;
+<span class="tok-tag">}</span></pre>
     </div>
   </main>
 

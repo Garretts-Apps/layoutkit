@@ -151,14 +151,13 @@ td code { color: var(--accent); }
 .editor { border: 1px solid var(--border); border-radius: 10px; background: #08080a; overflow: hidden; }
 .panel-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--border); }
 textarea.pg { display: block; width: 100%; min-height: 280px; resize: vertical; background: #08080a; color: var(--accent); font-family: var(--mono); font-size: 13px; line-height: 1.7; border: 0; padding: 16px; outline: none; }
-.tabs { display: flex; gap: 18px; border-bottom: 1px solid var(--border); padding: 0 16px; }
-.tab { background: none; border: 0; cursor: pointer; padding: 10px 0; font: inherit; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; }
-.tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
-.preview-frame { min-height: 280px; padding: 16px; }
-.applied-block { margin-bottom: 14px; }
-.applied-tag { color: var(--accent); font-weight: 700; font-size: 12px; margin-bottom: 6px; }
-.decls { display: flex; flex-wrap: wrap; gap: 4px; }
-.decl { border: 1px solid color-mix(in srgb, var(--purple) 25%, transparent); background: color-mix(in srgb, var(--purple) 10%, transparent); color: var(--purple); border-radius: 4px; padding: 2px 8px; font-size: 11px; }
+.preview-frame { min-height: 200px; padding: 16px; }
+.pg-css { margin: 0; padding: 16px; font-family: var(--mono); font-size: 13px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--fg); }
+
+/* Preset buttons — active state must be visible in dark mode */
+.preset { flex-shrink: 0; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 6px; padding: 6px 12px; font: inherit; font-size: 12px; font-weight: 600; }
+.preset:hover { color: var(--fg); border-color: #3f3f46; }
+.preset[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 15%, transparent); border-color: var(--accent); color: var(--accent); }
 
 /* ---- Footer ---- */
 .footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; padding: 32px 0; }
