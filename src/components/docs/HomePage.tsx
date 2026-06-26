@@ -10,13 +10,13 @@ interface HomePageProps {
 
 export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
   return (
-    <div className="mx-auto max-w-[840px] px-6 py-20">
+    <div className="mx-auto max-w-[840px] px-6 py-12 sm:py-20">
       {/* Hero */}
-      <div className="mb-20 text-center">
-        <div className="mb-6 inline-block rounded-full border border-accent/20 bg-gradient-to-r from-accent/15 to-purple/15 px-3 py-1 text-[11px] font-semibold text-accent">
+      <div className="mb-14 text-center sm:mb-20">
+        <div className="mb-6 inline-block rounded-full border border-accent/20 bg-gradient-to-r from-accent/15 to-purple/15 px-3 py-1 text-[10px] font-semibold text-accent sm:text-[11px]">
           YOU CAN FINALLY CENTER A DIV
         </div>
-        <h1 className="mb-5 bg-gradient-to-br from-zinc-100 to-zinc-400 bg-clip-text text-[56px] font-extrabold leading-[1.05] tracking-tighter text-transparent">
+        <h1 className="mb-5 bg-gradient-to-br from-zinc-100 to-zinc-400 bg-clip-text text-[34px] font-extrabold leading-[1.08] tracking-tighter text-transparent sm:text-[56px] sm:leading-[1.05]">
           10 semantic tags.
           <br />
           One pure-CSS stylesheet.

@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col font-mono">
       <Navbar section={section} onNavigate={setSection} />
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-x-hidden overflow-y-auto">
         {section === "home" && (
           <HomePage
             onNavigate={setSection}
