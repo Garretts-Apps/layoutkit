@@ -21,14 +21,14 @@ jobs:
       run:
         working-directory: packages/layoutkit
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           registry-url: https://registry.npmjs.org
 
-      # Trusted publishing needs npm >= 11.5.1; Node 20 ships npm 10.
+      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.
       - name: Upgrade npm
         run: npm install -g npm@latest
 
@@ -41,7 +41,16 @@ jobs:
       - name: Verify generated CSS is committed
         run: git diff --exit-code -- layoutkit.css ../../layoutkit.css
 
+      # Publish only if this version isn't already on npm, so re-running on an
+      # existing release/tag is a clean no-op instead of a failure.
       # No token: OIDC trusted publishing authenticates and adds provenance
       # automatically.
-      - name: Publish
-        run: npm publish --access public
+      - name: Publish if new
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          if [ -n "$(npm view "$NAME@$VERSION" version 2>/dev/null)" ]; then
+            echo "::notice::$NAME@$VERSION is already published — skipping."
+          else
+            npm publish --access public
+          fi
