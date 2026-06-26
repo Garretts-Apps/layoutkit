@@ -1,12 +1,19 @@
 {
   "name": "layoutkit-css",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "The first layout language for the web — pure CSS. Style <lk-*> tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.",
   "license": "MIT",
+  "homepage": "https://layoutkit.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/garrett-s-apps/layoutkit.git",
+    "url": "git+https://github.com/Garretts-Apps/layoutkit.git",
     "directory": "packages/layoutkit"
+  },
+  "bugs": {
+    "url": "https://github.com/Garretts-Apps/layoutkit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": ["layout", "css", "flexbox", "grid", "design-system", "zero-dependency", "no-build", "custom-tags", "semantic-html", "html"],
   "exports": {
@@ -17,7 +24,7 @@
   "style": "./layoutkit.css",
   "unpkg": "./layoutkit.css",
   "jsdelivr": "./layoutkit.css",
-  "files": ["layoutkit.css", "gen.mjs", "README.md"],
+  "files": ["layoutkit.css", "gen.mjs", "README.md", "LICENSE"],
   "sideEffects": ["*.css"],
   "scripts": {
     "build": "node gen.mjs"
