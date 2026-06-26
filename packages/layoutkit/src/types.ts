@@ -11,58 +11,27 @@ export type Padding =
 export type Align = "start" | "center" | "end" | "stretch" | "baseline";
 export type Justify = "start" | "center" | "end" | "between" | "around" | "evenly";
 
-/**
- * Spacing scale resolved to native CSS lengths. Follows the familiar
- * 0.25rem-per-step scale; the semantic aliases map onto numeric steps.
- * Used for `gap`, `padding`, and fixed `Spacer` sizes. `Padding` is a
- * subset of `GapSize`, so this single map serves every spacing prop.
- */
-export const space: Record<GapSize, string> = {
+// Spacing scale -> native CSS length. The familiar 0.25rem-per-step scale, so
+// every value is generated (`n * 0.25rem`) rather than hand-listed; semantic
+// aliases reuse the numeric steps. Serves `gap`, `padding`, and `Spacer`.
+const rem = (step: string) => `${Number(step) * 0.25}rem`;
+const NUMERIC = ["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "5", "6", "7", "8", "9", "10", "11", "12", "14", "16"];
+const ALIAS: Record<string, string> = { xs: "1", sm: "2", md: "4", lg: "6", xl: "8", "2xl": "12", "3xl": "16" };
+
+export const space = {
   none: "0",
   px: "1px",
-  "0.5": "0.125rem",
-  "1": "0.25rem",
-  "1.5": "0.375rem",
-  "2": "0.5rem",
-  "2.5": "0.625rem",
-  "3": "0.75rem",
-  "3.5": "0.875rem",
-  "4": "1rem",
-  "5": "1.25rem",
-  "6": "1.5rem",
-  "7": "1.75rem",
-  "8": "2rem",
-  "9": "2.25rem",
-  "10": "2.5rem",
-  "11": "2.75rem",
-  "12": "3rem",
-  "14": "3.5rem",
-  "16": "4rem",
-  // Semantic aliases (map to numeric steps)
-  xs: "0.25rem",
-  sm: "0.5rem",
-  md: "1rem",
-  lg: "1.5rem",
-  xl: "2rem",
-  "2xl": "3rem",
-  "3xl": "4rem",
-};
+  ...Object.fromEntries(NUMERIC.map((n) => [n, rem(n)])),
+  ...Object.fromEntries(Object.entries(ALIAS).map(([k, n]) => [k, rem(n)])),
+} as Record<GapSize, string>;
 
 /** `Align` prop value -> CSS `align-items` value. */
 export const alignItems: Record<Align, string> = {
-  start: "flex-start",
-  center: "center",
-  end: "flex-end",
-  stretch: "stretch",
-  baseline: "baseline",
+  start: "flex-start", center: "center", end: "flex-end", stretch: "stretch", baseline: "baseline",
 };
 
 /** `Justify` prop value -> CSS `justify-content` value. */
 export const justifyContent: Record<Justify, string> = {
-  start: "flex-start",
-  center: "center",
-  end: "flex-end",
-  between: "space-between",
-  around: "space-around",
-  evenly: "space-evenly",
+  start: "flex-start", center: "center", end: "flex-end",
+  between: "space-between", around: "space-around", evenly: "space-evenly",
 };
