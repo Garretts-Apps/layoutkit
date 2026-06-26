@@ -6,14 +6,13 @@ import { HomePage } from "@/components/docs/HomePage";
 import { DocsPage } from "@/components/docs/DocsPage";
 import { PlaygroundPage } from "@/components/docs/PlaygroundPage";
 import { TutorialPage } from "@/components/docs/TutorialPage";
-import { LintingPage } from "@/components/docs/LintingPage";
 import { InstallPage } from "@/components/docs/InstallPage";
 
 export default function Home() {
   const [section, setSection] = useState<Section>("home");
   const [selectedComponent, setSelectedComponent] = useState(0);
   const [playgroundCode, setPlaygroundCode] = useState(
-    '<Center fill>\n  <h1>Hello World</h1>\n  <p>Centered perfectly</p>\n</Center>'
+    '<lk-center full-height>\n  <h1>Hello World</h1>\n  <p>Centered perfectly</p>\n</lk-center>'
   );
 
   return (
@@ -42,7 +41,6 @@ export default function Home() {
           />
         )}
         {section === "tutorial" && <TutorialPage />}
-        {section === "linting" && <LintingPage />}
       </div>
     </div>
   );

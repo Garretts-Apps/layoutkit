@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* LayoutKit's own stylesheet — styles <lk-*> tags in docs examples + live previews. */
+@import "../../packages/layoutkit/layoutkit.css";
 
 @theme inline {
   --color-background: #0a0a0b;

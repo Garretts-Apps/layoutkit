@@ -7,7 +7,7 @@ function VendorSection() {
 
   async function copyFile() {
     try {
-      const res = await fetch("/layoutkit.js");
+      const res = await fetch("/layoutkit.css");
       await navigator.clipboard.writeText(await res.text());
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -19,22 +19,22 @@ function VendorSection() {
   return (
     <section className="mb-12 rounded-xl border border-accent/30 bg-accent/5 p-6">
       <h2 className="mb-2 text-2xl font-extrabold tracking-tight text-zinc-100">
-        Vendor it — no package manager, no build, no React
+        Vendor it — no package manager, no build, no JavaScript
       </h2>
       <p className="mb-4 font-sans text-[14px] text-muted">
-        One vanilla-JS file of native layout <em>web components</em>. Drop a single{" "}
-        <code className="rounded bg-zinc-800 px-1.5 text-accent">&lt;script&gt;</code> tag into
-        any HTML page — or any framework — and use the tags. No npm, no bundler, no
-        Tailwind, no React. You own the file and can edit it freely.
+        One pure-CSS stylesheet. Drop a single{" "}
+        <code className="rounded bg-zinc-800 px-1.5 text-accent">&lt;link&gt;</code> tag into
+        any HTML page — or any framework — and write the <code className="rounded bg-zinc-800 px-1.5 text-accent">&lt;lk-*&gt;</code> tags.
+        No npm, no bundler, no JavaScript runtime. You own the file and can edit it freely.
       </p>
 
       <div className="mb-4 flex flex-wrap gap-3">
         <a
-          href="/layoutkit.js"
-          download="layoutkit.js"
+          href="/layoutkit.css"
+          download="layoutkit.css"
           className="rounded-lg bg-accent px-4 py-2 text-[13px] font-bold text-background transition-opacity hover:opacity-90"
         >
-          Download layoutkit.js
+          Download layoutkit.css
         </a>
         <button
           onClick={copyFile}
@@ -49,7 +49,7 @@ function VendorSection() {
       </p>
       <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
         <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
-          <code>{`<script src="https://layoutkit.dev/layoutkit.js"></script>
+          <code>{`<link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css">
 
 <lk-stack gap="lg" padding="md">
   <lk-row gap="sm" justify="between">
@@ -64,13 +64,13 @@ function VendorSection() {
         </pre>
       </div>
       <p className="font-sans text-[12px] text-zinc-500">
-        Ten custom elements (<code className="rounded bg-zinc-800 px-1 text-zinc-300">lk-stack</code>,{" "}
+        Ten semantic tags (<code className="rounded bg-zinc-800 px-1 text-zinc-300">lk-stack</code>,{" "}
         <code className="rounded bg-zinc-800 px-1 text-zinc-300">lk-row</code>,{" "}
-        <code className="rounded bg-zinc-800 px-1 text-zinc-300">lk-center</code>, …). Attributes are
-        kebab-case (<code className="rounded bg-zinc-800 px-1 text-zinc-300">full-height</code>,{" "}
-        <code className="rounded bg-zinc-800 px-1 text-zinc-300">min-child-width</code>). Each styles
-        itself with native CSS. Zero dependencies, ~1.5 KB gzipped. Prefer React? Use the{" "}
-        <code className="rounded bg-zinc-800 px-1 text-accent">layoutkit-css</code> npm package above.
+        <code className="rounded bg-zinc-800 px-1 text-zinc-300">lk-center</code>, …) styled by
+        attribute selectors. Attributes are kebab-case (<code className="rounded bg-zinc-800 px-1 text-zinc-300">full-height</code>,{" "}
+        <code className="rounded bg-zinc-800 px-1 text-zinc-300">col-gap</code>); free-form values use
+        inline custom properties (<code className="rounded bg-zinc-800 px-1 text-zinc-300">--lk-min-child-width</code>).
+        Pure CSS, zero dependencies, no FOUC, ~2 KB brotli.
       </p>
     </section>
   );

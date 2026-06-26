@@ -1,76 +1,60 @@
 # layoutkit-css
 
-The first layout language for the web. 10 semantic components that compile to Tailwind CSS.
+**The first layout language for the web — pure CSS.** Style semantic `<lk-*>` tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.
 
-## Install
+You can finally center a div. We're as shocked as you are.
+
+## Use it
+
+Link the stylesheet, then write semantic layout tags in plain HTML — works with any server, any framework, no client runtime:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css">
+
+<lk-stack gap="lg" padding="md">
+  <lk-row gap="sm" justify="between">
+    <span>Logo</span>
+    <nav>…</nav>
+  </lk-row>
+  <lk-center full-height>You can finally center a div.</lk-center>
+  <lk-grid cols="3" gap="md">
+    <div>1</div><div>2</div><div>3</div>
+  </lk-grid>
+</lk-stack>
+```
+
+Or install and bundle it:
 
 ```bash
 npm install layoutkit-css
 ```
 
-## Usage
-
-```tsx
-import { Stack, Row, Center, Grid } from "layoutkit-css";
-
-function App() {
-  return (
-    <Stack gap="lg" padding="md">
-      <Row gap="sm" align="center">
-        <h1>Hello</h1>
-        <span>World</span>
-      </Row>
-      <Center fullHeight>
-        <p>Centered content</p>
-      </Center>
-      <Grid cols={3} gap="md">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-      </Grid>
-    </Stack>
-  );
-}
+```js
+import "layoutkit-css/layoutkit.css";
 ```
 
-## Components
+## Why pure CSS
 
-| Component | Description |
-|-----------|-------------|
-| `Stack` | Vertical flex layout |
-| `Row` | Horizontal flex layout |
-| `Center` | Centers content horizontally and/or vertically |
-| `Box` | Basic container with padding |
-| `Spread` | Pushes children to opposite ends (space-between) |
-| `Grid` | CSS Grid with responsive columns |
-| `Spacer` | Flexible space between elements |
-| `Divider` | Horizontal or vertical divider line |
-| `AspectRatio` | Constrains children to an aspect ratio |
-| `ScrollArea` | Scrollable container |
+- **No JavaScript, no FOUC.** A render-blocking `<link>` styles the tags before first paint. Nothing flashes, nothing hydrates.
+- **Hypermedia-native.** It's just HTML + CSS — server-render the markup and it works. No client runtime, no framework.
+- **Zero dependencies, no build.** Ten semantic primitives, ~2 KB over the wire (brotli).
+- **Real CSS.** Tags are styled by attribute selectors (`lk-stack[gap="lg"] { gap: 1.5rem }`). Inspect it, override it, own it.
 
-## Props
+## Primitives
 
-All components support:
-- `as` — Render as a different HTML element
-- `className` — Additional Tailwind/CSS classes
-- `ref` — Forwarded ref
-- All native HTML div props
+`lk-stack` · `lk-row` · `lk-center` · `lk-box` · `lk-spread` · `lk-grid` · `lk-spacer` · `lk-divider` · `lk-aspect-ratio` · `lk-scroll-area`
 
-### Gap & Padding Sizes
+Attributes are kebab-case: `gap`, `padding`, `align`, `justify`, `center`, `fill`, `full-height`, `wrap`, `reverse`, `cols`, `col-gap`, `row-gap`, `flow`, `place-items`, `responsive`, `size`, `orientation`, `thickness`, `direction`. Free-form values use custom properties: `--lk-ratio`, `--lk-divider-color`, `--lk-min-child-width`, `--lk-max-height`, `--lk-max-width`.
 
-Numeric: `"none"`, `"px"`, `"0.5"`, `"1"` through `"16"`
+Centering a div: the CSS final boss, defeated in one tag.
 
-Semantic: `"xs"`, `"sm"`, `"md"`, `"lg"`, `"xl"`, `"2xl"`, `"3xl"`
+## Build
 
-### Align & Justify
+The stylesheet is generated from `gen.mjs` (the spacing scale and selectors are computed, not hand-listed):
 
-- **align**: `"start"`, `"center"`, `"end"`, `"stretch"`, `"baseline"`
-- **justify**: `"start"`, `"center"`, `"end"`, `"between"`, `"around"`, `"evenly"`
-
-## Requirements
-
-- React 18+
-- Tailwind CSS (classes are generated at build time)
+```bash
+npm run build   # node gen.mjs -> layoutkit.css
+```
 
 ## License
 

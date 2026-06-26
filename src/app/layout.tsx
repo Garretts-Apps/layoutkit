@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LayoutKit — The First Layout Language for the Web",
+  title: "LayoutKit — The First Layout Language for the Web, as Pure CSS",
   description:
-    "10 semantic layout components that compile to native CSS. Zero dependencies, no Tailwind, no build step — full IntelliSense, framework-agnostic. You can finally center a div.",
+    "A pure-CSS stylesheet that styles semantic <lk-*> tags. Zero dependencies, zero JavaScript, no build step, no FOUC, ~2 KB brotli. Hypermedia-native, works with any server-rendered HTML. You can finally center a div.",
   openGraph: {
-    title: "LayoutKit — The First Layout Language for the Web",
+    title: "LayoutKit — The First Layout Language for the Web, as Pure CSS",
     description:
-      "10 semantic layout components that compile to native CSS. Zero dependencies, no Tailwind, no build step — full IntelliSense, framework-agnostic. You can finally center a div.",
+      "A pure-CSS stylesheet that styles semantic <lk-*> tags. Zero dependencies, zero JavaScript, no build step, no FOUC, ~2 KB brotli. You can finally center a div.",
     type: "website",
   },
 };

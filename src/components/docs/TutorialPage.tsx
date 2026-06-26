@@ -131,7 +131,7 @@ export function TutorialPage() {
               {result.results.map((r, i) => (
                 <div key={i} className="mb-3">
                   <div className="mb-1.5 text-[11px] font-bold text-accent">
-                    &lt;{r.component} /&gt;
+                    &lt;{r.component}&gt;
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {r.css

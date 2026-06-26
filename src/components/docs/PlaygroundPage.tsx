@@ -7,10 +7,10 @@ import { LivePreview } from "@/lib/jsx-renderer";
 type OutputTab = "compiled" | "preview";
 
 const PRESETS = [
-  { label: "Center", code: '<Center fullHeight>\n  <h1>Hello World</h1>\n</Center>' },
-  { label: "Stack", code: '<Stack gap="lg" center>\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</Stack>' },
-  { label: "Page Layout", code: '<Stack fill>\n  <Spread padding="md" className="border-b">\n    <span>Logo</span>\n    <Row gap="sm">\n      <a>Home</a>\n      <a>About</a>\n    </Row>\n  </Spread>\n  <Box fill padding="lg">\n    <Center>\n      <h1>Content</h1>\n    </Center>\n  </Box>\n</Stack>' },
-  { label: "Grid", code: '<Grid cols={3} gap="lg">\n  <div>Card 1</div>\n  <div>Card 2</div>\n  <div>Card 3</div>\n</Grid>' },
+  { label: "Center", code: '<lk-center full-height>\n  <h1>Hello World</h1>\n</lk-center>' },
+  { label: "Stack", code: '<lk-stack gap="lg" center>\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</lk-stack>' },
+  { label: "Page Layout", code: '<lk-stack fill>\n  <lk-spread padding="md">\n    <span>Logo</span>\n    <lk-row gap="sm">\n      <a>Home</a>\n      <a>About</a>\n    </lk-row>\n  </lk-spread>\n  <lk-box fill padding="lg">\n    <lk-center>\n      <h1>Content</h1>\n    </lk-center>\n  </lk-box>\n</lk-stack>' },
+  { label: "Grid", code: '<lk-grid cols="3" gap="lg">\n  <div>Card 1</div>\n  <div>Card 2</div>\n  <div>Card 3</div>\n</lk-grid>' },
 ];
 
 interface PlaygroundPageProps {
@@ -29,7 +29,7 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
         <div className="flex items-center gap-3">
           <span className="text-sm font-bold text-zinc-100">Interactive Compiler</span>
           <span className="text-[11px] text-zinc-600">
-            Type LayoutKit JSX &rarr; see the native CSS it compiles to
+            Type LayoutKit HTML &rarr; see the CSS it&apos;s styled with
           </span>
         </div>
         <div className="flex gap-2">
@@ -51,7 +51,7 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
         <div className="flex flex-1 flex-col border-r border-border">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
             <span className="h-2 w-2 rounded-full bg-accent" />
-            LayoutKit JSX Input
+            LayoutKit HTML
           </div>
           <textarea
             value={code}
@@ -100,7 +100,7 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
               <>
                 {result.results.length === 0 && (
                   <div className="text-[13px] italic text-zinc-700">
-                    Type a LayoutKit component to see compiled output...
+                    Type a LayoutKit tag to see compiled output...
                   </div>
                 )}
                 {result.results.map((r, i) => (
@@ -110,7 +110,7 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
                   >
                     <div className="flex items-center justify-between border-b border-border px-3 py-2">
                       <span className="text-xs font-bold text-accent">
-                        &lt;{r.component} /&gt;
+                        &lt;{r.component}&gt;
                       </span>
                       <span className="text-[10px] text-zinc-600">
                         {r.declarations} CSS {r.declarations === 1 ? "declaration" : "declarations"}

@@ -17,14 +17,14 @@ export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
           YOU CAN FINALLY CENTER A DIV
         </div>
         <h1 className="mb-5 bg-gradient-to-br from-zinc-100 to-zinc-400 bg-clip-text text-[56px] font-extrabold leading-[1.05] tracking-tighter text-transparent">
-          10 semantic components
+          10 semantic tags.
           <br />
-          that compile to native CSS.
+          One pure-CSS stylesheet.
         </h1>
         <p className="mx-auto mb-10 max-w-[560px] font-sans text-[17px] leading-relaxed text-muted">
-          Zero dependencies. Full IntelliSense. Framework-agnostic.
+          Zero dependencies. Zero JavaScript. No build. No FOUC.
           <br />
-          Centering a div: the CSS final boss, defeated in one component.
+          Centering a div: the CSS final boss, defeated in one tag.
         </p>
         <div className="flex justify-center gap-3">
           <button
@@ -44,127 +44,82 @@ export function HomePage({ onNavigate, onSelectComponent }: HomePageProps) {
         </div>
       </div>
 
-      {/* Install from npm */}
-      <div className="mb-8 rounded-xl border border-green-500/30 bg-green-500/5 p-8">
-        <div className="mb-2 inline-block rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-[11px] font-semibold text-green-400">
-          NOW ON NPM
-        </div>
-        <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
-          Install as a package
-        </h2>
-        <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-          <code className="text-[13px] text-green-400 break-all">npm install layoutkit-css</code>
-        </div>
-        <p className="mb-4 font-sans text-[14px] text-muted">
-          Then import and use — auto-complete works out of the box:
-        </p>
-        <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300">
-            <code>{`import { Stack, Center, Row, Grid } from "layoutkit-css"
-
-<Stack gap="lg" padding="md">
-  <Center fill>
-    <h1>Hello World</h1>
-  </Center>
-</Stack>`}</code>
-          </pre>
-        </div>
-        <p className="mt-4 font-sans text-[12px] text-zinc-500">
-          Requires React 18+. Zero dependencies, no Tailwind, no build step. Works with Next.js, Vite, Remix, and any React framework.
-        </p>
-      </div>
-
-      {/* No build, no React — web components */}
+      {/* Drop in a link tag */}
       <div className="mb-8 rounded-xl border border-purple/30 bg-purple/5 p-8">
         <div className="mb-2 inline-block rounded-full border border-purple/20 bg-purple/10 px-3 py-1 text-[11px] font-semibold text-purple">
-          NO BUILD · NO REACT
+          NO BUILD · NO JAVASCRIPT · NO FOUC
         </div>
         <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
-          Or drop in a script tag
+          Drop in one link tag
         </h2>
         <p className="mb-4 font-sans text-[14px] text-muted">
-          Not using React? Same 10 primitives ship as native web components. One{" "}
-          <code className="rounded bg-zinc-800 px-1.5 text-purple">&lt;script&gt;</code>, zero build,
-          zero dependencies — usable in plain HTML or any framework.
+          LayoutKit is pure CSS. Load one render-blocking stylesheet and write semantic{" "}
+          <code className="rounded bg-zinc-800 px-1.5 text-purple">&lt;lk-*&gt;</code> tags in plain
+          HTML — the browser styles them before the first paint. Zero JavaScript, zero dependencies,
+          no flash of unstyled content.
         </p>
         <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`<script src="https://layoutkit.dev/layoutkit.js"></script>
+          <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`<link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css">
 
-<lk-center full-height>
-  <h1>You can finally center a div.</h1>
-</lk-center>`}</code></pre>
+<lk-stack gap="lg" padding="md">
+  <lk-row gap="sm" justify="between">
+    <span>Logo</span>
+    <nav>…</nav>
+  </lk-row>
+  <lk-center full-height>You can finally center a div.</lk-center>
+  <lk-grid cols="3" gap="md">
+    <div>1</div><div>2</div><div>3</div>
+  </lk-grid>
+</lk-stack>`}</code></pre>
         </div>
         <button
           onClick={() => onNavigate("install")}
           className="mt-4 text-[13px] font-semibold text-purple hover:underline"
         >
-          Vendor it — no package manager &rarr;
+          Vendor it — download the stylesheet &rarr;
         </button>
       </div>
 
-      {/* Platform install instructions */}
-      <div className="mb-8 rounded-xl border border-zinc-700 bg-surface p-8">
-        <h3 className="mb-4 text-lg font-extrabold tracking-tight text-zinc-100">
-          Platform Setup
-        </h3>
-        <div className="space-y-4">
-          <div>
-            <div className="mb-2 text-[13px] font-bold text-accent">macOS</div>
-            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-3">
-              <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js (if needed)
-brew install node
-
-# In any React project:
-npm install layoutkit-css`}</code></pre>
-            </div>
-          </div>
-          <div>
-            <div className="mb-2 text-[13px] font-bold text-accent">Windows</div>
-            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-3">
-              <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js from https://nodejs.org
-# Then in PowerShell or CMD:
-npm install layoutkit-css`}</code></pre>
-            </div>
-          </div>
-          <div>
-            <div className="mb-2 text-[13px] font-bold text-accent">Linux</div>
-            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-3">
-              <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300"><code>{`# Install Node.js
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# In your project:
-npm install layoutkit-css`}</code></pre>
-            </div>
-          </div>
+      {/* npm CSS package */}
+      <div className="mb-16 rounded-xl border border-green-500/30 bg-green-500/5 p-8">
+        <div className="mb-2 inline-block rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-[11px] font-semibold text-green-400">
+          ON NPM AS A CSS PACKAGE
         </div>
-      </div>
-
-      {/* CLI scaffolding alternative */}
-      <div className="mb-16 rounded-xl border border-accent/30 bg-accent/5 p-8">
         <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
-          Or scaffold components directly
+          Or install the stylesheet from npm
         </h2>
         <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-          <code className="text-[13px] text-accent break-all">npx layoutkit init</code>
+          <code className="text-[13px] text-green-400 break-all">npm install layoutkit-css</code>
         </div>
-        <p className="font-sans text-[14px] text-muted">
-          This copies all 10 components into your project (shadcn-style). You own the source code and can customize freely.
+        <p className="mb-4 font-sans text-[14px] text-muted">
+          Then import the stylesheet once and write <code className="rounded bg-zinc-800 px-1.5 text-green-400">&lt;lk-*&gt;</code> tags anywhere:
+        </p>
+        <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <pre className="whitespace-pre-wrap break-words text-[12px] leading-relaxed text-zinc-300">
+            <code>{`import "layoutkit-css/layoutkit.css"
+
+<lk-stack gap="lg" padding="md">
+  <lk-center fill>You can finally center a div.</lk-center>
+</lk-stack>`}</code>
+          </pre>
+        </div>
+        <p className="mt-4 font-sans text-[12px] text-zinc-500">
+          It&apos;s a CSS package — just a stylesheet. No JavaScript runtime, no build step, no config. ~2 KB brotli.
         </p>
       </div>
 
       {/* Features Grid */}
       <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-zinc-100">
-        Complete tooling ecosystem
+        Why pure CSS wins
       </h2>
       <div className="mb-16 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {[
-          { name: "Compiler + Playground", desc: "Real-time compilation in your browser" },
-          { name: "Linter", desc: "6 semantic rules for layout quality" },
-          { name: "ESLint Plugin", desc: "Catch layout mistakes during development" },
-          { name: "HTML Compiler", desc: "Works with any framework or vanilla HTML" },
-          { name: "VS Code Extension", desc: "Full IntelliSense and autocomplete" },
-          { name: "Zero Dependencies", desc: "Native inline styles — no Tailwind, no runtime" },
+          { name: "Pure CSS", desc: "One stylesheet, no JavaScript runtime" },
+          { name: "Zero Dependencies", desc: "Nothing to install but the .css file" },
+          { name: "No Build Step", desc: "Link it and write tags — no bundler" },
+          { name: "No FOUC", desc: "Render-blocking CSS styles tags before first paint" },
+          { name: "Hypermedia-native", desc: "Works with any server-rendered HTML" },
+          { name: "~2 KB Brotli", desc: "Tiny over the wire, fully cacheable" },
         ].map((feature) => (
           <div
             key={feature.name}
@@ -184,13 +139,13 @@ npm install layoutkit-css`}</code></pre>
       <div className="mb-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
           {
-            label: "Inline styles",
+            label: "Raw CSS",
             lines: [
-              "display: flex,",
-              "flexDirection: column,",
-              "alignItems: center,",
-              "justifyContent: center,",
-              "minHeight: 100vh,",
+              "display: flex;",
+              "flex-direction: column;",
+              "align-items: center;",
+              "justify-content: center;",
+              "min-height: 100vh;",
             ],
             count: "5 properties",
           },
@@ -201,8 +156,8 @@ npm install layoutkit-css`}</code></pre>
           },
           {
             label: "LayoutKit",
-            lines: ["<Center fullHeight>"],
-            count: "1 prop",
+            lines: ["<lk-center full-height>"],
+            count: "1 tag",
             highlight: true,
           },
         ].map((col) => (
@@ -246,7 +201,7 @@ npm install layoutkit-css`}</code></pre>
 
       {/* Component grid */}
       <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-zinc-100">
-        10 components. Every layout.
+        10 tags. Every layout.
       </h2>
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
         {COMPONENT_DOCS.map((comp, i) => (
