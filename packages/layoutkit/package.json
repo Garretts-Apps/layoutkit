@@ -1,7 +1,7 @@
 {
   "name": "layoutkit-css",
-  "version": "1.0.0",
-  "description": "The first layout language for the web — pure CSS. Style <lk-*> tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.",
+  "version": "1.1.0",
+  "description": "A layout language for the web — pure CSS. Style <lk-*> tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.",
   "license": "MIT",
   "homepage": "https://layoutkit.dev",
   "repository": {
@@ -15,7 +15,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["layout", "css", "flexbox", "grid", "design-system", "zero-dependency", "no-build", "custom-tags", "semantic-html", "html"],
+  "keywords": ["layout", "css", "flexbox", "grid", "design-system", "design-tokens", "cascade-layers", "logical-properties", "zero-dependency", "no-build", "custom-tags", "semantic-html", "html"],
   "exports": {
     ".": "./layoutkit.css",
     "./layoutkit.css": "./layoutkit.css"
@@ -24,7 +24,7 @@
   "style": "./layoutkit.css",
   "unpkg": "./layoutkit.css",
   "jsdelivr": "./layoutkit.css",
-  "files": ["layoutkit.css", "gen.mjs", "README.md", "LICENSE"],
+  "files": ["layoutkit.css", "gen.mjs", "README.md", "CHANGELOG.md", "LICENSE"],
   "sideEffects": ["*.css"],
   "scripts": {
     "build": "node gen.mjs"
