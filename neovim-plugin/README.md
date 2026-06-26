@@ -8,7 +8,7 @@ Neovim plugin for [LayoutKit](https://layoutkit.dev) — snippets, completions, 
 
 ```lua
 {
-  "Garrett-s-Apps/layoutkit",
+  "Garretts-Apps/layoutkit",
   config = function()
     require("layoutkit").setup()
   end,
@@ -22,7 +22,7 @@ Neovim plugin for [LayoutKit](https://layoutkit.dev) — snippets, completions, 
 Clone and add the `neovim-plugin/` directory to your runtimepath:
 
 ```bash
-git clone https://github.com/Garrett-s-Apps/layoutkit.git ~/.local/share/nvim/layoutkit
+git clone https://github.com/Garretts-Apps/layoutkit.git ~/.local/share/nvim/layoutkit
 ```
 
 Then in your `init.lua`:
