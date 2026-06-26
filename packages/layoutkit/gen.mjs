@@ -1,6 +1,7 @@
 // Generates layoutkit.css — pure-CSS layout primitives that style <lk-*>
-// custom-element tags via attribute selectors. No JS, no runtime, no FOUC:
-// a render-blocking <link> styles the tags before first paint.
+// custom-element-named tags (unregistered, styled purely by CSS) via
+// attribute selectors. No JS, no runtime, no FOUC: a render-blocking <link>
+// styles the tags before first paint.
 //
 //   node gen.mjs   ->   layoutkit.css
 //
@@ -111,7 +112,7 @@ const pkgDir = dirname(fileURLToPath(import.meta.url));
 // same source so they can never drift.
 const targets = [
   join(pkgDir, "layoutkit.css"),
-  join(pkgDir, "..", "..", "public", "layoutkit.css"),
+  join(pkgDir, "..", "..", "layoutkit.css"), // site root — dogfooded by the docs + offered as the download
 ];
 for (const target of targets) writeFileSync(target, css);
 const kb = (Buffer.byteLength(css, "utf8") / 1024).toFixed(1);

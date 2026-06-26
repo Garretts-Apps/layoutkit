@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Playground — LayoutKit</title>
+  <meta name="description" content="Type LayoutKit markup and see the native CSS the stylesheet applies, with a live preview. Pure CSS, no build.">
+  <link rel="stylesheet" href="/layoutkit.css">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <nav class="nav" aria-label="Primary">
+      <lk-spread align="center">
+        <a href="/" aria-label="LayoutKit home">
+          <lk-row gap="2" align="center">
+            <lk-center class="brand-mark">L</lk-center>
+            <span class="brand brand-name">LayoutKit</span>
+            <span class="badge">CSS</span>
+          </lk-row>
+        </a>
+        <lk-row class="navlinks" gap="1">
+          <a class="navlink" href="/">Home</a>
+          <a class="navlink" href="/install">Install</a>
+          <a class="navlink" href="/docs">Docs</a>
+          <a class="navlink" href="/playground" aria-current="page">Playground</a>
+          <a class="navlink" href="/tutorial">Tutorial</a>
+        </lk-row>
+      </lk-spread>
+    </nav>
+  </header>
+
+  <main id="main" class="container" style="padding-block: 40px;">
+    <lk-stack gap="2" style="margin-bottom: 20px;">
+      <h1 class="h2">Playground</h1>
+      <p class="sans muted">Type LayoutKit markup &rarr; see the native CSS the stylesheet applies, plus a live preview. Nothing is compiled — these are just the attribute-selector rules that match.</p>
+      <lk-row id="pg-presets" class="navlinks" gap="2" style="margin-top: 4px;"></lk-row>
+    </lk-stack>
+
+    <div class="split">
+      <!-- Input -->
+      <div class="editor">
+        <div class="panel-label">LayoutKit markup</div>
+        <textarea id="pg-input" class="pg" spellcheck="false" aria-label="LayoutKit markup input"><lk-center full-height>
+  <h2>Hello World</h2>
+  <p>Centered perfectly</p>
+</lk-center></textarea>
+      </div>
+
+      <!-- Output -->
+      <div class="editor">
+        <div class="tabs" role="tablist">
+          <button class="tab" data-tab="preview" role="tab" aria-selected="true">Live preview</button>
+          <button class="tab" data-tab="applied" role="tab" aria-selected="false">Applied CSS</button>
+        </div>
+        <div class="preview-frame">
+          <div id="pg-preview"><lk-center full-height><h2>Hello World</h2><p>Centered perfectly</p></lk-center></div>
+          <noscript><p class="sans muted">The live editor needs JavaScript, but the preview above is rendered by pure CSS — no JS required.</p></noscript>
+        </div>
+        <div class="preview-frame" hidden>
+          <div id="pg-applied"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <lk-spread class="container" align="center">
+      <span>LayoutKit — pure-CSS layout. MIT.</span>
+      <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garrett-s-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
+    </lk-spread>
+  </footer>
+
+  <script src="/assets/playground.js"></script>
+</body>
+</html>
