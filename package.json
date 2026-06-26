@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "vendor": "node scripts/build-vendor.mjs",
+    "prebuild": "node scripts/build-vendor.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

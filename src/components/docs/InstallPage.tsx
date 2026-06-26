@@ -1,5 +1,74 @@
 "use client";
 
+import { useState } from "react";
+
+function VendorSection() {
+  const [copied, setCopied] = useState(false);
+
+  async function copyFile() {
+    try {
+      const res = await fetch("/layoutkit.tsx");
+      await navigator.clipboard.writeText(await res.text());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  return (
+    <section className="mb-12 rounded-xl border border-accent/30 bg-accent/5 p-6">
+      <h2 className="mb-2 text-2xl font-extrabold tracking-tight text-zinc-100">
+        Vendor it — no package manager
+      </h2>
+      <p className="mb-4 font-sans text-[14px] text-muted">
+        LayoutKit is zero-dependency native CSS, so the whole library fits in one
+        file. Download it, drop it in your project, and import — no npm, no
+        Tailwind, no build config. You own the code and can edit it freely.
+      </p>
+
+      <div className="mb-4 flex flex-wrap gap-3">
+        <a
+          href="/layoutkit.tsx"
+          download="layoutkit.tsx"
+          className="rounded-lg bg-accent px-4 py-2 text-[13px] font-bold text-background transition-opacity hover:opacity-90"
+        >
+          Download layoutkit.tsx
+        </a>
+        <button
+          onClick={copyFile}
+          className="rounded-lg border border-zinc-700 bg-background px-4 py-2 text-[13px] font-bold text-zinc-200 transition-colors hover:border-accent"
+        >
+          {copied ? "Copied ✓" : "Copy to clipboard"}
+        </button>
+      </div>
+
+      <p className="mb-2 font-sans text-[13px] text-muted">Or pull it from the command line:</p>
+      <div className="mb-4 rounded-lg border border-zinc-700 bg-background p-4">
+        <code className="text-[14px] text-green-400">curl -O https://layoutkit.dev/layoutkit.tsx</code>
+      </div>
+
+      <p className="mb-2 font-sans text-[13px] text-muted">Then import from wherever you put it:</p>
+      <div className="rounded-lg border border-zinc-700 bg-background p-4">
+        <pre className="text-[13px] leading-relaxed text-zinc-300">
+          <code>{`import { Stack, Row, Center, Grid } from "./layoutkit"
+
+export default function App() {
+  return (
+    <Stack gap="lg" padding="md">
+      <Center fill>Centered — works on import</Center>
+    </Stack>
+  )
+}`}</code>
+        </pre>
+      </div>
+      <p className="mt-3 font-sans text-[12px] text-zinc-500">
+        One file, ~1.4 KB over the wire (brotli), zero runtime dependencies. Requires React 18+.
+      </p>
+    </section>
+  );
+}
+
 export function InstallPage() {
   return (
     <div className="mx-auto max-w-[840px] px-6 py-20">
@@ -52,9 +121,12 @@ export default function App() {
           </pre>
         </div>
         <p className="mt-3 font-sans text-[12px] text-zinc-500">
-          Requires React 18+ and Tailwind CSS. Works with Next.js, Vite, Remix, and any React framework.
+          Requires React 18+. Zero runtime dependencies, no Tailwind. Works with Next.js, Vite, Remix, and any React framework.
         </p>
       </section>
+
+      {/* Vendor without a package manager */}
+      <VendorSection />
 
       {/* Alternative: CLI scaffolding */}
       <section className="mb-12 rounded-xl border border-accent/30 bg-accent/5 p-6">
@@ -84,7 +156,7 @@ export default function App() {
                 <code>{`# Install Node.js (if you don't have it)
 brew install node
 
-# In your React + Tailwind project:
+# In any React project:
 npm install layoutkit-css`}</code>
               </pre>
             </div>
@@ -336,7 +408,7 @@ require("layoutkit").setup()`}</code>
         </p>
         <ul className="space-y-1 font-sans text-[13px] text-muted">
           <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">as</code> — Render as a different HTML element</li>
-          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">className</code> — Additional Tailwind/CSS classes</li>
+          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">className</code> — Additional CSS classes (passed through)</li>
           <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">ref</code> — Forwarded ref</li>
           <li>All native HTML div props</li>
         </ul>

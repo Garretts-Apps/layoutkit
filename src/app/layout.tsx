@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LayoutKit — The First Layout Language for the Web",
   description:
-    "10 semantic layout components that compile to Tailwind CSS. Zero runtime, full IntelliSense, framework-agnostic.",
+    "10 semantic layout components that compile to native CSS. Zero dependencies, no Tailwind, no build step — full IntelliSense, framework-agnostic. You can finally center a div.",
   openGraph: {
     title: "LayoutKit — The First Layout Language for the Web",
     description:
-      "10 semantic layout components that compile to Tailwind CSS. Zero runtime, full IntelliSense, framework-agnostic.",
+      "10 semantic layout components that compile to native CSS. Zero dependencies, no Tailwind, no build step — full IntelliSense, framework-agnostic. You can finally center a div.",
     type: "website",
   },
 };

@@ -1,23 +1,23 @@
-import { forwardRef, type ReactNode, type ComponentPropsWithoutRef } from "react";
-import { cn } from "./utils";
+import { forwardRef, type CSSProperties, type ReactNode, type ComponentPropsWithoutRef } from "react";
+import { mergeStyles } from "./utils";
 
 interface AspectRatioProps extends ComponentPropsWithoutRef<"div"> {
   ratio?: number;
   children: ReactNode;
 }
 
+const fillStyle: CSSProperties = { position: "absolute", inset: 0 };
+
 export const AspectRatio = forwardRef<HTMLDivElement, AspectRatioProps>(
-  ({ ratio = 1, children, className, ...props }, ref) => {
+  ({ ratio = 1, children, style, ...props }, ref) => {
+    const containerStyle: CSSProperties = {
+      position: "relative",
+      paddingBottom: `${(1 / ratio) * 100}%`,
+    };
+
     return (
-      <div
-        ref={ref}
-        className={cn("relative", className)}
-        style={{ paddingBottom: `${(1 / ratio) * 100}%` }}
-        {...props}
-      >
-        <div className="absolute inset-0">
-          {children}
-        </div>
+      <div ref={ref} style={mergeStyles(containerStyle, style)} {...props}>
+        <div style={fillStyle}>{children}</div>
       </div>
     );
   }

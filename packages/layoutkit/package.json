@@ -1,14 +1,14 @@
 {
   "name": "layoutkit-css",
   "version": "0.1.0",
-  "description": "The first layout language for the web. 10 semantic components that compile to Tailwind CSS.",
+  "description": "The first layout language for the web. 10 semantic components that compile to native CSS. Zero dependencies, no build step.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/garrett-s-apps/layoutkit.git",
     "directory": "packages/layoutkit"
   },
-  "keywords": ["layout", "tailwind", "css", "react", "components", "flexbox", "grid", "design-system"],
+  "keywords": ["layout", "css", "react", "components", "flexbox", "grid", "design-system", "zero-dependency", "inline-styles"],
   "type": "module",
   "exports": {
     ".": {
@@ -33,10 +33,6 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.4.1"
-  },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
@@ -51,5 +47,8 @@
     "react": "^19.2.0",
     "tsup": "^8.4.0",
     "typescript": "^5"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
   }
 }

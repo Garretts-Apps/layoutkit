@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { TUTORIAL_STEPS } from "@/lib/docs-data";
-import { parseJSXToTailwind } from "@/lib/compiler";
+import { parseJSXToCSS } from "@/lib/compiler";
 
 function useTypewriter(text: string, speed = 35, active = false) {
   const [displayed, setDisplayed] = useState("");
@@ -38,7 +38,7 @@ export function TutorialPage() {
   const [code, setCode] = useState(TUTORIAL_STEPS[0].code);
   const [showHint, setShowHint] = useState(false);
 
-  const result = parseJSXToTailwind(typing ? "" : code);
+  const result = parseJSXToCSS(typing ? "" : code);
   const typewriter = useTypewriter(TUTORIAL_STEPS[step].code, 30, typing);
 
   useEffect(() => {
@@ -134,15 +134,16 @@ export function TutorialPage() {
                     &lt;{r.component} /&gt;
                   </div>
                   <div className="flex flex-wrap gap-1">
-                    {r.tailwindClasses
-                      .split(" ")
+                    {r.css
+                      .split(";")
+                      .map((decl) => decl.trim())
                       .filter(Boolean)
-                      .map((cls, j) => (
+                      .map((decl, j) => (
                         <span
                           key={j}
                           className="rounded border border-purple/15 bg-purple/10 px-1.5 py-0.5 text-[11px] text-purple"
                         >
-                          {cls}
+                          {decl}
                         </span>
                       ))}
                   </div>

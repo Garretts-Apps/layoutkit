@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { parseJSXToTailwind } from "@/lib/compiler";
+import { parseJSXToCSS } from "@/lib/compiler";
 import { LivePreview } from "@/lib/jsx-renderer";
 
 type OutputTab = "compiled" | "preview";
 
 const PRESETS = [
-  { label: "Center", code: '<Center fill>\n  <h1>Hello World</h1>\n</Center>' },
+  { label: "Center", code: '<Center fullHeight>\n  <h1>Hello World</h1>\n</Center>' },
   { label: "Stack", code: '<Stack gap="lg" center>\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</Stack>' },
   { label: "Page Layout", code: '<Stack fill>\n  <Spread padding="md" className="border-b">\n    <span>Logo</span>\n    <Row gap="sm">\n      <a>Home</a>\n      <a>About</a>\n    </Row>\n  </Spread>\n  <Box fill padding="lg">\n    <Center>\n      <h1>Content</h1>\n    </Center>\n  </Box>\n</Stack>' },
   { label: "Grid", code: '<Grid cols={3} gap="lg">\n  <div>Card 1</div>\n  <div>Card 2</div>\n  <div>Card 3</div>\n</Grid>' },
@@ -20,7 +20,7 @@ interface PlaygroundPageProps {
 
 export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
   const [outputTab, setOutputTab] = useState<OutputTab>("preview");
-  const result = parseJSXToTailwind(code);
+  const result = parseJSXToCSS(code);
 
   return (
     <div className="flex h-[calc(100vh-49px)] flex-col">
@@ -29,7 +29,7 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
         <div className="flex items-center gap-3">
           <span className="text-sm font-bold text-zinc-100">Interactive Compiler</span>
           <span className="text-[11px] text-zinc-600">
-            Type LayoutKit JSX &rarr; see compiled Tailwind output
+            Type LayoutKit JSX &rarr; see the native CSS it compiles to
           </span>
         </div>
         <div className="flex gap-2">
@@ -113,23 +113,24 @@ export function PlaygroundPage({ code, onCodeChange }: PlaygroundPageProps) {
                         &lt;{r.component} /&gt;
                       </span>
                       <span className="text-[10px] text-zinc-600">
-                        {r.tailwindClasses.split(" ").length} classes
+                        {r.declarations} CSS {r.declarations === 1 ? "declaration" : "declarations"}
                       </span>
                     </div>
                     <div className="px-3 py-2.5">
                       <div className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
-                        Tailwind Classes
+                        Native CSS
                       </div>
                       <div className="flex flex-wrap gap-1">
-                        {r.tailwindClasses
-                          .split(" ")
+                        {r.css
+                          .split(";")
+                          .map((decl) => decl.trim())
                           .filter(Boolean)
-                          .map((cls, j) => (
+                          .map((decl, j) => (
                             <span
                               key={j}
                               className="rounded border border-purple/20 bg-purple/10 px-2 py-0.5 text-[11px] font-medium text-purple"
                             >
-                              {cls}
+                              {decl}
                             </span>
                           ))}
                       </div>
