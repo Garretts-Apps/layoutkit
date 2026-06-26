@@ -1,7 +1,8 @@
 /* LayoutKit Playground — vanilla JS, no dependencies.
    Left: LayoutKit markup. Right: the rendered output (styled by the real
-   stylesheet). Below: the raw CSS you'd have written by hand to get the same
-   layout — i.e. what LayoutKit saves you. Nothing is compiled; these are the
+   stylesheet). Below: the same layout written by hand without LayoutKit —
+   the plain HTML (<div class="…">) and the CSS you'd otherwise write. That's
+   what LayoutKit saves you. Nothing is compiled; the live preview is just the
    attribute-selector rules layoutkit.css already applies. */
 (() => {
   const SPACE = {
@@ -110,22 +111,65 @@
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const sanitize = (s) => s.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/\son\w+="[^"]*"/gi, "");
 
-  // The hand-written CSS equivalent: one rule per element, real and readable.
-  function toCSS(results) {
-    if (!results.length) return '<span class="tok-com">/* Type a &lt;lk-…&gt; tag to see the raw CSS it replaces */</span>';
+  // Assign each element a class name. Same tag + same declarations share a
+  // class; the same tag with different attributes gets a numbered suffix.
+  function assignClasses(results) {
+    const byKey = new Map();
+    const count = new Map();
+    for (const r of results) {
+      const base = r.tag.replace(/^lk-/, "");
+      const key = base + "|" + r.decls.map(([k, v]) => k + ":" + v).join(";");
+      if (byKey.has(key)) { r.cls = byKey.get(key); continue; }
+      const n = (count.get(base) || 0) + 1;
+      count.set(base, n);
+      r.cls = n === 1 ? base : base + "-" + n;
+      byKey.set(key, r.cls);
+    }
+  }
+
+  // Rewrite the LayoutKit markup as plain HTML: each <lk-tag …> becomes a
+  // <div class="…"> with the class it was assigned; other tags are untouched.
+  function vanillaText(input, results) {
+    let i = 0;
+    return input.replace(/<(\/?)([a-z][\w-]*)((?:[^>"]|"[^"]*")*?)(\/?)>/g, (m, slash, tag, _a, sc) => {
+      if (!BUILDERS[tag]) return m;
+      if (slash) return "</div>";
+      const cls = (results[i++] || {}).cls || tag.replace(/^lk-/, "");
+      return sc ? '<div class="' + cls + '"></div>' : '<div class="' + cls + '">';
+    });
+  }
+
+  // Lightweight HTML syntax highlight over an escaped string.
+  function hlHTML(raw) {
+    return esc(raw).replace(/&lt;(\/?)([a-zA-Z][\w-]*)([^]*?)&gt;/g, (m, slash, tag, attrs) => {
+      const a = attrs.replace(/([a-zA-Z-]+)=(&quot;[^]*?&quot;)/g,
+        '<span class="tok-attr">$1</span>=<span class="tok-str">$2</span>');
+      return '<span class="tok-tag">&lt;' + slash + tag + "</span>" + a + '<span class="tok-tag">&gt;</span>';
+    });
+  }
+
+  // The CSS rules: one per distinct class, in document order.
+  function cssRules(results) {
     const seen = new Set();
     const blocks = [];
     for (const r of results) {
-      const sel = "." + r.tag.replace(/^lk-/, "");
-      const key = sel + "|" + r.decls.map(([k, v]) => k + v).join();
-      if (seen.has(key)) continue;
-      seen.add(key);
+      if (seen.has(r.cls)) continue;
+      seen.add(r.cls);
       const body = r.decls
-        .map(([k, v]) => '  <span class="tok-attr">' + esc(k) + "</span>: <span class=\"tok-str\">" + esc(v) + "</span>;")
+        .map(([k, v]) => '  <span class="tok-attr">' + esc(k) + '</span>: <span class="tok-str">' + esc(v) + "</span>;")
         .join("\n");
-      blocks.push('<span class="tok-com">/* ' + esc(r.raw) + " */</span>\n<span class=\"tok-tag\">" + esc(sel) + " {</span>\n" + body + "\n<span class=\"tok-tag\">}</span>");
+      blocks.push('<span class="tok-com">/* ' + esc(r.raw) + ' */</span>\n<span class="tok-tag">.' + esc(r.cls) + " {</span>\n" + body + '\n<span class="tok-tag">}</span>');
     }
     return blocks.join("\n\n");
+  }
+
+  // The full hand-written equivalent: the HTML and the CSS you'd write without
+  // LayoutKit to get the same layout.
+  function toByHand(input, results) {
+    if (!results.length) return '<span class="tok-com">/* Type a &lt;lk-…&gt; tag to see the HTML + CSS it replaces */</span>';
+    assignClasses(results);
+    return '<span class="tok-com">&lt;!-- HTML --&gt;</span>\n' + hlHTML(vanillaText(input, results)) +
+      '\n\n<span class="tok-com">/* CSS */</span>\n' + cssRules(results);
   }
 
   const PRESETS = [
@@ -143,7 +187,7 @@
 
   function render() {
     preview.innerHTML = sanitize(input.value);
-    cssOut.innerHTML = toCSS(parse(input.value));
+    cssOut.innerHTML = toByHand(input.value, parse(input.value));
   }
 
   const buttons = [];

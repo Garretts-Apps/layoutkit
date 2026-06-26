@@ -1,0 +1,40 @@
+name: Publish to npm
+
+# Publishes packages/layoutkit (layoutkit-css) to the npm registry.
+# Trigger by creating a GitHub Release (tag like v1.0.0), or run manually.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # required for npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/layoutkit
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      # Regenerate the stylesheet from source so the published file always
+      # matches gen.mjs. (gen.mjs resolves its own paths, so cwd is fine.)
+      - name: Generate stylesheet
+        run: node gen.mjs
+
+      # Fail early if the working tree drifted from the committed CSS.
+      - name: Verify generated CSS is committed
+        run: git diff --exit-code -- layoutkit.css ../../layoutkit.css
+
+      - name: Publish
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
