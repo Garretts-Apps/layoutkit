@@ -1,6 +1,6 @@
 # LayoutKit
 
-**The first layout language for the web, as pure CSS.** A single stylesheet that styles semantic `<lk-*>` tags through attribute selectors. Zero dependencies, zero JavaScript, no build step, no FOUC.
+**A layout language for the web, as pure CSS.** A single stylesheet that styles semantic `<lk-*>` tags through attribute selectors. Zero dependencies, zero JavaScript, no build step, no FOUC.
 
 You can finally center a div. We're as shocked as you are.
 
@@ -13,7 +13,8 @@ LayoutKit is just CSS. You load one render-blocking stylesheet and write semanti
 - **No build step, no config.** Link it and write tags.
 - **No FOUC.** Render-blocking CSS styles your tags before the first paint.
 - **Hypermedia-native.** Works with any server-rendered HTML — plain HTML, htmx, Hotwire, Rails, Django, PHP, or any framework.
-- **Tiny over the wire.** ~2 KB brotli.
+- **Composes with your design system.** Spacing resolves through `--lk-space-*` (defaulting to your `--space-*` tokens), everything sits in `@layer layoutkit`, and directional rules use logical properties. It consumes a token system instead of running parallel to one.
+- **Tiny over the wire.** ~2.3 KB brotli.
 
 ## Install
 
@@ -68,6 +69,27 @@ Free-form values use inline custom properties: `--lk-ratio`, `--lk-divider-color
 ```
 
 Centering a div: the CSS final boss, defeated in one tag.
+
+## Theming
+
+The semantic scale (`xs … 3xl`) resolves through `--lk-space-*` custom properties that default to your `--space-*` design tokens, so you remap the whole scale by defining your tokens once:
+
+```css
+:root {
+  --space-md: 0.875rem;   /* your design system's token — gap="md", padding="md", … all follow */
+  --space-lg: 1.25rem;
+}
+/* or set LayoutKit's scale directly, bypassing tokens */
+:root { --lk-space-lg: 1.25rem; }
+```
+
+Everything is declared in `@layer layoutkit`, so your own unlayered styles always win — no specificity fights — and you can order the layer wherever you like:
+
+```css
+@layer reset, layoutkit, components, utilities;
+```
+
+Directional rules use logical properties (`border-inline-start`, `block-size`, …) so layouts follow writing mode and RTL. The fixed numeric scale (`gap="4"`) and `none`/`px` stay literal.
 
 ---
 

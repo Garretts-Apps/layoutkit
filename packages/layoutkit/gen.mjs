@@ -5,8 +5,17 @@
 //
 //   node gen.mjs   ->   layoutkit.css
 //
-// Free-form values (color, ratio, min/max sizes) are driven by CSS custom
-// properties so they stay in pure CSS without enumerating every value.
+// Architecture notes:
+//   - All rules live in `@layer layoutkit` so a host app controls specificity
+//     relative to its own cascade layers (unlayered author styles always win).
+//   - Semantic spacing resolves through --lk-space-* custom properties that
+//     default to the host's --space-* tokens, so the scale consumes a design
+//     system instead of running parallel to it. Override --space-* (or
+//     --lk-space-* directly) to remap.
+//   - Directional box-model uses logical properties (block/inline) so layouts
+//     follow writing mode and RTL.
+//   - Free-form values (color, ratio, min/max sizes) are driven by CSS custom
+//     properties so they stay in pure CSS without enumerating every value.
 
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -14,23 +23,29 @@ import { dirname, join } from "node:path";
 
 const rem = (n) => `${Number(n) * 0.25}rem`;
 const NUM = ["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "5", "6", "7", "8", "9", "10", "11", "12", "14", "16"];
-const SPACE = { none: "0", px: "1px", xs: rem("1"), sm: rem("2"), md: rem("4"), lg: rem("6"), xl: rem("8"), "2xl": rem("12"), "3xl": rem("16") };
+// Semantic t-shirt sizes — these are the design tokens. Each resolves through
+// the host's --space-* token, falling back to LayoutKit's own value.
+const TOKENS = { xs: rem("1"), sm: rem("2"), md: rem("4"), lg: rem("6"), xl: rem("8"), "2xl": rem("12"), "3xl": rem("16") };
+// Resolved spacing values used inside rules. Named tokens point at the custom
+// properties; the fixed numeric scale and none/px stay literal.
+const SPACE = { none: "0", px: "1px" };
+for (const t of Object.keys(TOKENS)) SPACE[t] = `var(--lk-space-${t})`;
 for (const n of NUM) SPACE[n] = rem(n);
 const ALIGN = { start: "flex-start", center: "center", end: "flex-end", stretch: "stretch", baseline: "baseline" };
 const JUSTIFY = { start: "flex-start", center: "center", end: "flex-end", between: "space-between", around: "space-around", evenly: "space-evenly" };
 
 const out = [];
-const section = (title) => out.push(`\n/* ${title} */`);
-const rule = (sel, decls) => out.push(`${sel} { ${decls} }`);
+const section = (title) => out.push(`\n  /* ${title} */`);
+const rule = (sel, decls) => out.push(`  ${sel} { ${decls} }`);
 // One grouped rule per attribute value across the given tags.
 const variants = (tags, attr, map, render) => {
   for (const [k, v] of Object.entries(map)) {
-    rule(tags.map((t) => `${t}[${attr}="${k}"]`).join(",\n"), render(v));
+    rule(tags.map((t) => `${t}[${attr}="${k}"]`).join(",\n  "), render(v));
   }
 };
 
 out.push("/*");
-out.push(" * layoutkit-css — the first layout language for the web, as pure CSS.");
+out.push(" * layoutkit-css — a layout language for the web, as pure CSS.");
 out.push(" * Zero dependencies. No JavaScript. No build step. No FOUC.");
 out.push(" *");
 out.push(' *   <link rel="stylesheet" href="layoutkit.css">');
@@ -38,22 +53,29 @@ out.push(' *   <lk-stack gap="lg" padding="md">');
 out.push(" *     <lk-center full-height>You can finally center a div.</lk-center>");
 out.push(" *   </lk-stack>");
 out.push(" *");
-out.push(" * Attributes are kebab-case. Free-form values use custom properties:");
-out.push(' *   --lk-ratio, --lk-divider-color, --lk-min-child-width, --lk-max-height, --lk-max-width.');
+out.push(" * Theming: remap the scale onto your design tokens by defining --space-*");
+out.push(" * (or override --lk-space-* directly). All rules are in @layer layoutkit.");
+out.push(" * Free-form values use custom properties:");
+out.push(" *   --lk-ratio, --lk-divider-color, --lk-min-child-width, --lk-max-height, --lk-max-width.");
 out.push(" */");
 
+out.push("@layer layoutkit {");
+
+section("Design tokens — remap via your --space-* tokens, or override --lk-space-* directly");
+rule(":root", Object.entries(TOKENS).map(([k, v]) => `--lk-space-${k}: var(--space-${k}, ${v});`).join(" "));
+
 section("Base — every primitive sets its own display + box model");
-rule("lk-stack,\nlk-row,\nlk-center,\nlk-box,\nlk-spread,\nlk-grid,\nlk-spacer,\nlk-divider,\nlk-aspect-ratio,\nlk-scroll-area", "box-sizing: border-box;");
-rule("lk-stack", "display: flex; flex-direction: column; gap: 1rem; align-items: stretch; justify-content: flex-start;");
-rule("lk-row", "display: flex; flex-direction: row; gap: 1rem; align-items: center; justify-content: flex-start;");
+rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-spread,\n  lk-grid,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area", "box-sizing: border-box;");
+rule("lk-stack", "display: flex; flex-direction: column; gap: var(--lk-space-md); align-items: stretch; justify-content: flex-start;");
+rule("lk-row", "display: flex; flex-direction: row; gap: var(--lk-space-md); align-items: center; justify-content: flex-start;");
 rule("lk-center", "display: flex; flex-direction: column; align-items: center; justify-content: center;");
 rule("lk-box", "display: block;");
 rule("lk-spread", "display: flex; flex-direction: row; justify-content: space-between; align-items: center;");
-rule("lk-grid", "display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem;");
+rule("lk-grid", "display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: var(--lk-space-md);");
 rule("lk-spacer", "display: block; flex: 1 1 0%;");
-rule("lk-divider", "display: block; width: 100%; border-top: 1px solid var(--lk-divider-color, #e5e7eb);");
+rule("lk-divider", "display: block; inline-size: 100%; border-block-start: 1px solid var(--lk-divider-color, #e5e7eb);");
 rule("lk-aspect-ratio", "display: block; aspect-ratio: var(--lk-ratio, 1);");
-rule("lk-scroll-area", "display: block; overflow-y: auto; max-height: var(--lk-max-height, none); max-width: var(--lk-max-width, none);");
+rule("lk-scroll-area", "display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none);");
 
 section("Gap (lk-stack, lk-row, lk-grid)");
 variants(["lk-stack", "lk-row", "lk-grid"], "gap", SPACE, (v) => `gap: ${v};`);
@@ -68,10 +90,10 @@ section("Justify-content (lk-stack, lk-row)");
 variants(["lk-stack", "lk-row"], "justify", JUSTIFY, (v) => `justify-content: ${v};`);
 
 section("Boolean modifiers");
-rule("lk-stack[center],\nlk-row[center]", "align-items: center; justify-content: center;");
-rule("lk-center[fill],\nlk-stack[fill],\nlk-row[fill],\nlk-box[fill]", "flex: 1 1 0%;");
-rule("lk-center[full-height],\nlk-stack[full-height],\nlk-row[full-height]", "min-height: 100vh;");
-rule("lk-stack[wrap],\nlk-row[wrap]", "flex-wrap: wrap;");
+rule("lk-stack[center],\n  lk-row[center]", "align-items: center; justify-content: center;");
+rule("lk-center[fill],\n  lk-stack[fill],\n  lk-row[fill],\n  lk-box[fill]", "flex: 1 1 0%;");
+rule("lk-center[full-height],\n  lk-stack[full-height],\n  lk-row[full-height]", "min-block-size: 100vh;");
+rule("lk-stack[wrap],\n  lk-row[wrap]", "flex-wrap: wrap;");
 rule("lk-row[reverse]", "flex-direction: row-reverse;");
 
 section("Center — single-axis overrides");
@@ -92,19 +114,21 @@ for (const p of ["start", "center", "end", "stretch"]) rule(`lk-grid[place-items
 
 section("Spacer — fixed sizes (default is flexible)");
 rule('lk-spacer[size="auto"]', "flex: 1 1 0%;");
-variants(["lk-spacer"], "size", SPACE, (v) => `flex: none; height: ${v};`);
+variants(["lk-spacer"], "size", SPACE, (v) => `flex: none; block-size: ${v};`);
 
 section("Divider — thickness + vertical orientation");
-rule('lk-divider[thickness="medium"]', "border-top-width: 2px;");
-rule('lk-divider[thickness="thick"]', "border-top-width: 4px;");
-rule('lk-divider[orientation="vertical"]', "width: auto; height: 100%; align-self: stretch; border-top: 0; border-left: 1px solid var(--lk-divider-color, #e5e7eb);");
-rule('lk-divider[orientation="vertical"][thickness="medium"]', "border-left-width: 2px;");
-rule('lk-divider[orientation="vertical"][thickness="thick"]', "border-left-width: 4px;");
+rule('lk-divider[thickness="medium"]', "border-block-start-width: 2px;");
+rule('lk-divider[thickness="thick"]', "border-block-start-width: 4px;");
+rule('lk-divider[orientation="vertical"]', "inline-size: auto; block-size: 100%; align-self: stretch; border-block-start: 0; border-inline-start: 1px solid var(--lk-divider-color, #e5e7eb);");
+rule('lk-divider[orientation="vertical"][thickness="medium"]', "border-inline-start-width: 2px;");
+rule('lk-divider[orientation="vertical"][thickness="thick"]', "border-inline-start-width: 4px;");
 
 section("Scroll-area — direction");
 rule('lk-scroll-area[direction="vertical"]', "overflow-x: hidden; overflow-y: auto;");
 rule('lk-scroll-area[direction="horizontal"]', "overflow-x: auto; overflow-y: hidden;");
 rule('lk-scroll-area[direction="both"]', "overflow: auto;");
+
+out.push("}");
 
 const css = out.join("\n") + "\n";
 const pkgDir = dirname(fileURLToPath(import.meta.url));
@@ -116,4 +140,4 @@ const targets = [
 ];
 for (const target of targets) writeFileSync(target, css);
 const kb = (Buffer.byteLength(css, "utf8") / 1024).toFixed(1);
-console.log(`Wrote layoutkit.css (${kb} KB, ${out.filter((l) => l.includes("{")).length} rules) -> ${targets.length} targets`);
+console.log(`Wrote layoutkit.css (${kb} KB, ${out.filter((l) => l.includes("{") && !l.includes("@layer")).length} rules) -> ${targets.length} targets`);

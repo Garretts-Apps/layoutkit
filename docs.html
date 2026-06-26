@@ -16,7 +16,7 @@
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit — the first layout language for the web, as pure CSS.">
+  <meta property="og:image:alt" content="LayoutKit — a layout language for the web, as pure CSS.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Docs — LayoutKit tags & attributes reference">
   <meta name="twitter:description" content="All 10 semantic lk-* tags and every attribute. Pure CSS, zero dependencies, no build step.">
@@ -83,10 +83,44 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           <a class="navlink" href="#lk-divider">lk-divider</a>
           <a class="navlink" href="#lk-aspect-ratio">lk-aspect-ratio</a>
           <a class="navlink" href="#lk-scroll-area">lk-scroll-area</a>
+          <a class="navlink" href="#theming">Theming</a>
           <a class="navlink" href="#reference">Size scale</a>
         </lk-row>
       </lk-stack>
     </lk-box>
+
+    <!-- ============ Theming & architecture ============ -->
+    <lk-stack id="theming" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
+      <lk-stack gap="2">
+        <h2 class="h2">Theming &amp; architecture</h2>
+        <p class="lead sans muted">LayoutKit is built to consume a design system, not run parallel to one.</p>
+      </lk-stack>
+
+      <lk-stack gap="3">
+        <h3 class="h2" style="font-size:18px;">Spacing maps to your tokens</h3>
+        <p class="sans muted">The semantic scale (<code class="sans">xs … 3xl</code>) resolves through <code class="sans">--lk-space-*</code> custom properties that default to your <code class="sans">--space-*</code> tokens. Define your tokens once and the whole <code class="sans">gap</code>/<code class="sans">padding</code> scale remaps onto them — no per-component overrides.</p>
+        <div class="code"><pre><span class="tok-com">/* layoutkit ships, inside @layer layoutkit: */</span>
+<span class="tok-tag">:root</span> { <span class="tok-attr">--lk-space-md</span>: <span class="tok-str">var(--space-md, 1rem)</span>; }
+<span class="tok-tag">lk-stack[gap="md"]</span> { <span class="tok-attr">gap</span>: <span class="tok-str">var(--lk-space-md)</span>; }
+
+<span class="tok-com">/* your app — remap the scale by defining tokens: */</span>
+<span class="tok-tag">:root</span> { <span class="tok-attr">--space-md</span>: <span class="tok-str">0.875rem</span>; <span class="tok-attr">--space-lg</span>: <span class="tok-str">1.25rem</span>; }
+<span class="tok-com">/* …or set LayoutKit's scale directly: */</span>
+<span class="tok-tag">:root</span> { <span class="tok-attr">--lk-space-lg</span>: <span class="tok-str">1.25rem</span>; }</pre></div>
+        <p class="sans muted" style="font-size:12px;">The fixed numeric scale (<code class="sans">gap="4"</code>) and <code class="sans">none</code>/<code class="sans">px</code> stay literal — they're a utility scale, not semantic tokens.</p>
+      </lk-stack>
+
+      <lk-stack gap="3">
+        <h3 class="h2" style="font-size:18px;">Everything is in <code class="sans">@layer layoutkit</code></h3>
+        <p class="sans muted">All rules live in a named cascade layer, so your own unlayered styles always win — overriding a LayoutKit rule never needs a specificity fight. Order the layer wherever you like:</p>
+        <div class="code"><pre><span class="tok-tag">@layer</span> reset, layoutkit, components, utilities;</pre></div>
+      </lk-stack>
+
+      <lk-stack gap="3">
+        <h3 class="h2" style="font-size:18px;">Logical properties</h3>
+        <p class="sans muted">Directional rules use logical properties (<code class="sans">border-inline-start</code>, <code class="sans">block-size</code>, <code class="sans">min-block-size</code>, <code class="sans">max-inline-size</code>, …), so layouts follow writing mode and RTL. In LTR top-to-bottom contexts the rendering is identical.</p>
+      </lk-stack>
+    </lk-stack>
 
     <!-- ============ lk-stack ============ -->
     <lk-stack id="lk-stack" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
@@ -111,7 +145,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
               <tr><td><code class="sans">justify</code></td><td>Justify</td><td>start</td><td>Main-axis alignment (justify-content)</td></tr>
               <tr><td><code class="sans">center</code></td><td>boolean</td><td>off</td><td>Center both axes (shorthand)</td></tr>
               <tr><td><code class="sans">fill</code></td><td>boolean</td><td>off</td><td>Grow to fill available space (flex: 1 1 0%)</td></tr>
-              <tr><td><code class="sans">full-height</code></td><td>boolean</td><td>off</td><td>Force a minimum full-viewport height (min-height: 100vh)</td></tr>
+              <tr><td><code class="sans">full-height</code></td><td>boolean</td><td>off</td><td>Force a minimum full-viewport height (min-block-size: 100vh)</td></tr>
               <tr><td><code class="sans">padding</code></td><td>Padding</td><td>none</td><td>Internal padding</td></tr>
               <tr><td><code class="sans">wrap</code></td><td>boolean</td><td>off</td><td>Allow children to wrap</td></tr>
             </tbody>
@@ -125,11 +159,11 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           <table>
             <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
             <tbody>
-              <tr><td><code class="sans">lk-stack</code> (base)</td><td><code class="sans">display: flex; flex-direction: column; gap: 1rem; align-items: stretch; justify-content: flex-start</code></td></tr>
+              <tr><td><code class="sans">lk-stack</code> (base)</td><td><code class="sans">display: flex; flex-direction: column; gap: var(--lk-space-md); align-items: stretch; justify-content: flex-start</code></td></tr>
               <tr><td><code class="sans">[gap="none"]</code></td><td><code class="sans">gap: 0</code></td></tr>
               <tr><td><code class="sans">[gap="xs"]</code></td><td><code class="sans">gap: 0.25rem</code></td></tr>
               <tr><td><code class="sans">[gap="sm"]</code></td><td><code class="sans">gap: 0.5rem</code></td></tr>
-              <tr><td><code class="sans">[gap="md"]</code> (default)</td><td><code class="sans">gap: 1rem</code></td></tr>
+              <tr><td><code class="sans">[gap="md"]</code> (default)</td><td><code class="sans">gap: var(--lk-space-md)</code></td></tr>
               <tr><td><code class="sans">[gap="lg"]</code></td><td><code class="sans">gap: 1.5rem</code></td></tr>
               <tr><td><code class="sans">[gap="xl"]</code></td><td><code class="sans">gap: 2rem</code></td></tr>
               <tr><td><code class="sans">[gap="2xl"]</code></td><td><code class="sans">gap: 3rem</code></td></tr>
@@ -147,7 +181,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
               <tr><td><code class="sans">[justify="evenly"]</code></td><td><code class="sans">justify-content: space-evenly</code></td></tr>
               <tr><td><code class="sans">[center]</code></td><td><code class="sans">align-items: center; justify-content: center</code></td></tr>
               <tr><td><code class="sans">[fill]</code></td><td><code class="sans">flex: 1 1 0%</code></td></tr>
-              <tr><td><code class="sans">[full-height]</code></td><td><code class="sans">min-height: 100vh</code></td></tr>
+              <tr><td><code class="sans">[full-height]</code></td><td><code class="sans">min-block-size: 100vh</code></td></tr>
               <tr><td><code class="sans">[wrap]</code></td><td><code class="sans">flex-wrap: wrap</code></td></tr>
               <tr><td><code class="sans">[padding="md"]</code></td><td><code class="sans">padding: 1rem</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
             </tbody>
@@ -194,7 +228,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           <table>
             <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
             <tbody>
-              <tr><td><code class="sans">lk-row</code> (base)</td><td><code class="sans">display: flex; flex-direction: row; gap: 1rem; align-items: center; justify-content: flex-start</code></td></tr>
+              <tr><td><code class="sans">lk-row</code> (base)</td><td><code class="sans">display: flex; flex-direction: row; gap: var(--lk-space-md); align-items: center; justify-content: flex-start</code></td></tr>
               <tr><td><code class="sans">[gap="xs"]</code> … <code class="sans">[gap="3xl"]</code></td><td><code class="sans">gap: 0.25rem … 4rem</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
               <tr><td><code class="sans">[align="start"]</code></td><td><code class="sans">align-items: flex-start</code></td></tr>
               <tr><td><code class="sans">[align="center"]</code> (default)</td><td><code class="sans">align-items: center</code></td></tr>
@@ -237,7 +271,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
             <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><code class="sans">fill</code></td><td>boolean</td><td>off</td><td>Grow to fill available space in the parent flex container (flex: 1 1 0%)</td></tr>
-              <tr><td><code class="sans">full-height</code></td><td>boolean</td><td>off</td><td>Force a minimum full-viewport height (min-height: 100vh)</td></tr>
+              <tr><td><code class="sans">full-height</code></td><td>boolean</td><td>off</td><td>Force a minimum full-viewport height (min-block-size: 100vh)</td></tr>
               <tr><td><code class="sans">horizontal</code></td><td>boolean</td><td>off</td><td>Center only on the x-axis</td></tr>
               <tr><td><code class="sans">vertical</code></td><td>boolean</td><td>off</td><td>Center only on the y-axis</td></tr>
               <tr><td><code class="sans">inline</code></td><td>boolean</td><td>off</td><td>Use inline-flex instead of flex</td></tr>
@@ -254,7 +288,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
             <tbody>
               <tr><td><code class="sans">lk-center</code> (base)</td><td><code class="sans">display: flex; flex-direction: column; align-items: center; justify-content: center</code></td></tr>
               <tr><td><code class="sans">[fill]</code></td><td><code class="sans">flex: 1 1 0%</code></td></tr>
-              <tr><td><code class="sans">[full-height]</code></td><td><code class="sans">min-height: 100vh</code></td></tr>
+              <tr><td><code class="sans">[full-height]</code></td><td><code class="sans">min-block-size: 100vh</code></td></tr>
               <tr><td><code class="sans">[inline]</code></td><td><code class="sans">display: inline-flex</code></td></tr>
               <tr><td><code class="sans">[horizontal]:not([vertical])</code></td><td><code class="sans">justify-content: flex-start</code> (cancels y-centering, keeps x-centering)</td></tr>
               <tr><td><code class="sans">[vertical]:not([horizontal])</code></td><td><code class="sans">align-items: stretch</code> (cancels x-centering, keeps y-centering)</td></tr>
@@ -395,7 +429,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           <table>
             <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
             <tbody>
-              <tr><td><code class="sans">lk-grid</code> (base)</td><td><code class="sans">display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem</code></td></tr>
+              <tr><td><code class="sans">lk-grid</code> (base)</td><td><code class="sans">display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: var(--lk-space-md)</code></td></tr>
               <tr><td><code class="sans">[cols="N"]</code> (N = 1–12)</td><td><code class="sans">grid-template-columns: repeat(N, minmax(0, 1fr))</code></td></tr>
               <tr><td><code class="sans">[rows="N"]</code> (N = 1–12)</td><td><code class="sans">grid-template-rows: repeat(N, minmax(0, 1fr))</code></td></tr>
               <tr><td><code class="sans">[gap="…"]</code></td><td><code class="sans">gap: …</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
@@ -449,15 +483,15 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
             <tbody>
               <tr><td><code class="sans">lk-spacer</code> (base)</td><td><code class="sans">display: block; flex: 1 1 0%</code></td></tr>
               <tr><td><code class="sans">[size="auto"]</code> (default)</td><td><code class="sans">flex: 1 1 0%</code></td></tr>
-              <tr><td><code class="sans">[size="none"]</code></td><td><code class="sans">flex: none; height: 0</code></td></tr>
-              <tr><td><code class="sans">[size="xs"]</code></td><td><code class="sans">flex: none; height: 0.25rem</code></td></tr>
-              <tr><td><code class="sans">[size="sm"]</code></td><td><code class="sans">flex: none; height: 0.5rem</code></td></tr>
-              <tr><td><code class="sans">[size="md"]</code></td><td><code class="sans">flex: none; height: 1rem</code></td></tr>
-              <tr><td><code class="sans">[size="lg"]</code></td><td><code class="sans">flex: none; height: 1.5rem</code></td></tr>
-              <tr><td><code class="sans">[size="xl"]</code></td><td><code class="sans">flex: none; height: 2rem</code></td></tr>
-              <tr><td><code class="sans">[size="2xl"]</code></td><td><code class="sans">flex: none; height: 3rem</code></td></tr>
-              <tr><td><code class="sans">[size="3xl"]</code></td><td><code class="sans">flex: none; height: 4rem</code></td></tr>
-              <tr><td><code class="sans">[size="N"]</code> (numeric scale)</td><td><code class="sans">flex: none; height: …</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
+              <tr><td><code class="sans">[size="none"]</code></td><td><code class="sans">flex: none; block-size: 0</code></td></tr>
+              <tr><td><code class="sans">[size="xs"]</code></td><td><code class="sans">flex: none; block-size: 0.25rem</code></td></tr>
+              <tr><td><code class="sans">[size="sm"]</code></td><td><code class="sans">flex: none; block-size: 0.5rem</code></td></tr>
+              <tr><td><code class="sans">[size="md"]</code></td><td><code class="sans">flex: none; block-size: 1rem</code></td></tr>
+              <tr><td><code class="sans">[size="lg"]</code></td><td><code class="sans">flex: none; block-size: 1.5rem</code></td></tr>
+              <tr><td><code class="sans">[size="xl"]</code></td><td><code class="sans">flex: none; block-size: 2rem</code></td></tr>
+              <tr><td><code class="sans">[size="2xl"]</code></td><td><code class="sans">flex: none; block-size: 3rem</code></td></tr>
+              <tr><td><code class="sans">[size="3xl"]</code></td><td><code class="sans">flex: none; block-size: 4rem</code></td></tr>
+              <tr><td><code class="sans">[size="N"]</code> (numeric scale)</td><td><code class="sans">flex: none; block-size: …</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
             </tbody>
           </table>
         </div>
@@ -505,12 +539,12 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           <table>
             <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
             <tbody>
-              <tr><td><code class="sans">lk-divider</code> (base)</td><td><code class="sans">display: block; width: 100%; border-top: 1px solid var(--lk-divider-color, #e5e7eb)</code></td></tr>
-              <tr><td><code class="sans">[thickness="medium"]</code></td><td><code class="sans">border-top-width: 2px</code></td></tr>
-              <tr><td><code class="sans">[thickness="thick"]</code></td><td><code class="sans">border-top-width: 4px</code></td></tr>
-              <tr><td><code class="sans">[orientation="vertical"]</code></td><td><code class="sans">width: auto; height: 100%; align-self: stretch; border-top: 0; border-left: 1px solid var(--lk-divider-color, #e5e7eb)</code></td></tr>
-              <tr><td><code class="sans">[orientation="vertical"][thickness="medium"]</code></td><td><code class="sans">border-left-width: 2px</code></td></tr>
-              <tr><td><code class="sans">[orientation="vertical"][thickness="thick"]</code></td><td><code class="sans">border-left-width: 4px</code></td></tr>
+              <tr><td><code class="sans">lk-divider</code> (base)</td><td><code class="sans">display: block; inline-size: 100%; border-block-start: 1px solid var(--lk-divider-color, #e5e7eb)</code></td></tr>
+              <tr><td><code class="sans">[thickness="medium"]</code></td><td><code class="sans">border-block-start-width: 2px</code></td></tr>
+              <tr><td><code class="sans">[thickness="thick"]</code></td><td><code class="sans">border-block-start-width: 4px</code></td></tr>
+              <tr><td><code class="sans">[orientation="vertical"]</code></td><td><code class="sans">inline-size: auto; block-size: 100%; align-self: stretch; border-block-start: 0; border-inline-start: 1px solid var(--lk-divider-color, #e5e7eb)</code></td></tr>
+              <tr><td><code class="sans">[orientation="vertical"][thickness="medium"]</code></td><td><code class="sans">border-inline-start-width: 2px</code></td></tr>
+              <tr><td><code class="sans">[orientation="vertical"][thickness="thick"]</code></td><td><code class="sans">border-inline-start-width: 4px</code></td></tr>
             </tbody>
           </table>
         </div>
@@ -600,7 +634,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           <table>
             <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
             <tbody>
-              <tr><td><code class="sans">lk-scroll-area</code> (base)</td><td><code class="sans">display: block; overflow-y: auto; max-height: var(--lk-max-height, none); max-width: var(--lk-max-width, none)</code></td></tr>
+              <tr><td><code class="sans">lk-scroll-area</code> (base)</td><td><code class="sans">display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none)</code></td></tr>
               <tr><td><code class="sans">[direction="vertical"]</code></td><td><code class="sans">overflow-x: hidden; overflow-y: auto</code></td></tr>
               <tr><td><code class="sans">[direction="horizontal"]</code></td><td><code class="sans">overflow-x: auto; overflow-y: hidden</code></td></tr>
               <tr><td><code class="sans">[direction="both"]</code></td><td><code class="sans">overflow: auto</code></td></tr>
@@ -620,7 +654,10 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
         <p class="lead sans muted" style="max-width: 640px;">
           The shared scale used by <code class="sans">gap</code>, <code class="sans">col-gap</code>,
           <code class="sans">row-gap</code>, <code class="sans">padding</code>, and <code class="sans">size</code>.
-          Every token maps to a fixed CSS length, applied by the stylesheet.
+          The semantic sizes (<code class="sans">xs … 3xl</code>) are applied as
+          <code class="sans">var(--lk-space-&lt;size&gt;)</code>, defaulting to your
+          <code class="sans">--space-&lt;size&gt;</code> token then the length below — see
+          <a class="navlink" href="#theming" style="padding:0;">Theming</a>. The numeric steps are literal.
         </p>
       </lk-stack>
 

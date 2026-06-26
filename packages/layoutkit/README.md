@@ -1,6 +1,6 @@
 # layoutkit-css
 
-**The first layout language for the web — pure CSS.** Style semantic `<lk-*>` tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.
+**A layout language for the web — pure CSS.** Style semantic `<lk-*>` tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.
 
 You can finally center a div. We're as shocked as you are.
 
@@ -37,8 +37,10 @@ import "layoutkit-css/layoutkit.css";
 
 - **No JavaScript, no FOUC.** A render-blocking `<link>` styles the tags before first paint. Nothing flashes, nothing hydrates.
 - **Hypermedia-native.** It's just HTML + CSS — server-render the markup and it works. No client runtime, no framework.
-- **Zero dependencies, no build.** Ten semantic primitives, ~2 KB over the wire (brotli).
-- **Real CSS.** Tags are styled by attribute selectors (`lk-stack[gap="lg"] { gap: 1.5rem }`). Inspect it, override it, own it.
+- **Zero dependencies, no build.** Ten semantic primitives, ~2.3 KB over the wire (brotli).
+- **Real CSS, layered.** Tags are styled by attribute selectors (`lk-stack[gap="lg"] { gap: var(--lk-space-lg) }`), all inside `@layer layoutkit`. Inspect it, override it, own it.
+- **Consumes your tokens.** Spacing resolves through `--lk-space-*`, which default to your `--space-*` design tokens. It composes with a design system instead of competing with one.
+- **Logical properties.** Directional rules use `inline`/`block` logical properties, so layouts follow writing mode and RTL.
 
 ## Primitives
 
@@ -47,6 +49,35 @@ import "layoutkit-css/layoutkit.css";
 Attributes are kebab-case: `gap`, `padding`, `align`, `justify`, `center`, `fill`, `full-height`, `wrap`, `reverse`, `cols`, `col-gap`, `row-gap`, `flow`, `place-items`, `responsive`, `size`, `orientation`, `thickness`, `direction`. Free-form values use custom properties: `--lk-ratio`, `--lk-divider-color`, `--lk-min-child-width`, `--lk-max-height`, `--lk-max-width`.
 
 Centering a div: the CSS final boss, defeated in one tag.
+
+## Theming
+
+The semantic scale (`xs … 3xl`) resolves through `--lk-space-*` custom properties that default to your design tokens:
+
+```css
+/* layoutkit ships, in @layer layoutkit: */
+:root { --lk-space-md: var(--space-md, 1rem); /* … */ }
+lk-stack[gap="md"] { gap: var(--lk-space-md); }
+```
+
+So you remap the whole scale by defining your tokens once — no per-component overrides:
+
+```css
+:root {
+  --space-md: 0.875rem;   /* your design system's token */
+  --space-lg: 1.25rem;
+}
+/* or bypass tokens and set LayoutKit's scale directly */
+:root { --lk-space-lg: 1.25rem; }
+```
+
+Everything is declared in `@layer layoutkit`, so your own (unlayered) styles always win — overriding a LayoutKit rule never needs a specificity fight. If you use cascade layers, order `layoutkit` wherever you like:
+
+```css
+@layer reset, layoutkit, components, utilities;
+```
+
+The fixed numeric scale (`gap="4"`, etc.) and `none`/`px` stay literal — they're a utility scale, not semantic tokens.
 
 ## Good to know
 
