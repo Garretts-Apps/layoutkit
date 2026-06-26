@@ -82,322 +82,109 @@ export function InstallPage() {
       {/* Header */}
       <div className="mb-12">
         <div className="mb-4 inline-block rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-[11px] font-semibold text-green-400">
-          NOW ON NPM
+          PURE CSS · ZERO JAVASCRIPT
         </div>
         <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-zinc-100">
           Install LayoutKit
         </h1>
         <p className="font-sans text-[16px] text-muted">
-          Get the npm package, editor extensions, and platform-specific setup.
+          Link the stylesheet from a CDN, vendor it locally, or install the CSS package from npm.
         </p>
       </div>
 
-      {/* npm Install */}
+      {/* Link the stylesheet */}
       <section className="mb-12">
         <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
-          npm Package
+          Link the stylesheet
+        </h2>
+        <p className="mb-4 font-sans text-[14px] text-muted">
+          LayoutKit is just CSS. Add one render-blocking{" "}
+          <code className="rounded bg-zinc-800 px-1.5 text-accent">&lt;link&gt;</code> and write
+          semantic tags — no JavaScript, no build, no FOUC:
+        </p>
+        <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
+          <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
+            <code>{`<link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css">
+
+<lk-stack gap="lg" padding="md">
+  <lk-row gap="sm" justify="between">
+    <span>Logo</span>
+    <nav>…</nav>
+  </lk-row>
+  <lk-center full-height>You can finally center a div.</lk-center>
+  <lk-grid cols="3" gap="md">
+    <div>1</div><div>2</div><div>3</div>
+  </lk-grid>
+</lk-stack>`}</code>
+          </pre>
+        </div>
+        <p className="mt-3 font-sans text-[12px] text-zinc-500">
+          Pure CSS, zero dependencies, no JavaScript runtime, no build step. ~2 KB brotli.
+        </p>
+      </section>
+
+      {/* npm CSS package */}
+      <section className="mb-12">
+        <h2 className="mb-4 text-2xl font-extrabold tracking-tight text-zinc-100">
+          npm (CSS package)
         </h2>
         <div className="mb-4 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
           <code className="text-[14px] text-green-400 break-all">npm install layoutkit-css</code>
         </div>
         <p className="mb-4 font-sans text-[14px] text-muted">
-          Then import and use — TypeScript IntelliSense works out of the box:
+          It&apos;s a CSS package — import the stylesheet once, then write{" "}
+          <code className="rounded bg-zinc-800 px-1.5 text-accent">&lt;lk-*&gt;</code> tags anywhere:
         </p>
         <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
           <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
-            <code>{`import { Stack, Row, Center, Grid } from "layoutkit-css"
+            <code>{`import "layoutkit-css/layoutkit.css"
 
-export default function App() {
-  return (
-    <Stack gap="lg" padding="md">
-      <Row gap="sm" align="center">
-        <h1>Hello</h1>
-        <span>World</span>
-      </Row>
-      <Center fill>
-        <p>Centered content</p>
-      </Center>
-      <Grid cols={3} gap="md">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-      </Grid>
-    </Stack>
-  )
-}`}</code>
+<lk-stack gap="lg" padding="md">
+  <lk-row gap="sm" align="center">
+    <h1>Hello</h1>
+    <span>World</span>
+  </lk-row>
+  <lk-center fill>Centered content</lk-center>
+  <lk-grid cols="3" gap="md">
+    <div>1</div><div>2</div><div>3</div>
+  </lk-grid>
+</lk-stack>`}</code>
           </pre>
         </div>
         <p className="mt-3 font-sans text-[12px] text-zinc-500">
-          Requires React 18+. Zero runtime dependencies, no Tailwind. Works with Next.js, Vite, Remix, and any React framework.
+          A single CSS import — no JavaScript, no Tailwind, no build step, no config.
         </p>
       </section>
 
       {/* Vendor without a package manager */}
       <VendorSection />
 
-      {/* Alternative: CLI scaffolding */}
-      <section className="mb-12 rounded-xl border border-accent/30 bg-accent/5 p-6">
-        <h3 className="mb-3 text-lg font-bold text-zinc-100">
-          Alternative: Scaffold components (shadcn-style)
-        </h3>
-        <div className="mb-3 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-          <code className="text-[14px] text-accent break-all">npx layoutkit init</code>
-        </div>
-        <p className="font-sans text-[13px] text-muted">
-          Copies all 10 components into your project. You own the source code and can customize freely.
-        </p>
-      </section>
-
-      {/* Platform Setup */}
-      <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-zinc-100">
-          Platform Setup
-        </h2>
-
-        <div className="space-y-6">
-          {/* macOS */}
-          <div className="rounded-xl border border-zinc-700 bg-surface p-6">
-            <h3 className="mb-3 text-lg font-bold text-accent">macOS</h3>
-            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-              <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
-                <code>{`# Install Node.js (if you don't have it)
-brew install node
-
-# In any React project:
-npm install layoutkit-css`}</code>
-              </pre>
-            </div>
-          </div>
-
-          {/* Windows */}
-          <div className="rounded-xl border border-zinc-700 bg-surface p-6">
-            <h3 className="mb-3 text-lg font-bold text-accent">Windows</h3>
-            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-              <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
-                <code>{`# 1. Install Node.js from https://nodejs.org (LTS recommended)
-# 2. Open PowerShell or Command Prompt
-# 3. In your project directory:
-npm install layoutkit-css`}</code>
-              </pre>
-            </div>
-          </div>
-
-          {/* Linux */}
-          <div className="rounded-xl border border-zinc-700 bg-surface p-6">
-            <h3 className="mb-3 text-lg font-bold text-accent">Linux</h3>
-            <div className="overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-              <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
-                <code>{`# Install Node.js (Ubuntu/Debian)
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# In your project:
-npm install layoutkit-css`}</code>
-              </pre>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* VS Code Extension */}
-      <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-zinc-100">
-          VS Code Extension
-        </h2>
-        <p className="mb-4 font-sans text-[14px] text-muted">
-          Snippets and IntelliSense for all 10 components. Type a component name and Tab to expand.
-        </p>
-
-        <h3 className="mb-3 text-lg font-bold text-zinc-200">Install</h3>
-        <div className="mb-6 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
-            <code>{`# Clone the repo
-git clone https://github.com/Garrett-s-Apps/layoutkit.git
-cd layoutkit/vscode-extension
-
-# Build and install
-npm install
-npx @vscode/vsce package --allow-missing-repository
-code --install-extension layoutkit-0.1.0.vsix`}</code>
-          </pre>
-        </div>
-
-        <h3 className="mb-3 text-lg font-bold text-zinc-200">Snippets</h3>
-        <p className="mb-3 font-sans text-[13px] text-muted">
-          Open any <code className="rounded bg-zinc-800 px-1.5 text-accent">.tsx</code> or <code className="rounded bg-zinc-800 px-1.5 text-accent">.jsx</code> file and start typing:
-        </p>
-        <div className="overflow-x-auto rounded-lg border border-zinc-700">
-          <table className="w-full text-left text-[13px]">
-            <thead>
-              <tr className="border-b border-zinc-700 bg-zinc-800/50">
-                <th className="px-4 py-2 font-semibold text-zinc-300">Type</th>
-                <th className="px-4 py-2 font-semibold text-zinc-300">Expands to</th>
-              </tr>
-            </thead>
-            <tbody className="font-mono text-[12px]">
-              {[
-                ["Stack", "<Stack gap=\"md\">...</Stack>"],
-                ["Row", "<Row gap=\"md\">...</Row>"],
-                ["Center", "<Center fill>...</Center>"],
-                ["Grid", "<Grid cols={3} gap=\"md\">...</Grid>"],
-                ["Box", "<Box padding=\"md\">...</Box>"],
-                ["Spread", "<Spread>...</Spread>"],
-                ["Spacer", "<Spacer />"],
-                ["Divider", "<Divider />"],
-                ["AspectRatio", "<AspectRatio ratio={16/9}>...</AspectRatio>"],
-                ["ScrollArea", "<ScrollArea maxHeight=\"...\">...</ScrollArea>"],
-                ["lk-page", "Full page layout with nav + content"],
-              ].map(([trigger, result]) => (
-                <tr key={trigger} className="border-b border-zinc-800">
-                  <td className="px-4 py-2 text-accent">{trigger}</td>
-                  <td className="px-4 py-2 text-zinc-400">{result}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="mb-3 mt-6 text-lg font-bold text-zinc-200">TypeScript IntelliSense</h3>
-        <p className="font-sans text-[13px] text-muted">
-          Since <code className="rounded bg-zinc-800 px-1.5 text-accent">layoutkit-css</code> ships
-          with <code className="rounded bg-zinc-800 px-1.5 text-zinc-300">.d.ts</code> type
-          declarations, VS Code provides full IntelliSense automatically:
-        </p>
-        <ul className="mt-3 space-y-2 font-sans text-[13px] text-muted">
-          <li className="flex gap-2"><span className="text-green-400">&#10003;</span> Auto-import suggestions when you type a component name</li>
-          <li className="flex gap-2"><span className="text-green-400">&#10003;</span> Prop autocomplete with type unions (<code className="rounded bg-zinc-800 px-1 text-zinc-300">{'"xs" | "sm" | "md" | ...'}</code>)</li>
-          <li className="flex gap-2"><span className="text-green-400">&#10003;</span> Hover documentation for every prop</li>
-          <li className="flex gap-2"><span className="text-green-400">&#10003;</span> Go-to-definition support</li>
-        </ul>
-      </section>
-
-      {/* Neovim Plugin */}
-      <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-zinc-100">
-          Neovim Plugin
-        </h2>
-        <p className="mb-4 font-sans text-[14px] text-muted">
-          LuaSnip snippets, nvim-cmp completions, and utility commands.
-        </p>
-
-        <h3 className="mb-3 text-lg font-bold text-zinc-200">Install with lazy.nvim</h3>
-        <div className="mb-6 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
-            <code>{`-- Add to your lazy.nvim plugin spec:
-{
-  "Garrett-s-Apps/layoutkit",
-  subdirectory = "neovim-plugin",
-  ft = { "typescriptreact", "javascriptreact" },
-  config = function()
-    require("layoutkit").setup()
-  end,
-}`}</code>
-          </pre>
-        </div>
-
-        <h3 className="mb-3 text-lg font-bold text-zinc-200">Manual Install</h3>
-        <div className="mb-6 overflow-x-auto rounded-lg border border-zinc-700 bg-background p-4">
-          <pre className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-zinc-300">
-            <code>{`# Clone the repo
-git clone https://github.com/Garrett-s-Apps/layoutkit.git \\
-  ~/.local/share/nvim/layoutkit
-
-# Add to your init.lua
-vim.opt.runtimepath:append(
-  "~/.local/share/nvim/layoutkit/neovim-plugin"
-)
-require("layoutkit").setup()`}</code>
-          </pre>
-        </div>
-
-        <h3 className="mb-3 text-lg font-bold text-zinc-200">Snippets (LuaSnip)</h3>
-        <div className="overflow-x-auto rounded-lg border border-zinc-700">
-          <table className="w-full text-left text-[13px]">
-            <thead>
-              <tr className="border-b border-zinc-700 bg-zinc-800/50">
-                <th className="px-4 py-2 font-semibold text-zinc-300">Trigger</th>
-                <th className="px-4 py-2 font-semibold text-zinc-300">Component</th>
-              </tr>
-            </thead>
-            <tbody className="font-mono text-[12px]">
-              {[
-                ["lkimport", "Import statement"],
-                ["lkstack", "<Stack>"],
-                ["lkrow", "<Row>"],
-                ["lkcenter", "<Center>"],
-                ["lkbox", "<Box>"],
-                ["lkgrid", "<Grid>"],
-                ["lkspread", "<Spread>"],
-                ["lkspacer", "<Spacer />"],
-                ["lkdivider", "<Divider />"],
-                ["lkaspect", "<AspectRatio>"],
-                ["lkscroll", "<ScrollArea>"],
-              ].map(([trigger, comp]) => (
-                <tr key={trigger} className="border-b border-zinc-800">
-                  <td className="px-4 py-2 text-accent">{trigger}</td>
-                  <td className="px-4 py-2 text-zinc-400">{comp}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="mb-3 mt-6 text-lg font-bold text-zinc-200">Commands</h3>
-        <div className="overflow-x-auto rounded-lg border border-zinc-700">
-          <table className="w-full text-left text-[13px]">
-            <thead>
-              <tr className="border-b border-zinc-700 bg-zinc-800/50">
-                <th className="px-4 py-2 font-semibold text-zinc-300">Command</th>
-                <th className="px-4 py-2 font-semibold text-zinc-300">Description</th>
-              </tr>
-            </thead>
-            <tbody className="font-mono text-[12px]">
-              <tr className="border-b border-zinc-800">
-                <td className="px-4 py-2 text-accent">:LayoutKitList</td>
-                <td className="px-4 py-2 text-zinc-400">List all components and their props</td>
-              </tr>
-              <tr className="border-b border-zinc-800">
-                <td className="px-4 py-2 text-accent">:LayoutKitImport</td>
-                <td className="px-4 py-2 text-zinc-400">Insert full import statement at cursor</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="mb-3 mt-6 text-lg font-bold text-zinc-200">Autocomplete (nvim-cmp)</h3>
-        <p className="font-sans text-[13px] text-muted">
-          When nvim-cmp is installed, the plugin registers a completion source that triggers on{" "}
-          <code className="rounded bg-zinc-800 px-1.5 text-zinc-300">&lt;</code> for component names
-          and inside prop values for gap/padding sizes.
-        </p>
-      </section>
-
       {/* Components Reference */}
       <section className="mb-12">
         <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-zinc-100">
-          All Components
+          All Tags
         </h2>
         <div className="overflow-x-auto rounded-lg border border-zinc-700">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-zinc-700 bg-zinc-800/50">
-                <th className="px-4 py-2 font-semibold text-zinc-300">Component</th>
+                <th className="px-4 py-2 font-semibold text-zinc-300">Tag</th>
                 <th className="px-4 py-2 font-semibold text-zinc-300">Description</th>
-                <th className="px-4 py-2 font-semibold text-zinc-300">Key Props</th>
+                <th className="px-4 py-2 font-semibold text-zinc-300">Key Attributes</th>
               </tr>
             </thead>
             <tbody className="text-[12px]">
               {[
-                ["Stack", "Vertical flex layout", "gap, align, justify, padding, fill, fullHeight"],
-                ["Row", "Horizontal flex layout", "gap, align, justify, padding, wrap, reverse"],
-                ["Center", "Center content", "fill, fullHeight, horizontal, vertical, inline"],
-                ["Box", "Container with padding", "padding, fill, center"],
-                ["Grid", "CSS Grid", "cols, rows, gap, responsive, minChildWidth"],
-                ["Spread", "Space-between layout", "align, padding"],
-                ["Spacer", "Flexible space", "size"],
-                ["Divider", "Separator line", "orientation, color, thickness"],
-                ["AspectRatio", "Fixed aspect ratio", "ratio"],
-                ["ScrollArea", "Scrollable container", "direction, maxHeight, maxWidth"],
+                ["lk-stack", "Vertical flex layout", "gap, align, justify, padding, fill, full-height"],
+                ["lk-row", "Horizontal flex layout", "gap, align, justify, padding, wrap, reverse"],
+                ["lk-center", "Center content", "fill, full-height, horizontal, vertical, inline"],
+                ["lk-box", "Container with padding", "padding, fill, center"],
+                ["lk-grid", "CSS Grid", "cols, rows, gap, col-gap, row-gap, responsive"],
+                ["lk-spread", "Space-between layout", "align, padding"],
+                ["lk-spacer", "Flexible space", "size"],
+                ["lk-divider", "Separator line", "orientation, thickness"],
+                ["lk-aspect-ratio", "Fixed aspect ratio", "--lk-ratio"],
+                ["lk-scroll-area", "Scrollable container", "direction, --lk-max-height, --lk-max-width"],
               ].map(([name, desc, props]) => (
                 <tr key={name} className="border-b border-zinc-800">
                   <td className="px-4 py-2 font-mono font-bold text-accent">&lt;{name}&gt;</td>
@@ -409,21 +196,21 @@ require("layoutkit").setup()`}</code>
           </table>
         </div>
 
-        <h3 className="mb-3 mt-6 text-lg font-bold text-zinc-200">Shared Props</h3>
+        <h3 className="mb-3 mt-6 text-lg font-bold text-zinc-200">Free-form values</h3>
         <p className="mb-3 font-sans text-[13px] text-muted">
-          All components support:
+          Attributes are kebab-case. For values outside the preset scale, set an inline custom property:
         </p>
         <ul className="space-y-1 font-sans text-[13px] text-muted">
-          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">as</code> — Render as a different HTML element</li>
-          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">className</code> — Additional CSS classes (passed through)</li>
-          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">ref</code> — Forwarded ref</li>
-          <li>All native HTML div props</li>
+          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">--lk-ratio</code> — Custom aspect ratio (e.g. <code className="rounded bg-zinc-800 px-1 text-zinc-300">16/9</code>)</li>
+          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">--lk-divider-color</code> — Divider line color</li>
+          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">--lk-min-child-width</code> — Min child width for <code className="rounded bg-zinc-800 px-1 text-zinc-300">responsive</code> grids</li>
+          <li><code className="rounded bg-zinc-800 px-1.5 text-zinc-300">--lk-max-height</code> / <code className="rounded bg-zinc-800 px-1.5 text-zinc-300">--lk-max-width</code> — Scroll-area limits</li>
         </ul>
 
         <h3 className="mb-3 mt-6 text-lg font-bold text-zinc-200">Size Scale</h3>
         <p className="mb-3 font-sans text-[13px] text-muted">
           Used for <code className="rounded bg-zinc-800 px-1.5 text-zinc-300">gap</code> and{" "}
-          <code className="rounded bg-zinc-800 px-1.5 text-zinc-300">padding</code> props:
+          <code className="rounded bg-zinc-800 px-1.5 text-zinc-300">padding</code> attributes:
         </p>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
@@ -463,7 +250,7 @@ require("layoutkit").setup()`}</code>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {[
             { label: "npm", url: "https://www.npmjs.com/package/layoutkit-css", desc: "layoutkit-css on npm" },
-            { label: "GitHub", url: "https://github.com/Garrett-s-Apps/layoutkit", desc: "Source code + extensions" },
+            { label: "GitHub", url: "https://github.com/Garrett-s-Apps/layoutkit", desc: "Source code + stylesheet" },
           ].map((link) => (
             <a
               key={link.label}
