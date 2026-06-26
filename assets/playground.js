@@ -1,8 +1,8 @@
 /* LayoutKit Playground — vanilla JS, no dependencies.
-   Parses <lk-*> markup and reports the native CSS the stylesheet applies via
-   attribute selectors (mirrors packages/layoutkit/layoutkit.css), plus a live
-   preview rendered by the real stylesheet. Nothing is "compiled" — this just
-   explains which rules match. */
+   Left: LayoutKit markup. Right: the rendered output (styled by the real
+   stylesheet). Below: the raw CSS you'd have written by hand to get the same
+   layout — i.e. what LayoutKit saves you. Nothing is compiled; these are the
+   attribute-selector rules layoutkit.css already applies. */
 (() => {
   const SPACE = {
     none: "0", px: "1px", "0.5": "0.125rem", "1": "0.25rem", "1.5": "0.375rem",
@@ -102,62 +102,62 @@
       for (const a of m[2].matchAll(/(?:^|\s)([a-z][\w-]*)(?!\s*=)\b/g)) attrs[a[1]] = true;
       for (const a of m[2].matchAll(/([a-z][\w-]*)="([^"]*)"/g)) attrs[a[1]] = a[2];
       const decls = BUILDERS[tag](attrs).filter(([, v]) => v != null && v !== "");
-      results.push({ tag, css: decls.map(([k, v]) => k + ": " + v).join("; ") });
+      results.push({ tag, raw: m[0].replace(/\s+/g, " ").trim(), decls });
     }
     return results;
   }
 
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  // Render the markup so the real stylesheet styles it. Strip scripts + inline handlers.
   const sanitize = (s) => s.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/\son\w+="[^"]*"/gi, "");
+
+  // The hand-written CSS equivalent: one rule per element, real and readable.
+  function toCSS(results) {
+    if (!results.length) return '<span class="tok-com">/* Type a &lt;lk-…&gt; tag to see the raw CSS it replaces */</span>';
+    const seen = new Set();
+    const blocks = [];
+    for (const r of results) {
+      const sel = "." + r.tag.replace(/^lk-/, "");
+      const key = sel + "|" + r.decls.map(([k, v]) => k + v).join();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const body = r.decls
+        .map(([k, v]) => '  <span class="tok-attr">' + esc(k) + "</span>: <span class=\"tok-str\">" + esc(v) + "</span>;")
+        .join("\n");
+      blocks.push('<span class="tok-com">/* ' + esc(r.raw) + " */</span>\n<span class=\"tok-tag\">" + esc(sel) + " {</span>\n" + body + "\n<span class=\"tok-tag\">}</span>");
+    }
+    return blocks.join("\n\n");
+  }
 
   const PRESETS = [
     { label: "Center", code: '<lk-center full-height>\n  <h2>Hello World</h2>\n  <p>Centered perfectly</p>\n</lk-center>' },
     { label: "Stack", code: '<lk-stack gap="lg" center>\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</lk-stack>' },
-    { label: "Page", code: '<lk-stack fill>\n  <lk-spread padding="md">\n    <strong>Logo</strong>\n    <lk-row gap="sm"><a>Home</a><a>About</a></lk-row>\n  </lk-spread>\n  <lk-box fill padding="lg"><lk-center><h1>Content</h1></lk-center></lk-box>\n</lk-stack>' },
+    { label: "Page", code: '<lk-stack fill>\n  <lk-spread padding="md">\n    <strong>Logo</strong>\n    <lk-row gap="sm"><a>Home</a><a>About</a></lk-row>\n  </lk-spread>\n  <lk-box fill padding="lg"><lk-center><h2>Content</h2></lk-center></lk-box>\n</lk-stack>' },
     { label: "Grid", code: '<lk-grid cols="3" gap="lg">\n  <div>1</div><div>2</div><div>3</div>\n</lk-grid>' },
   ];
 
-  function render() {
-    const code = input.value;
-    preview.innerHTML = sanitize(code);
-    const results = parse(code);
-    if (!results.length) {
-      applied.innerHTML = '<p class="muted sans" style="font-style:italic;">Type a &lt;lk-…&gt; tag to see the CSS it’s styled with.</p>';
-      return;
-    }
-    applied.innerHTML = results.map((r) => {
-      const chips = r.css.split(";").map((d) => d.trim()).filter(Boolean)
-        .map((d) => '<span class="decl">' + esc(d) + "</span>").join("");
-      return '<div class="applied-block"><div class="applied-tag">&lt;' + esc(r.tag) + "&gt;</div><div class=\"decls\">" + chips + "</div></div>";
-    }).join("");
-  }
-
   const input = document.getElementById("pg-input");
   const preview = document.getElementById("pg-preview");
-  const applied = document.getElementById("pg-applied");
+  const cssOut = document.getElementById("pg-css");
   const presetBar = document.getElementById("pg-presets");
   if (!input) return;
 
-  PRESETS.forEach((p) => {
+  function render() {
+    preview.innerHTML = sanitize(input.value);
+    cssOut.innerHTML = toCSS(parse(input.value));
+  }
+
+  const buttons = [];
+  const setActive = (idx) => buttons.forEach((b, i) => b.setAttribute("aria-pressed", String(i === idx)));
+  PRESETS.forEach((p, i) => {
     const b = document.createElement("button");
-    b.className = "navlink"; b.type = "button"; b.textContent = p.label;
-    b.addEventListener("click", () => { input.value = p.code; render(); });
+    b.className = "preset"; b.type = "button"; b.textContent = p.label; b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => { input.value = p.code; setActive(i); render(); });
     presetBar.appendChild(b);
+    buttons.push(b);
   });
 
-  // Tabs (preview / applied css)
-  document.querySelectorAll("[data-tab]").forEach((t) => {
-    t.addEventListener("click", () => {
-      document.querySelectorAll("[data-tab]").forEach((x) => x.setAttribute("aria-selected", "false"));
-      t.setAttribute("aria-selected", "true");
-      const which = t.getAttribute("data-tab");
-      preview.parentElement.hidden = which !== "preview";
-      applied.parentElement.hidden = which !== "applied";
-    });
-  });
-
-  input.addEventListener("input", render);
+  input.addEventListener("input", () => { setActive(-1); render(); });
   input.value = PRESETS[0].code;
+  setActive(0);
   render();
 })();
