@@ -1,9 +1,7 @@
-import { forwardRef, type CSSProperties, type ElementType, type ReactNode, type ComponentPropsWithoutRef } from "react";
-import { mergeStyles } from "./utils";
+import { layout } from "./utils";
 import { space, alignItems, justifyContent, type GapSize, type Align, type Justify, type Padding } from "./types";
 
-interface RowProps extends ComponentPropsWithoutRef<"div"> {
-  children: ReactNode;
+export interface RowProps {
   gap?: GapSize;
   align?: Align;
   justify?: Justify;
@@ -15,29 +13,20 @@ interface RowProps extends ComponentPropsWithoutRef<"div"> {
   padding?: Padding;
   wrap?: boolean;
   reverse?: boolean;
-  as?: ElementType;
 }
 
-export const Row = forwardRef<HTMLElement, RowProps>(
-  ({ children, gap = "md", align = "center", justify = "start", center, fill, fullHeight, padding = "none", wrap, reverse, as: Tag = "div", style, ...props }, ref) => {
-    const containerStyle: CSSProperties = {
-      display: "flex",
-      flexDirection: reverse ? "row-reverse" : "row",
-      gap: space[gap],
-      alignItems: center ? "center" : alignItems[align],
-      justifyContent: center ? "center" : justifyContent[justify],
-      flex: fill ? "1 1 0%" : undefined,
-      minHeight: fullHeight ? "100vh" : undefined,
-      padding: padding !== "none" ? space[padding] : undefined,
-      flexWrap: wrap ? "wrap" : undefined,
-    };
-
-    return (
-      <Tag ref={ref} style={mergeStyles(containerStyle, style)} {...props}>
-        {children}
-      </Tag>
-    );
-  }
+export const Row = layout<RowProps>(
+  "Row",
+  ["gap", "align", "justify", "center", "fill", "fullHeight", "padding", "wrap", "reverse"],
+  ({ gap = "md", align = "center", justify = "start", center, fill, fullHeight, padding = "none", wrap, reverse }) => ({
+    display: "flex",
+    flexDirection: reverse ? "row-reverse" : "row",
+    gap: space[gap],
+    alignItems: center ? "center" : alignItems[align],
+    justifyContent: center ? "center" : justifyContent[justify],
+    flex: fill ? "1 1 0%" : undefined,
+    minHeight: fullHeight ? "100vh" : undefined,
+    padding: padding !== "none" ? space[padding] : undefined,
+    flexWrap: wrap ? "wrap" : undefined,
+  })
 );
-
-Row.displayName = "Row";

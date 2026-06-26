@@ -1,31 +1,20 @@
-import { forwardRef, type CSSProperties, type ElementType, type ReactNode, type ComponentPropsWithoutRef } from "react";
-import { mergeStyles } from "./utils";
+import { layout } from "./utils";
 import { space, type Padding } from "./types";
 
-interface BoxProps extends ComponentPropsWithoutRef<"div"> {
-  children: ReactNode;
+export interface BoxProps {
   fill?: boolean;
   padding?: Padding;
   center?: boolean;
-  as?: ElementType;
 }
 
-export const Box = forwardRef<HTMLElement, BoxProps>(
-  ({ children, fill, padding = "none", center, as: Tag = "div", style, ...props }, ref) => {
-    const containerStyle: CSSProperties = {
-      flex: fill ? "1 1 0%" : undefined,
-      display: center ? "flex" : undefined,
-      alignItems: center ? "center" : undefined,
-      justifyContent: center ? "center" : undefined,
-      padding: padding !== "none" ? space[padding] : undefined,
-    };
-
-    return (
-      <Tag ref={ref} style={mergeStyles(containerStyle, style)} {...props}>
-        {children}
-      </Tag>
-    );
-  }
+export const Box = layout<BoxProps>(
+  "Box",
+  ["fill", "padding", "center"],
+  ({ fill, padding = "none", center }) => ({
+    flex: fill ? "1 1 0%" : undefined,
+    display: center ? "flex" : undefined,
+    alignItems: center ? "center" : undefined,
+    justifyContent: center ? "center" : undefined,
+    padding: padding !== "none" ? space[padding] : undefined,
+  })
 );
-
-Box.displayName = "Box";

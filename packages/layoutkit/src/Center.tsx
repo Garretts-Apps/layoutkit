@@ -1,8 +1,6 @@
-import { forwardRef, type CSSProperties, type ElementType, type ReactNode, type ComponentPropsWithoutRef } from "react";
-import { mergeStyles } from "./utils";
+import { layout } from "./utils";
 
-interface CenterProps extends ComponentPropsWithoutRef<"div"> {
-  children: ReactNode;
+export interface CenterProps {
   /** Grow to fill available space in the parent flex container. */
   fill?: boolean;
   /** Force a minimum full-viewport height — use for full-page centering. */
@@ -10,13 +8,14 @@ interface CenterProps extends ComponentPropsWithoutRef<"div"> {
   horizontal?: boolean;
   vertical?: boolean;
   inline?: boolean;
-  as?: ElementType;
 }
 
-export const Center = forwardRef<HTMLElement, CenterProps>(
-  ({ children, fill, fullHeight, horizontal, vertical, inline, as: Tag = "div", style, ...props }, ref) => {
+export const Center = layout<CenterProps>(
+  "Center",
+  ["fill", "fullHeight", "horizontal", "vertical", "inline"],
+  ({ fill, fullHeight, horizontal, vertical, inline }) => {
     const bothAxes = !horizontal && !vertical;
-    const containerStyle: CSSProperties = {
+    return {
       display: inline ? "inline-flex" : "flex",
       flexDirection: "column",
       alignItems: bothAxes || horizontal ? "center" : undefined,
@@ -24,13 +23,5 @@ export const Center = forwardRef<HTMLElement, CenterProps>(
       flex: fill ? "1 1 0%" : undefined,
       minHeight: fullHeight ? "100vh" : undefined,
     };
-
-    return (
-      <Tag ref={ref} style={mergeStyles(containerStyle, style)} {...props}>
-        {children}
-      </Tag>
-    );
   }
 );
-
-Center.displayName = "Center";
