@@ -1,6 +1,6 @@
 {
   "name": "layoutkit-css",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A layout language for the web — pure CSS. Style <lk-*> tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.",
   "license": "MIT",
   "homepage": "https://layoutkit.dev",

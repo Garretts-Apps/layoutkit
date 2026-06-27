@@ -3,10 +3,12 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
-## Unreleased (1.2.0)
+## 1.2.0
 
 Ergonomics pass: spend less effort styling, and stop thinking in raw-CSS
-mechanics. All additive — nothing from 1.1 changes.
+mechanics. All additive — nothing from 1.1 changes. The homepage was rebuilt
+entirely on these primitives (zero inline styles) and is served under a strict
+`style-src 'self'` CSP as proof.
 
 ### Added
 - **`place` — axis-agnostic alignment.** One attribute names *where children

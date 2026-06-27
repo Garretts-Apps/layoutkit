@@ -97,7 +97,7 @@ h1, h2, h3 { letter-spacing: -0.02em; margin: 0; font-weight: 800; }
 @media (min-width: 640px) { .hero-title { font-size: 56px; line-height: 1.05; } }
 .h2 { font-size: 24px; }
 .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-.lead { font-size: 17px; color: var(--muted); }
+.lead { font-size: 17px; color: var(--muted); max-width: 65ch; }
 
 /* ---- Buttons ---- */
 .btn {
@@ -124,6 +124,13 @@ h1, h2, h3 { letter-spacing: -0.02em; margin: 0; font-weight: 800; }
 }
 .pill-green { border-color: color-mix(in srgb, var(--green) 30%, transparent); background: color-mix(in srgb, var(--green) 10%, transparent); color: var(--green); }
 .pill-purple { border-color: color-mix(in srgb, var(--purple) 30%, transparent); background: color-mix(in srgb, var(--purple) 10%, transparent); color: var(--purple); }
+
+/* ---- Small external helpers (brand glue LayoutKit doesn't cover; kept external so the site stays CSP-clean under style-src 'self') ---- */
+.hero { padding-block: 56px 40px; }
+.section { margin-bottom: 64px; }
+.anchor { scroll-margin-top: 80px; }
+.card-purple { border-color: color-mix(in srgb, var(--purple) 30%, transparent); background: color-mix(in srgb, var(--purple) 5%, transparent); }
+.card-green { border-color: color-mix(in srgb, var(--green) 30%, transparent); background: color-mix(in srgb, var(--green) 5%, transparent); }
 
 /* ---- Code ---- */
 .code {
