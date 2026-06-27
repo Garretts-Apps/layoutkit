@@ -84,6 +84,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           <a class="navlink" href="#lk-aspect-ratio">lk-aspect-ratio</a>
           <a class="navlink" href="#lk-scroll-area">lk-scroll-area</a>
           <a class="navlink" href="#theming">Theming</a>
+          <a class="navlink" href="#surfaces">Text &amp; surfaces</a>
           <a class="navlink" href="#reference">Size scale</a>
         </lk-row>
       </lk-stack>
@@ -653,6 +654,48 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           </table>
         </div>
       </lk-stack>
+    </lk-stack>
+
+    <lk-divider style="margin-bottom: 64px;"></lk-divider>
+
+    <!-- ============ Text, surfaces & rhythm (1.2) ============ -->
+    <lk-stack id="surfaces" gap="5" style="scroll-margin-top: 80px; margin-bottom: 64px;">
+      <lk-stack gap="2">
+        <span class="pill pill-green">1.2 · ADDITIVE</span>
+        <h2 class="h2">Text, surfaces &amp; rhythm</h2>
+        <p class="lead sans muted" style="max-width: 640px;">Style without dropping to raw CSS: a type scale, a token-driven card, content width, and vertical rhythm — all enumerated attributes, so they work under a strict <code class="sans">style-src 'self'</code> CSP.</p>
+      </lk-stack>
+
+      <lk-grid responsive gap="4" style="--lk-min-child-width: 280px;">
+        <lk-card>
+          <lk-stack gap="2">
+            <span class="eyebrow">TYPE SCALE</span>
+            <p class="sans muted"><code class="sans">lk-text</code> / <code class="sans">lk-weight</code> on any element. Sizes <code class="sans">xs…4xl</code> resolve through <code class="sans">--text-*</code> tokens.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;h2</span> <span class="tok-attr">lk-text</span>=<span class="tok-str">"2xl"</span> <span class="tok-attr">lk-weight</span>=<span class="tok-str">"semibold"</span><span class="tok-tag">&gt;</span>…<span class="tok-tag">&lt;/h2&gt;</span></pre></div>
+          </lk-stack>
+        </lk-card>
+        <lk-card>
+          <lk-stack gap="2">
+            <span class="eyebrow">CARD</span>
+            <p class="sans muted"><code class="sans">lk-card</code> — padded surface; <code class="sans">padding</code>, <code class="sans">radius</code>, <code class="sans">surface</code>, <code class="sans">border</code>. Radius via <code class="sans">--radius-*</code> tokens.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-card</span> <span class="tok-attr">surface</span> <span class="tok-attr">radius</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>…<span class="tok-tag">&lt;/lk-card&gt;</span></pre></div>
+          </lk-stack>
+        </lk-card>
+        <lk-card>
+          <lk-stack gap="2">
+            <span class="eyebrow">WIDTH</span>
+            <p class="sans muted"><code class="sans">width="prose | xs…xl | full"</code> constrains <code class="sans">max-inline-size</code> and centers. <code class="sans">prose</code> = the reading measure.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">width</span>=<span class="tok-str">"prose"</span><span class="tok-tag">&gt;</span>…<span class="tok-tag">&lt;/lk-box&gt;</span></pre></div>
+          </lk-stack>
+        </lk-card>
+        <lk-card>
+          <lk-stack gap="2">
+            <span class="eyebrow">FLOW (RHYTHM)</span>
+            <p class="sans muted"><code class="sans">flow</code> (or <code class="sans">flow="lg"</code>) spaces every flowing child via the owl selector — no per-item margins.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">flow</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/lk-box&gt;</span></pre></div>
+          </lk-stack>
+        </lk-card>
+      </lk-grid>
     </lk-stack>
 
     <lk-divider style="margin-bottom: 64px;"></lk-divider>

@@ -14,14 +14,15 @@
  */
 @layer layoutkit {
 
-  /* Design tokens — remap via your --space-* tokens, or override --lk-space-* directly */
-  :root { --lk-space-xs: var(--space-xs, 0.25rem); --lk-space-sm: var(--space-sm, 0.5rem); --lk-space-md: var(--space-md, 1rem); --lk-space-lg: var(--space-lg, 1.5rem); --lk-space-xl: var(--space-xl, 2rem); --lk-space-2xl: var(--space-2xl, 3rem); --lk-space-3xl: var(--space-3xl, 4rem); }
+  /* Design tokens — remap via your --space-* / --text-* / --radius-* tokens, or override --lk-* directly */
+  :root { --lk-space-xs: var(--space-xs, 0.25rem); --lk-space-sm: var(--space-sm, 0.5rem); --lk-space-md: var(--space-md, 1rem); --lk-space-lg: var(--space-lg, 1.5rem); --lk-space-xl: var(--space-xl, 2rem); --lk-space-2xl: var(--space-2xl, 3rem); --lk-space-3xl: var(--space-3xl, 4rem); --lk-text-xs: var(--text-xs, 0.75rem); --lk-text-sm: var(--text-sm, 0.875rem); --lk-text-md: var(--text-md, 1rem); --lk-text-lg: var(--text-lg, 1.125rem); --lk-text-xl: var(--text-xl, 1.25rem); --lk-text-2xl: var(--text-2xl, 1.5rem); --lk-text-3xl: var(--text-3xl, 2rem); --lk-text-4xl: var(--text-4xl, 3rem); --lk-radius-sm: var(--radius-sm, 0.375rem); --lk-radius-md: var(--radius-md, 0.75rem); --lk-radius-lg: var(--radius-lg, 1rem); }
 
   /* Base — every primitive sets its own display + box model */
   lk-stack,
   lk-row,
   lk-center,
   lk-box,
+  lk-card,
   lk-spread,
   lk-grid,
   lk-spacer,
@@ -38,6 +39,112 @@
   lk-divider { display: block; inline-size: 100%; border-block-start: 1px solid var(--lk-divider-color, #e5e7eb); }
   lk-aspect-ratio { display: block; aspect-ratio: var(--lk-ratio, 1); }
   lk-scroll-area { display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none); }
+  lk-card { display: block; padding: var(--lk-space-lg); border-radius: var(--lk-radius-md); border: 1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent)); }
+
+  /* Type scale — lk-text / lk-weight (namespaced; work on any element) */
+  [lk-text="xs"] { font-size: var(--lk-text-xs); }
+  [lk-text="sm"] { font-size: var(--lk-text-sm); }
+  [lk-text="md"] { font-size: var(--lk-text-md); }
+  [lk-text="lg"] { font-size: var(--lk-text-lg); }
+  [lk-text="xl"] { font-size: var(--lk-text-xl); }
+  [lk-text="2xl"] { font-size: var(--lk-text-2xl); }
+  [lk-text="3xl"] { font-size: var(--lk-text-3xl); }
+  [lk-text="4xl"] { font-size: var(--lk-text-4xl); }
+  [lk-weight="normal"] { font-weight: 400; }
+  [lk-weight="medium"] { font-weight: 500; }
+  [lk-weight="semibold"] { font-weight: 600; }
+  [lk-weight="bold"] { font-weight: 700; }
+
+  /* Width — constrain & center content */
+  lk-box[width="xs"],
+  lk-card[width="xs"],
+  lk-stack[width="xs"],
+  lk-center[width="xs"],
+  lk-row[width="xs"] { max-inline-size: 20rem; margin-inline: auto; }
+  lk-box[width="sm"],
+  lk-card[width="sm"],
+  lk-stack[width="sm"],
+  lk-center[width="sm"],
+  lk-row[width="sm"] { max-inline-size: 30rem; margin-inline: auto; }
+  lk-box[width="md"],
+  lk-card[width="md"],
+  lk-stack[width="md"],
+  lk-center[width="md"],
+  lk-row[width="md"] { max-inline-size: 40rem; margin-inline: auto; }
+  lk-box[width="lg"],
+  lk-card[width="lg"],
+  lk-stack[width="lg"],
+  lk-center[width="lg"],
+  lk-row[width="lg"] { max-inline-size: 50rem; margin-inline: auto; }
+  lk-box[width="xl"],
+  lk-card[width="xl"],
+  lk-stack[width="xl"],
+  lk-center[width="xl"],
+  lk-row[width="xl"] { max-inline-size: 64rem; margin-inline: auto; }
+  lk-box[width="prose"],
+  lk-card[width="prose"],
+  lk-stack[width="prose"],
+  lk-center[width="prose"],
+  lk-row[width="prose"] { max-inline-size: var(--lk-measure, 65ch); margin-inline: auto; }
+  lk-box[width="full"],
+  lk-card[width="full"],
+  lk-stack[width="full"],
+  lk-center[width="full"],
+  lk-row[width="full"] { max-inline-size: 100%; }
+
+  /* Flow — vertical rhythm between flowing children (the owl) */
+  lk-box[flow] > * + *,
+  lk-card[flow] > * + * { margin-block-start: var(--lk-space-md); }
+  lk-box[flow="xs"] > * + *,
+  lk-card[flow="xs"] > * + * { margin-block-start: var(--lk-space-xs); }
+  lk-box[flow="sm"] > * + *,
+  lk-card[flow="sm"] > * + * { margin-block-start: var(--lk-space-sm); }
+  lk-box[flow="md"] > * + *,
+  lk-card[flow="md"] > * + * { margin-block-start: var(--lk-space-md); }
+  lk-box[flow="lg"] > * + *,
+  lk-card[flow="lg"] > * + * { margin-block-start: var(--lk-space-lg); }
+  lk-box[flow="xl"] > * + *,
+  lk-card[flow="xl"] > * + * { margin-block-start: var(--lk-space-xl); }
+  lk-box[flow="2xl"] > * + *,
+  lk-card[flow="2xl"] > * + * { margin-block-start: var(--lk-space-2xl); }
+  lk-box[flow="3xl"] > * + *,
+  lk-card[flow="3xl"] > * + * { margin-block-start: var(--lk-space-3xl); }
+
+  /* Card — padding, radius, surface, border */
+  lk-card[padding="1"] { padding: 0.25rem; }
+  lk-card[padding="2"] { padding: 0.5rem; }
+  lk-card[padding="3"] { padding: 0.75rem; }
+  lk-card[padding="4"] { padding: 1rem; }
+  lk-card[padding="5"] { padding: 1.25rem; }
+  lk-card[padding="6"] { padding: 1.5rem; }
+  lk-card[padding="7"] { padding: 1.75rem; }
+  lk-card[padding="8"] { padding: 2rem; }
+  lk-card[padding="9"] { padding: 2.25rem; }
+  lk-card[padding="10"] { padding: 2.5rem; }
+  lk-card[padding="11"] { padding: 2.75rem; }
+  lk-card[padding="12"] { padding: 3rem; }
+  lk-card[padding="14"] { padding: 3.5rem; }
+  lk-card[padding="16"] { padding: 4rem; }
+  lk-card[padding="none"] { padding: 0; }
+  lk-card[padding="px"] { padding: 1px; }
+  lk-card[padding="xs"] { padding: var(--lk-space-xs); }
+  lk-card[padding="sm"] { padding: var(--lk-space-sm); }
+  lk-card[padding="md"] { padding: var(--lk-space-md); }
+  lk-card[padding="lg"] { padding: var(--lk-space-lg); }
+  lk-card[padding="xl"] { padding: var(--lk-space-xl); }
+  lk-card[padding="2xl"] { padding: var(--lk-space-2xl); }
+  lk-card[padding="3xl"] { padding: var(--lk-space-3xl); }
+  lk-card[padding="0.5"] { padding: 0.125rem; }
+  lk-card[padding="1.5"] { padding: 0.375rem; }
+  lk-card[padding="2.5"] { padding: 0.625rem; }
+  lk-card[padding="3.5"] { padding: 0.875rem; }
+  lk-card[radius="none"] { border-radius: 0; }
+  lk-card[radius="sm"] { border-radius: var(--lk-radius-sm); }
+  lk-card[radius="md"] { border-radius: var(--lk-radius-md); }
+  lk-card[radius="lg"] { border-radius: var(--lk-radius-lg); }
+  lk-card[radius="full"] { border-radius: 9999px; }
+  lk-card[surface] { background: var(--lk-surface, color-mix(in srgb, currentColor 6%, transparent)); }
+  lk-card[border="none"] { border: 0; }
 
   /* Gap (lk-stack, lk-row, lk-grid) */
   lk-stack[gap="1"],

@@ -16,6 +16,26 @@ mechanics. All additive — nothing from 1.1 changes.
   consistent on rows and stacks — no more tracking which axis `align` vs
   `justify` controls. Works on `lk-stack`, `lk-row`, `lk-center`, `lk-spread`,
   and `lk-grid`. `align`/`justify` keep working as the low-level escape.
+- **`flow` — vertical rhythm without per-item margins.** `<lk-box flow>` (or
+  `flow="lg"`) spaces every flowing child via the owl selector — no more
+  hand-placed `margin-bottom`. Works on `lk-box` and `lk-card`.
+- **`width` — constrain & center.** `width="prose | xs…xl | full"` sets
+  `max-inline-size` (prose = the reading measure) and centers via
+  `margin-inline:auto`. Works on `lk-box`, `lk-card`, `lk-stack`, `lk-center`,
+  `lk-row`. Replaces inline `max-width`.
+- **Type scale — `lk-text` / `lk-weight`.** Namespaced attributes usable on any
+  element (`<h2 lk-text="2xl" lk-weight="semibold">`). Sizes `xs…4xl` resolve
+  through `--lk-text-*` → your `--text-*` tokens; weights `normal…bold`.
+  Replaces inline `font-size`/`font-weight`.
+- **`lk-card` — token-driven surface.** Padded block with radius and a
+  brand-neutral `currentColor` border by default. Attributes `padding`,
+  `radius` (`none…full`), `surface` (tinted fill), `border="none"`. Radius
+  resolves through `--lk-radius-*` → your `--radius-*` tokens.
+
+All new spacing/type/radius values are **enumerated attributes** (external-CSS
+attribute selectors), so they work under a strict `style-src 'self'` CSP with no
+inline styles. Arbitrary values remain available via the inline `--lk-*` escape
+hatch (`--lk-measure`, `--lk-surface`, `--lk-card-border`, …).
 
 ## 1.1.0
 
