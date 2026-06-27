@@ -85,6 +85,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           <a class="navlink" href="#lk-scroll-area">lk-scroll-area</a>
           <a class="navlink" href="#theming">Theming</a>
           <a class="navlink" href="#surfaces">Text &amp; surfaces</a>
+          <a class="navlink" href="#responsive">Responsive</a>
           <a class="navlink" href="#reference">Size scale</a>
         </lk-row>
       </lk-stack>
@@ -696,6 +697,40 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
           </lk-stack>
         </lk-card>
       </lk-grid>
+    </lk-stack>
+
+    <lk-divider style="margin-bottom: 64px;"></lk-divider>
+
+    <!-- ============ Responsive primitives (1.2) ============ -->
+    <lk-stack id="responsive" gap="5" style="scroll-margin-top: 80px; margin-bottom: 64px;">
+      <lk-stack gap="2">
+        <span class="pill pill-purple">1.2 · NO MEDIA QUERIES</span>
+        <h2 class="h2">Responsive primitives</h2>
+        <p class="lead sans muted" style="max-width: 640px;">Layouts that respond to their own available width through intrinsic sizing — no breakpoints, no media queries, no JavaScript. Resize the window.</p>
+      </lk-stack>
+
+      <lk-stack gap="2">
+        <h3 class="h2" style="font-size:18px;"><code class="sans">lk-switcher</code></h3>
+        <p class="sans muted">A row that flips to a stack below a threshold (<code class="sans">--lk-switch-at</code>, default 30rem).</p>
+        <div class="code"><pre><span class="tok-tag">&lt;lk-switcher&gt;</span><span class="tok-tag">&lt;div&gt;</span>…<span class="tok-tag">&lt;/div&gt;</span><span class="tok-tag">&lt;div&gt;</span>…<span class="tok-tag">&lt;/div&gt;</span><span class="tok-tag">&lt;/lk-switcher&gt;</span></pre></div>
+        <div class="demo"><lk-switcher style="--lk-switch-at: 24rem;"><span class="chip">One</span><span class="chip">Two</span><span class="chip">Three</span></lk-switcher></div>
+      </lk-stack>
+
+      <lk-stack gap="2">
+        <h3 class="h2" style="font-size:18px;"><code class="sans">lk-sidebar</code></h3>
+        <p class="sans muted">Fixed side (<code class="sans">--lk-sidebar-width</code>) + flexible content that wraps under when it would get too narrow. <code class="sans">side="end"</code> swaps sides.</p>
+        <div class="demo"><lk-sidebar><span class="chip">Sidebar</span><span class="chip">Content area that grows and then wraps below the sidebar on narrow screens.</span></lk-sidebar></div>
+      </lk-stack>
+
+      <lk-row class="navlinks" gap="3" style="flex-wrap:wrap;">
+        <span class="sans muted" style="font-size:13px;"><code class="sans">lk-cluster</code> — wrapping chip/button group (<code class="sans">gap</code> + <code class="sans">place</code>)</span>
+        <span class="sans muted" style="font-size:13px;"><code class="sans">lk-cover</code> — min-height region; <code class="sans">[center]</code> child centers, header/footer pin to edges</span>
+      </lk-row>
+
+      <lk-stack gap="2">
+        <span class="eyebrow">ENUMERATED FREE-FORM (CSP-CLEAN)</span>
+        <p class="sans muted"><code class="sans">ratio="16/9"</code> (aspect-ratio), <code class="sans">min="md"</code> (grid auto-fill min child width), <code class="sans">max-h="md"</code> (scroll-area) — attribute versions of the inline <code class="sans">--lk-*</code> knobs, so they work under a strict <code class="sans">style-src 'self'</code> CSP.</p>
+      </lk-stack>
     </lk-stack>
 
     <lk-divider style="margin-bottom: 64px;"></lk-divider>

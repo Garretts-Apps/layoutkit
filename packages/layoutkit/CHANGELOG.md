@@ -32,10 +32,26 @@ mechanics. All additive — nothing from 1.1 changes.
   `radius` (`none…full`), `surface` (tinted fill), `border="none"`. Radius
   resolves through `--lk-radius-*` → your `--radius-*` tokens.
 
+- **Responsive intent primitives — no media queries.** Layouts that respond to
+  their own available width via intrinsic sizing:
+  - `lk-switcher` — a row that flips to a stack below `--lk-switch-at` (default
+    30rem), using the flex-basis `calc` trick. No query, no JS.
+  - `lk-sidebar` — a fixed-width side (`--lk-sidebar-width`, default 18rem) + a
+    flexible content area that wraps under it below `--lk-sidebar-content-min`
+    (default 50%). `side="end"` puts the sidebar last.
+  - `lk-cluster` — a wrapping group (chips, tags, buttons); `gap` + `place`.
+  - `lk-cover` — a `min-block-size` region (default `100svh`) whose `[center]`
+    child (or lone child) is vertically centered while header/footer sit at the
+    edges.
+- **Enumerated free-form knobs (CSP-clean).** `ratio` (common aspect ratios),
+  `min` (grid auto-fill min child width), and `max-h` (scroll-area max height)
+  replace the inline `--lk-ratio` / `--lk-min-child-width` / `--lk-max-height`
+  styles for the common cases — so they work under `style-src 'self'`.
+
 All new spacing/type/radius values are **enumerated attributes** (external-CSS
 attribute selectors), so they work under a strict `style-src 'self'` CSP with no
 inline styles. Arbitrary values remain available via the inline `--lk-*` escape
-hatch (`--lk-measure`, `--lk-surface`, `--lk-card-border`, …).
+hatch (`--lk-measure`, `--lk-surface`, `--lk-switch-at`, `--lk-sidebar-width`, …).
 
 ## 1.1.0
 
