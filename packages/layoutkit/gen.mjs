@@ -48,6 +48,12 @@ const DIST = { between: "space-between", around: "space-around", evenly: "space-
 const FLEX = { start: "flex-start", center: "center", end: "flex-end" };
 const GRIDP = { start: "start", center: "center", end: "end" };
 
+// Type scale, weights, radius, width — all token-backed where it makes sense.
+const TEXT = { xs: "0.75rem", sm: "0.875rem", md: "1rem", lg: "1.125rem", xl: "1.25rem", "2xl": "1.5rem", "3xl": "2rem", "4xl": "3rem" };
+const WEIGHT = { normal: "400", medium: "500", semibold: "600", bold: "700" };
+const RADIUS = { none: "0", sm: "0.375rem", md: "0.75rem", lg: "1rem", full: "9999px" };
+const WIDTH = { xs: "20rem", sm: "30rem", md: "40rem", lg: "50rem", xl: "64rem", prose: "var(--lk-measure, 65ch)", full: "100%" };
+
 const out = [];
 const section = (title) => out.push(`\n  /* ${title} */`);
 const rule = (sel, decls) => out.push(`  ${sel} { ${decls} }`);
@@ -75,11 +81,15 @@ out.push(" */");
 
 out.push("@layer layoutkit {");
 
-section("Design tokens — remap via your --space-* tokens, or override --lk-space-* directly");
-rule(":root", Object.entries(TOKENS).map(([k, v]) => `--lk-space-${k}: var(--space-${k}, ${v});`).join(" "));
+section("Design tokens — remap via your --space-* / --text-* / --radius-* tokens, or override --lk-* directly");
+rule(":root", [
+  ...Object.entries(TOKENS).map(([k, v]) => `--lk-space-${k}: var(--space-${k}, ${v});`),
+  ...Object.entries(TEXT).map(([k, v]) => `--lk-text-${k}: var(--text-${k}, ${v});`),
+  ...Object.entries(RADIUS).filter(([k]) => k !== "none" && k !== "full").map(([k, v]) => `--lk-radius-${k}: var(--radius-${k}, ${v});`),
+].join(" "));
 
 section("Base — every primitive sets its own display + box model");
-rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-spread,\n  lk-grid,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area", "box-sizing: border-box;");
+rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-card,\n  lk-spread,\n  lk-grid,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area", "box-sizing: border-box;");
 rule("lk-stack", "display: flex; flex-direction: column; gap: var(--lk-space-md); align-items: stretch; justify-content: flex-start;");
 rule("lk-row", "display: flex; flex-direction: row; gap: var(--lk-space-md); align-items: center; justify-content: flex-start;");
 rule("lk-center", "display: flex; flex-direction: column; align-items: center; justify-content: center;");
@@ -90,6 +100,27 @@ rule("lk-spacer", "display: block; flex: 1 1 0%;");
 rule("lk-divider", "display: block; inline-size: 100%; border-block-start: 1px solid var(--lk-divider-color, #e5e7eb);");
 rule("lk-aspect-ratio", "display: block; aspect-ratio: var(--lk-ratio, 1);");
 rule("lk-scroll-area", "display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none);");
+rule("lk-card", "display: block; padding: var(--lk-space-lg); border-radius: var(--lk-radius-md); border: 1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent));");
+
+section("Type scale — lk-text / lk-weight (namespaced; work on any element)");
+for (const k of Object.keys(TEXT)) rule(`[lk-text="${k}"]`, `font-size: var(--lk-text-${k});`);
+for (const [k, v] of Object.entries(WEIGHT)) rule(`[lk-weight="${k}"]`, `font-weight: ${v};`);
+
+section("Width — constrain & center content");
+const WIDTH_TAGS = ["lk-box", "lk-card", "lk-stack", "lk-center", "lk-row"];
+for (const [k, v] of Object.entries(WIDTH)) {
+  rule(WIDTH_TAGS.map((t) => `${t}[width="${k}"]`).join(",\n  "), `max-inline-size: ${v};${k === "full" ? "" : " margin-inline: auto;"}`);
+}
+
+section("Flow — vertical rhythm between flowing children (the owl)");
+rule("lk-box[flow] > * + *,\n  lk-card[flow] > * + *", "margin-block-start: var(--lk-space-md);");
+for (const k of Object.keys(TOKENS)) rule(`lk-box[flow="${k}"] > * + *,\n  lk-card[flow="${k}"] > * + *`, `margin-block-start: var(--lk-space-${k});`);
+
+section("Card — padding, radius, surface, border");
+variants(["lk-card"], "padding", SPACE, (v) => `padding: ${v};`);
+for (const k of Object.keys(RADIUS)) rule(`lk-card[radius="${k}"]`, `border-radius: ${k === "none" ? "0" : k === "full" ? "9999px" : `var(--lk-radius-${k})`};`);
+rule("lk-card[surface]", "background: var(--lk-surface, color-mix(in srgb, currentColor 6%, transparent));");
+rule('lk-card[border="none"]', "border: 0;");
 
 section("Gap (lk-stack, lk-row, lk-grid)");
 variants(["lk-stack", "lk-row", "lk-grid"], "gap", SPACE, (v) => `gap: ${v};`);
