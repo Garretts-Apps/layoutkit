@@ -34,6 +34,20 @@ for (const n of NUM) SPACE[n] = rem(n);
 const ALIGN = { start: "flex-start", center: "center", end: "flex-end", stretch: "stretch", baseline: "baseline" };
 const JUSTIFY = { start: "flex-start", center: "center", end: "flex-end", between: "space-between", around: "space-around", evenly: "space-evenly" };
 
+// `place` — one axis-agnostic attribute for "where children sit". Each value is
+// resolved per container so the same word is visually consistent regardless of
+// the flex/grid main axis (no more align-vs-justify axis math in your head).
+// Positions are [inline, block] visual anchors (start = inline/block-start, RTL-aware).
+const PLACE = {
+  center: ["center", "center"], top: ["center", "start"], bottom: ["center", "end"],
+  start: ["start", "center"], end: ["end", "center"],
+  "top-start": ["start", "start"], "top-end": ["end", "start"],
+  "bottom-start": ["start", "end"], "bottom-end": ["end", "end"],
+};
+const DIST = { between: "space-between", around: "space-around", evenly: "space-evenly" };
+const FLEX = { start: "flex-start", center: "center", end: "flex-end" };
+const GRIDP = { start: "start", center: "center", end: "end" };
+
 const out = [];
 const section = (title) => out.push(`\n  /* ${title} */`);
 const rule = (sel, decls) => out.push(`  ${sel} { ${decls} }`);
@@ -88,6 +102,25 @@ variants(["lk-stack", "lk-row", "lk-spread"], "align", ALIGN, (v) => `align-item
 
 section("Justify-content (lk-stack, lk-row)");
 variants(["lk-stack", "lk-row"], "justify", JUSTIFY, (v) => `justify-content: ${v};`);
+
+section("Place — axis-agnostic alignment (the same word works on rows and stacks)");
+// Flex containers: for a column the block axis is main (justify) and inline is cross (align);
+// for a row it's the reverse. Encoding both keeps `place` visually consistent.
+const placeFlex = (tag, mainIsBlock) => {
+  for (const [val, [inl, blk]] of Object.entries(PLACE)) {
+    const [jc, ai] = mainIsBlock ? [FLEX[blk], FLEX[inl]] : [FLEX[inl], FLEX[blk]];
+    rule(`${tag}[place="${val}"]`, `justify-content: ${jc}; align-items: ${ai};`);
+  }
+  for (const [val, jc] of Object.entries(DIST)) rule(`${tag}[place="${val}"]`, `justify-content: ${jc};`);
+};
+placeFlex("lk-stack", true);
+placeFlex("lk-center", true);
+placeFlex("lk-row", false);
+placeFlex("lk-spread", false);
+// Grid: items align within their cells via justify-items (inline) + align-items (block).
+for (const [val, [inl, blk]] of Object.entries(PLACE)) {
+  rule(`lk-grid[place="${val}"]`, `justify-items: ${GRIDP[inl]}; align-items: ${GRIDP[blk]};`);
+}
 
 section("Boolean modifiers");
 rule("lk-stack[center],\n  lk-row[center]", "align-items: center; justify-content: center;");

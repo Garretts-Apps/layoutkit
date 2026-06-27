@@ -120,6 +120,15 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
         <h3 class="h2" style="font-size:18px;">Logical properties</h3>
         <p class="sans muted">Directional rules use logical properties (<code class="sans">border-inline-start</code>, <code class="sans">block-size</code>, <code class="sans">min-block-size</code>, <code class="sans">max-inline-size</code>, …), so layouts follow writing mode and RTL. In LTR top-to-bottom contexts the rendering is identical.</p>
       </lk-stack>
+
+      <lk-stack gap="3">
+        <h3 class="h2" style="font-size:18px;">Axis-agnostic alignment: <code class="sans">place</code></h3>
+        <p class="sans muted">Flexbox makes you track which axis <code class="sans">align</code> vs <code class="sans">justify</code> controls — and it flips between rows and stacks. <code class="sans">place</code> is one attribute that names <em>where children sit</em>, resolved per container so the same word is visually consistent everywhere.</p>
+        <div class="code"><pre><span class="tok-com">&lt;!-- both put their children in the top-right, no axis math --&gt;</span>
+<span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">place</span>=<span class="tok-str">"top-end"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/lk-stack&gt;</span>
+<span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">place</span>=<span class="tok-str">"top-end"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/lk-row&gt;</span></pre></div>
+        <p class="sans muted">Positions: <code class="sans">center</code>, <code class="sans">top</code>, <code class="sans">bottom</code>, <code class="sans">start</code>, <code class="sans">end</code>, <code class="sans">top-start</code>, <code class="sans">top-end</code>, <code class="sans">bottom-start</code>, <code class="sans">bottom-end</code>. Distribution: <code class="sans">between</code>, <code class="sans">around</code>, <code class="sans">evenly</code>. Works on <code class="sans">lk-stack</code>, <code class="sans">lk-row</code>, <code class="sans">lk-center</code>, <code class="sans">lk-spread</code>, and <code class="sans">lk-grid</code>. <code class="sans">align</code>/<code class="sans">justify</code> still work for the low-level escape.</p>
+      </lk-stack>
     </lk-stack>
 
     <!-- ============ lk-stack ============ -->
@@ -141,6 +150,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
             <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><code class="sans">gap</code></td><td>GapSize</td><td>md (1rem)</td><td>Space between children</td></tr>
+              <tr><td><code class="sans">place</code></td><td>Place</td><td>—</td><td>Axis-agnostic alignment — where children sit (<code class="sans">center</code>, <code class="sans">top-end</code>, <code class="sans">between</code>, …). Recommended over align/justify.</td></tr>
               <tr><td><code class="sans">align</code></td><td>Align</td><td>stretch</td><td>Cross-axis alignment (align-items)</td></tr>
               <tr><td><code class="sans">justify</code></td><td>Justify</td><td>start</td><td>Main-axis alignment (justify-content)</td></tr>
               <tr><td><code class="sans">center</code></td><td>boolean</td><td>off</td><td>Center both axes (shorthand)</td></tr>
@@ -211,6 +221,7 @@ import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
             <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><code class="sans">gap</code></td><td>GapSize</td><td>md (1rem)</td><td>Space between children</td></tr>
+              <tr><td><code class="sans">place</code></td><td>Place</td><td>—</td><td>Axis-agnostic alignment — where children sit (<code class="sans">center</code>, <code class="sans">top-end</code>, <code class="sans">between</code>, …). Recommended over align/justify.</td></tr>
               <tr><td><code class="sans">align</code></td><td>Align</td><td>center</td><td>Cross-axis alignment (align-items)</td></tr>
               <tr><td><code class="sans">justify</code></td><td>Justify</td><td>start</td><td>Main-axis alignment (justify-content)</td></tr>
               <tr><td><code class="sans">center</code></td><td>boolean</td><td>off</td><td>Center both axes</td></tr>

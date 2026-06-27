@@ -3,6 +3,20 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## Unreleased (1.2.0)
+
+Ergonomics pass: spend less effort styling, and stop thinking in raw-CSS
+mechanics. All additive — nothing from 1.1 changes.
+
+### Added
+- **`place` — axis-agnostic alignment.** One attribute names *where children
+  sit* (`center`, `top`, `bottom`, `start`, `end`, `top-start`, `top-end`,
+  `bottom-start`, `bottom-end`) plus distribution (`between`, `around`,
+  `evenly`). It's resolved per container, so the same word is visually
+  consistent on rows and stacks — no more tracking which axis `align` vs
+  `justify` controls. Works on `lk-stack`, `lk-row`, `lk-center`, `lk-spread`,
+  and `lk-grid`. `align`/`justify` keep working as the low-level escape.
+
 ## 1.1.0
 
 Architecture pass to make LayoutKit compose with a design system rather than

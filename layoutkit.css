@@ -263,6 +263,65 @@
   lk-stack[justify="evenly"],
   lk-row[justify="evenly"] { justify-content: space-evenly; }
 
+  /* Place — axis-agnostic alignment (the same word works on rows and stacks) */
+  lk-stack[place="center"] { justify-content: center; align-items: center; }
+  lk-stack[place="top"] { justify-content: flex-start; align-items: center; }
+  lk-stack[place="bottom"] { justify-content: flex-end; align-items: center; }
+  lk-stack[place="start"] { justify-content: center; align-items: flex-start; }
+  lk-stack[place="end"] { justify-content: center; align-items: flex-end; }
+  lk-stack[place="top-start"] { justify-content: flex-start; align-items: flex-start; }
+  lk-stack[place="top-end"] { justify-content: flex-start; align-items: flex-end; }
+  lk-stack[place="bottom-start"] { justify-content: flex-end; align-items: flex-start; }
+  lk-stack[place="bottom-end"] { justify-content: flex-end; align-items: flex-end; }
+  lk-stack[place="between"] { justify-content: space-between; }
+  lk-stack[place="around"] { justify-content: space-around; }
+  lk-stack[place="evenly"] { justify-content: space-evenly; }
+  lk-center[place="center"] { justify-content: center; align-items: center; }
+  lk-center[place="top"] { justify-content: flex-start; align-items: center; }
+  lk-center[place="bottom"] { justify-content: flex-end; align-items: center; }
+  lk-center[place="start"] { justify-content: center; align-items: flex-start; }
+  lk-center[place="end"] { justify-content: center; align-items: flex-end; }
+  lk-center[place="top-start"] { justify-content: flex-start; align-items: flex-start; }
+  lk-center[place="top-end"] { justify-content: flex-start; align-items: flex-end; }
+  lk-center[place="bottom-start"] { justify-content: flex-end; align-items: flex-start; }
+  lk-center[place="bottom-end"] { justify-content: flex-end; align-items: flex-end; }
+  lk-center[place="between"] { justify-content: space-between; }
+  lk-center[place="around"] { justify-content: space-around; }
+  lk-center[place="evenly"] { justify-content: space-evenly; }
+  lk-row[place="center"] { justify-content: center; align-items: center; }
+  lk-row[place="top"] { justify-content: center; align-items: flex-start; }
+  lk-row[place="bottom"] { justify-content: center; align-items: flex-end; }
+  lk-row[place="start"] { justify-content: flex-start; align-items: center; }
+  lk-row[place="end"] { justify-content: flex-end; align-items: center; }
+  lk-row[place="top-start"] { justify-content: flex-start; align-items: flex-start; }
+  lk-row[place="top-end"] { justify-content: flex-end; align-items: flex-start; }
+  lk-row[place="bottom-start"] { justify-content: flex-start; align-items: flex-end; }
+  lk-row[place="bottom-end"] { justify-content: flex-end; align-items: flex-end; }
+  lk-row[place="between"] { justify-content: space-between; }
+  lk-row[place="around"] { justify-content: space-around; }
+  lk-row[place="evenly"] { justify-content: space-evenly; }
+  lk-spread[place="center"] { justify-content: center; align-items: center; }
+  lk-spread[place="top"] { justify-content: center; align-items: flex-start; }
+  lk-spread[place="bottom"] { justify-content: center; align-items: flex-end; }
+  lk-spread[place="start"] { justify-content: flex-start; align-items: center; }
+  lk-spread[place="end"] { justify-content: flex-end; align-items: center; }
+  lk-spread[place="top-start"] { justify-content: flex-start; align-items: flex-start; }
+  lk-spread[place="top-end"] { justify-content: flex-end; align-items: flex-start; }
+  lk-spread[place="bottom-start"] { justify-content: flex-start; align-items: flex-end; }
+  lk-spread[place="bottom-end"] { justify-content: flex-end; align-items: flex-end; }
+  lk-spread[place="between"] { justify-content: space-between; }
+  lk-spread[place="around"] { justify-content: space-around; }
+  lk-spread[place="evenly"] { justify-content: space-evenly; }
+  lk-grid[place="center"] { justify-items: center; align-items: center; }
+  lk-grid[place="top"] { justify-items: center; align-items: start; }
+  lk-grid[place="bottom"] { justify-items: center; align-items: end; }
+  lk-grid[place="start"] { justify-items: start; align-items: center; }
+  lk-grid[place="end"] { justify-items: end; align-items: center; }
+  lk-grid[place="top-start"] { justify-items: start; align-items: start; }
+  lk-grid[place="top-end"] { justify-items: end; align-items: start; }
+  lk-grid[place="bottom-start"] { justify-items: start; align-items: end; }
+  lk-grid[place="bottom-end"] { justify-items: end; align-items: end; }
+
   /* Boolean modifiers */
   lk-stack[center],
   lk-row[center] { align-items: center; justify-content: center; }
