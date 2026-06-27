@@ -53,6 +53,10 @@ const TEXT = { xs: "0.75rem", sm: "0.875rem", md: "1rem", lg: "1.125rem", xl: "1
 const WEIGHT = { normal: "400", medium: "500", semibold: "600", bold: "700" };
 const RADIUS = { none: "0", sm: "0.375rem", md: "0.75rem", lg: "1rem", full: "9999px" };
 const WIDTH = { xs: "20rem", sm: "30rem", md: "40rem", lg: "50rem", xl: "64rem", prose: "var(--lk-measure, 65ch)", full: "100%" };
+// Enumerated free-form values — CSP-clean alternatives to the inline --lk-* knobs.
+const RATIO = ["1/1", "16/9", "4/3", "3/2", "2/1", "3/1", "9/16", "4/5"];
+const MINW = { "2xs": "8rem", xs: "10rem", sm: "12rem", md: "16rem", lg: "20rem", xl: "24rem" };
+const MAXH = { sm: "16rem", md: "24rem", lg: "32rem", screen: "100svh" };
 
 const out = [];
 const section = (title) => out.push(`\n  /* ${title} */`);
@@ -89,7 +93,7 @@ rule(":root", [
 ].join(" "));
 
 section("Base — every primitive sets its own display + box model");
-rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-card,\n  lk-spread,\n  lk-grid,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area", "box-sizing: border-box;");
+rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-card,\n  lk-spread,\n  lk-grid,\n  lk-cluster,\n  lk-switcher,\n  lk-sidebar,\n  lk-cover,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area", "box-sizing: border-box;");
 rule("lk-stack", "display: flex; flex-direction: column; gap: var(--lk-space-md); align-items: stretch; justify-content: flex-start;");
 rule("lk-row", "display: flex; flex-direction: row; gap: var(--lk-space-md); align-items: center; justify-content: flex-start;");
 rule("lk-center", "display: flex; flex-direction: column; align-items: center; justify-content: center;");
@@ -101,6 +105,25 @@ rule("lk-divider", "display: block; inline-size: 100%; border-block-start: 1px s
 rule("lk-aspect-ratio", "display: block; aspect-ratio: var(--lk-ratio, 1);");
 rule("lk-scroll-area", "display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none);");
 rule("lk-card", "display: block; padding: var(--lk-space-lg); border-radius: var(--lk-radius-md); border: 1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent));");
+
+section("Responsive intent primitives — respond to available space, no media queries");
+// Cluster: a wrapping group (chips, tags, buttons). align via `place`, gap via `gap`.
+rule("lk-cluster", "display: flex; flex-wrap: wrap; gap: var(--lk-space-sm); align-items: center;");
+// Switcher: a row that flips to a stack when narrower than --lk-switch-at — pure
+// intrinsic sizing (the flex-basis calc trick), no query, no JS.
+rule("lk-switcher", "display: flex; flex-wrap: wrap; gap: var(--lk-space-md);");
+rule("lk-switcher > *", "flex-grow: 1; flex-basis: calc((var(--lk-switch-at, 30rem) - 100%) * 999);");
+// Sidebar: a fixed-width side + a flexible content area that wraps under it when
+// the content would get narrower than --lk-sidebar-content-min.
+rule("lk-sidebar", "display: flex; flex-wrap: wrap; gap: var(--lk-space-md);");
+rule("lk-sidebar > :first-child", "flex-grow: 1; flex-basis: var(--lk-sidebar-width, 18rem);");
+rule("lk-sidebar > :last-child", "flex-grow: 999; flex-basis: 0; min-inline-size: var(--lk-sidebar-content-min, 50%);");
+rule('lk-sidebar[side="end"] > :first-child', "flex-grow: 999; flex-basis: 0; min-inline-size: var(--lk-sidebar-content-min, 50%);");
+rule('lk-sidebar[side="end"] > :last-child', "flex-grow: 1; flex-basis: var(--lk-sidebar-width, 18rem); min-inline-size: 0;");
+// Cover: a min-height region; the [center] child (or a lone child) is vertically
+// centered while header/footer children sit at the edges.
+rule("lk-cover", "display: flex; flex-direction: column; min-block-size: var(--lk-cover-min, 100svh); gap: var(--lk-space-md); padding: var(--lk-space-md);");
+rule("lk-cover > [center],\n  lk-cover > :only-child", "margin-block: auto;");
 
 section("Type scale — lk-text / lk-weight (namespaced; work on any element)");
 for (const k of Object.keys(TEXT)) rule(`[lk-text="${k}"]`, `font-size: var(--lk-text-${k});`);
@@ -122,8 +145,8 @@ for (const k of Object.keys(RADIUS)) rule(`lk-card[radius="${k}"]`, `border-radi
 rule("lk-card[surface]", "background: var(--lk-surface, color-mix(in srgb, currentColor 6%, transparent));");
 rule('lk-card[border="none"]', "border: 0;");
 
-section("Gap (lk-stack, lk-row, lk-grid)");
-variants(["lk-stack", "lk-row", "lk-grid"], "gap", SPACE, (v) => `gap: ${v};`);
+section("Gap (lk-stack, lk-row, lk-grid, lk-cluster, lk-switcher, lk-sidebar, lk-cover)");
+variants(["lk-stack", "lk-row", "lk-grid", "lk-cluster", "lk-switcher", "lk-sidebar", "lk-cover"], "gap", SPACE, (v) => `gap: ${v};`);
 
 section("Padding (lk-stack, lk-row, lk-box, lk-spread)");
 variants(["lk-stack", "lk-row", "lk-box", "lk-spread"], "padding", SPACE, (v) => `padding: ${v};`);
@@ -148,6 +171,7 @@ placeFlex("lk-stack", true);
 placeFlex("lk-center", true);
 placeFlex("lk-row", false);
 placeFlex("lk-spread", false);
+placeFlex("lk-cluster", false);
 // Grid: items align within their cells via justify-items (inline) + align-items (block).
 for (const [val, [inl, blk]] of Object.entries(PLACE)) {
   rule(`lk-grid[place="${val}"]`, `justify-items: ${GRIDP[inl]}; align-items: ${GRIDP[blk]};`);
@@ -169,6 +193,9 @@ section("Grid columns / rows / flow / placement");
 for (let n = 1; n <= 12; n++) rule(`lk-grid[cols="${n}"]`, `grid-template-columns: repeat(${n}, minmax(0, 1fr));`);
 for (let n = 1; n <= 12; n++) rule(`lk-grid[rows="${n}"]`, `grid-template-rows: repeat(${n}, minmax(0, 1fr));`);
 rule("lk-grid[responsive]", "grid-template-columns: repeat(auto-fit, minmax(var(--lk-min-child-width, 250px), 1fr));");
+// `min` = responsive auto-fill with an enumerated min child width (CSP-clean
+// alternative to inline --lk-min-child-width).
+for (const [k, v] of Object.entries(MINW)) rule(`lk-grid[min="${k}"]`, `grid-template-columns: repeat(auto-fill, minmax(${v}, 1fr));`);
 variants(["lk-grid"], "col-gap", SPACE, (v) => `column-gap: ${v};`);
 variants(["lk-grid"], "row-gap", SPACE, (v) => `row-gap: ${v};`);
 rule('lk-grid[flow="row"]', "grid-auto-flow: row;");
@@ -187,10 +214,14 @@ rule('lk-divider[orientation="vertical"]', "inline-size: auto; block-size: 100%;
 rule('lk-divider[orientation="vertical"][thickness="medium"]', "border-inline-start-width: 2px;");
 rule('lk-divider[orientation="vertical"][thickness="thick"]', "border-inline-start-width: 4px;");
 
-section("Scroll-area — direction");
+section("Scroll-area — direction + enumerated max height");
 rule('lk-scroll-area[direction="vertical"]', "overflow-x: hidden; overflow-y: auto;");
 rule('lk-scroll-area[direction="horizontal"]', "overflow-x: auto; overflow-y: hidden;");
 rule('lk-scroll-area[direction="both"]', "overflow: auto;");
+for (const [k, v] of Object.entries(MAXH)) rule(`lk-scroll-area[max-h="${k}"]`, `max-block-size: ${v};`);
+
+section("Aspect-ratio — common ratios (enumerated, CSP-clean)");
+for (const r of RATIO) rule(`lk-aspect-ratio[ratio="${r}"]`, `aspect-ratio: ${r};`);
 
 out.push("}");
 

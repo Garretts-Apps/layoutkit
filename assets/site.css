@@ -163,5 +163,9 @@ textarea.pg { display: block; width: 100%; height: 300px; resize: vertical; back
 .preset:hover { color: var(--fg); border-color: #3f3f46; }
 .preset[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 15%, transparent); border-color: var(--accent); color: var(--accent); }
 
+/* ---- Demo frames (docs/tutorial examples) ---- */
+.demo { border: 1px dashed var(--border); border-radius: 8px; padding: 12px; background: var(--surface-2); }
+.chip { display: inline-block; background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); border-radius: 6px; padding: 8px 12px; font-size: 12px; }
+
 /* ---- Footer ---- */
 .footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; padding: 32px 0; }
