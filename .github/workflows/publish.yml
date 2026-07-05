@@ -46,8 +46,8 @@ jobs:
       # Publish only if this version isn't already on npm, so re-running on an
       # existing release/tag is a clean no-op instead of a failure.
       # No token: OIDC trusted publishing authenticates through npm Trusted
-      # Publishing. Do not pass --provenance while this repository is private:
-      # npm provenance currently supports only public GitHub source repositories.
+      # Publishing, and --provenance attaches GitHub Actions provenance for
+      # public-source package transparency.
       - name: Publish if new
         working-directory: packages/layoutkit
         run: |
@@ -56,5 +56,5 @@ jobs:
           if [ -n "$(npm view "$NAME@$VERSION" version 2>/dev/null)" ]; then
             echo "::notice::$NAME@$VERSION is already published — skipping."
           else
-            npm publish --access public
+            npm publish --access public --provenance
           fi
