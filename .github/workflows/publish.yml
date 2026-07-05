@@ -7,7 +7,7 @@ on:
     types: [published]
   workflow_dispatch:
 
-# Auth is via npm trusted publishing (OIDC) — no NPM_TOKEN needed.
+# Auth is via npm trusted publishing (OIDC), not registry secrets.
 # Requires this workflow to be registered as a trusted publisher for
 # layoutkit-css on npmjs.com (repo + workflow filename must match).
 permissions:
@@ -17,9 +17,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/layoutkit
     steps:
       - uses: actions/checkout@v5
 
@@ -28,29 +25,35 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
 
-      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.
+      # Trusted publishing requires npm >= 11.5.1. Node 22 runners may still
+      # bundle npm 10.x, so upgrade the CLI in the release job without adding a
+      # repo dependency or registry token.
       - name: Upgrade npm
         run: npm install -g npm@latest
 
       # Regenerate the stylesheet from source so the published file always
-      # matches gen.mjs. (gen.mjs resolves its own paths, so cwd is fine.)
+      # matches gen.mjs.
       - name: Generate stylesheet
-        run: node gen.mjs
+        run: npm run build
 
       # Fail early if the working tree drifted from the committed CSS.
       - name: Verify generated CSS is committed
-        run: git diff --exit-code -- layoutkit.css ../../layoutkit.css
+        run: git diff --exit-code -- layoutkit.css packages/layoutkit/layoutkit.css
+
+      - name: Validate package
+        run: npm run check
 
       # Publish only if this version isn't already on npm, so re-running on an
       # existing release/tag is a clean no-op instead of a failure.
-      # No token: OIDC trusted publishing authenticates and adds provenance
-      # automatically.
+      # No token: OIDC trusted publishing authenticates through npm Trusted
+      # Publishing and --provenance records the GitHub build provenance.
       - name: Publish if new
+        working-directory: packages/layoutkit
         run: |
           NAME=$(node -p "require('./package.json').name")
           VERSION=$(node -p "require('./package.json').version")
           if [ -n "$(npm view "$NAME@$VERSION" version 2>/dev/null)" ]; then
             echo "::notice::$NAME@$VERSION is already published — skipping."
           else
-            npm publish --access public
+            npm publish --access public --provenance
           fi

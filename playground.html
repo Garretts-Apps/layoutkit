@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Playground — LayoutKit</title>
-  <meta name="description" content="Type LayoutKit markup, see it rendered live, and the plain HTML + CSS it replaces. Pure CSS, no build.">
+  <title>Playground - LayoutKit</title>
+  <meta name="description" content="Try LayoutKit markup as pure-CSS layout wrappers around native semantic HTML.">
   <link rel="canonical" href="https://layoutkit.dev/playground">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
-  <meta property="og:title" content="Playground — LayoutKit">
-  <meta property="og:description" content="Type LayoutKit markup, see it rendered live, and the plain HTML + CSS it replaces. Pure CSS, no build.">
+  <meta property="og:title" content="Playground - LayoutKit">
+  <meta property="og:description" content="Try LayoutKit markup as pure-CSS layout wrappers around native semantic HTML.">
   <meta property="og:url" content="https://layoutkit.dev/playground">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit — a layout language for the web, as pure CSS.">
+  <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Playground — LayoutKit">
-  <meta name="twitter:description" content="Type LayoutKit markup, see it rendered live, and the plain HTML + CSS it replaces.">
+  <meta name="twitter:title" content="Playground - LayoutKit">
+  <meta name="twitter:description" content="Try LayoutKit markup as pure-CSS layout wrappers around native semantic HTML.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20260626b">
+  <link rel="stylesheet" href="/assets/site.css?v=20260705a">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -50,7 +50,7 @@
   <main id="main" class="container" style="padding-block: 40px;">
     <lk-stack gap="2" style="margin-bottom: 20px;">
       <h1 class="h2">Playground</h1>
-      <p class="sans muted">Type LayoutKit markup &rarr; see it rendered live, and the plain HTML + CSS you&rsquo;d have written by hand to get the same layout. That&rsquo;s what LayoutKit saves you.</p>
+      <p class="sans muted">Try <code class="sans">lk-*</code> layout wrappers around native semantic HTML. The preview uses the same CSS file shipped by the package.</p>
       <lk-row id="pg-presets" class="navlinks" gap="2" style="margin-top: 4px;"></lk-row>
     </lk-stack>
 
@@ -58,17 +58,22 @@
       <!-- Input -->
       <div class="editor">
         <div class="panel-label">LayoutKit markup</div>
-        <textarea id="pg-input" class="pg" spellcheck="false" aria-label="LayoutKit markup input"><lk-center full-height>
-  <h2>Hello World</h2>
-  <p>Centered perfectly</p>
-</lk-center></textarea>
+        <textarea id="pg-input" class="pg" spellcheck="false" aria-label="LayoutKit markup input"><section aria-labelledby="empty-heading">
+  <lk-center full-height>
+    <lk-stack gap="sm" align="center">
+      <h2 id="empty-heading">No results</h2>
+      <p>Try changing the filters.</p>
+      <button type="button">Reset filters</button>
+    </lk-stack>
+  </lk-center>
+</section></textarea>
       </div>
 
       <!-- Output: live preview (rendered by layoutkit.css) -->
       <div class="editor">
         <div class="panel-label">Live preview</div>
         <div class="preview-frame">
-          <div id="pg-preview"><lk-center full-height><h2>Hello World</h2><p>Centered perfectly</p></lk-center></div>
+          <div id="pg-preview"><section aria-labelledby="empty-heading-preview"><lk-center full-height><lk-stack gap="sm" align="center"><h2 id="empty-heading-preview">No results</h2><p>Try changing the filters.</p><button type="button">Reset filters</button></lk-stack></lk-center></section></div>
           <noscript><p class="sans muted">The live editor needs JavaScript, but this preview is rendered by pure CSS — no JS required.</p></noscript>
         </div>
       </div>
@@ -76,7 +81,7 @@
 
     <!-- The same layout without LayoutKit: the HTML + CSS you'd write by hand -->
     <div class="editor" style="margin-top: 16px;">
-      <div class="panel-label">Without LayoutKit — the HTML + CSS, by hand</div>
+      <div class="panel-label">Equivalent layout CSS, by hand</div>
       <pre id="pg-css" class="pg-css code"><span class="tok-com">&lt;!-- HTML --&gt;</span>
 <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"center"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;h2&gt;</span>Hello World<span class="tok-tag">&lt;/h2&gt;</span>
@@ -97,7 +102,7 @@
 
   <footer class="footer">
     <lk-spread class="container" align="center">
-      <span>LayoutKit — pure-CSS layout. MIT.</span>
+      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
       <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
     </lk-spread>
   </footer>

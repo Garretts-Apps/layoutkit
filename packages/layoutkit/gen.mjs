@@ -1,17 +1,15 @@
-// Generates layoutkit.css — pure-CSS layout primitives that style <lk-*>
-// custom-element-named tags (unregistered, styled purely by CSS) via
-// attribute selectors. No JS, no runtime, no FOUC: a render-blocking <link>
-// styles the tags before first paint.
+// Generates layoutkit.css — pure-CSS layout primitives that style unregistered
+// <lk-*> custom-element-shaped tags via attribute selectors. No JavaScript, no
+// runtime, no dependencies.
 //
 //   node gen.mjs   ->   layoutkit.css
 //
 // Architecture notes:
 //   - All rules live in `@layer layoutkit` so a host app controls specificity
 //     relative to its own cascade layers (unlayered author styles always win).
-//   - Semantic spacing resolves through --lk-space-* custom properties that
-//     default to the host's --space-* tokens, so the scale consumes a design
-//     system instead of running parallel to it. Override --space-* (or
-//     --lk-space-* directly) to remap.
+//   - Named spacing resolves through --lk-space-* custom properties that default
+//     to the host's --space-* tokens. Override --space-* (or --lk-space-*
+//     directly) to remap the scale.
 //   - Directional box-model uses logical properties (block/inline) so layouts
 //     follow writing mode and RTL.
 //   - Free-form values (color, ratio, min/max sizes) are driven by CSS custom
@@ -69,15 +67,17 @@ const variants = (tags, attr, map, render) => {
 };
 
 out.push("/*");
-out.push(" * layoutkit-css — a layout language for the web, as pure CSS.");
-out.push(" * Zero dependencies. No JavaScript. No build step. No FOUC.");
+out.push(" * layoutkit-css — a tiny pure-CSS layout vocabulary for readable app structure.");
+out.push(" * Zero dependencies. No JavaScript. No build step.");
 out.push(" *");
 out.push(' *   <link rel="stylesheet" href="layoutkit.css">');
-out.push(' *   <lk-stack gap="lg" padding="md">');
-out.push(" *     <lk-center full-height>You can finally center a div.</lk-center>");
-out.push(" *   </lk-stack>");
+out.push(' *   <main>');
+out.push(' *     <lk-stack gap="lg">');
+out.push(" *       <h1>Dashboard</h1>");
+out.push(" *     </lk-stack>");
+out.push(" *   </main>");
 out.push(" *");
-out.push(" * Theming: remap the scale onto your design tokens by defining --space-*");
+out.push(" * Tokens: remap the scale onto your design tokens by defining --space-*");
 out.push(" * (or override --lk-space-* directly). All rules are in @layer layoutkit.");
 out.push(" * Free-form values use custom properties:");
 out.push(" *   --lk-ratio, --lk-divider-color, --lk-min-child-width, --lk-max-height, --lk-max-width.");

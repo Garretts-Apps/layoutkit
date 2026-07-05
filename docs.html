@@ -3,31 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Docs — LayoutKit tags &amp; attributes reference (pure CSS)</title>
-  <meta name="description" content="LayoutKit reference: all 10 semantic <lk-*> tags — stack, row, center, box, spread, grid, spacer, divider, aspect-ratio, scroll-area — and every attribute. Pure CSS, zero dependencies, no build step.">
+  <title>Docs - LayoutKit primitives, attributes, accessibility, and tokens</title>
+  <meta name="description" content="LayoutKit documentation for pure-CSS layout primitives, attributes, accessibility guidance, semantic HTML usage, design tokens, TSX/JSX, and package verification.">
   <link rel="canonical" href="https://layoutkit.dev/docs">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
-  <meta property="og:title" content="Docs — LayoutKit tags & attributes reference">
-  <meta property="og:description" content="All 10 semantic lk-* tags and every attribute — stack, row, center, grid, spread, and more. Pure CSS, zero dependencies, no build step.">
+  <meta property="og:title" content="LayoutKit Docs">
+  <meta property="og:description" content="Reference for a tiny pure-CSS layout vocabulary used inside native semantic HTML.">
   <meta property="og:url" content="https://layoutkit.dev/docs">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit — a layout language for the web, as pure CSS.">
+  <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Docs — LayoutKit tags & attributes reference">
-  <meta name="twitter:description" content="All 10 semantic lk-* tags and every attribute. Pure CSS, zero dependencies, no build step.">
+  <meta name="twitter:title" content="LayoutKit Docs">
+  <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, TSX/JSX, and package verification.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
-  <!-- LayoutKit styles itself with LayoutKit. The library stylesheet does the layout; -->
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20260626b">
+  <link rel="stylesheet" href="/assets/site.css?v=20260705a">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <!-- Nav (dogfooded: lk-spread = space-between row) -->
   <header>
     <nav class="nav" aria-label="Primary">
       <lk-spread align="center">
@@ -50,800 +48,228 @@
   </header>
 
   <main id="main" class="container">
-    <!-- Header + intro -->
-    <lk-stack gap="5" padding="none" style="padding-block: 56px 40px;">
-      <span class="pill">REFERENCE</span>
-      <h1 class="hero-title" style="font-size: clamp(2rem, 5vw, 3rem);">Docs</h1>
-      <p class="lead sans" style="max-width: 640px;">
-        LayoutKit is a pure-CSS stylesheet. It styles semantic <code class="sans">&lt;lk-*&gt;</code> custom tags
-        through plain attribute selectors — no JavaScript, no custom-element registration, no build step.
-        Each tag below is a normal HTML element that the stylesheet applies layout rules to.
-      </p>
-      <p class="lead sans muted" style="max-width: 640px;">
-        This page itself is built with LayoutKit: the nav, grids, and stacks you see are <code class="sans">&lt;lk-*&gt;</code>
-        tags. Drop in one stylesheet and write tags.
-      </p>
-      <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span>
-<span class="tok-com">/* or, with a bundler */</span>
-import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
-    </lk-stack>
+    <lk-stack gap="3xl" style="padding-block: 56px;">
+      <section aria-labelledby="docs-heading">
+        <lk-stack gap="4">
+          <span class="pill">REFERENCE</span>
+          <h1 id="docs-heading" class="hero-title" style="font-size: 42px;">LayoutKit Docs</h1>
+          <p class="lead sans">A tiny pure-CSS layout vocabulary for readable app structure. Use <code class="sans">lk-*</code> tags to make layout intent visible while native semantic HTML carries document meaning.</p>
+          <lk-row class="navlinks" gap="1" wrap>
+            <a class="navlink" href="#install">Install</a>
+            <a class="navlink" href="#scope">Scope</a>
+            <a class="navlink" href="#primitives">Primitives</a>
+            <a class="navlink" href="#attributes">Attributes</a>
+            <a class="navlink" href="#tokens">Tokens</a>
+            <a class="navlink" href="#accessibility">Accessibility</a>
+            <a class="navlink" href="#jsx">TSX/JSX</a>
+            <a class="navlink" href="#browser-support">Browser support</a>
+            <a class="navlink" href="#security">Security</a>
+          </lk-row>
+        </lk-stack>
+      </section>
 
-    <!-- Jump nav -->
-    <lk-box class="card" padding="4" style="margin-bottom: 48px;">
-      <lk-stack gap="3">
-        <span class="eyebrow">JUMP TO A TAG</span>
-        <lk-row class="navlinks" gap="1">
-          <a class="navlink" href="#lk-stack">lk-stack</a>
-          <a class="navlink" href="#lk-row">lk-row</a>
-          <a class="navlink" href="#lk-center">lk-center</a>
-          <a class="navlink" href="#lk-box">lk-box</a>
-          <a class="navlink" href="#lk-spread">lk-spread</a>
-          <a class="navlink" href="#lk-grid">lk-grid</a>
-          <a class="navlink" href="#lk-spacer">lk-spacer</a>
-          <a class="navlink" href="#lk-divider">lk-divider</a>
-          <a class="navlink" href="#lk-aspect-ratio">lk-aspect-ratio</a>
-          <a class="navlink" href="#lk-scroll-area">lk-scroll-area</a>
-          <a class="navlink" href="#theming">Theming</a>
-          <a class="navlink" href="#surfaces">Text &amp; surfaces</a>
-          <a class="navlink" href="#responsive">Responsive</a>
-          <a class="navlink" href="#reference">Size scale</a>
-        </lk-row>
-      </lk-stack>
-    </lk-box>
+      <section id="install" aria-labelledby="install-heading">
+        <lk-stack gap="4">
+          <h2 id="install-heading" class="h2">Install and load CSS</h2>
+          <p class="sans muted">Load LayoutKit early in the document <code class="sans">&lt;head&gt;</code>, or import it at the root/global CSS level in a framework. If the CSS does not load, <code class="sans">lk-*</code> tags are plain unknown elements.</p>
+          <div class="code"><pre>npm install layoutkit-css</pre></div>
+          <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
+          <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span></pre></div>
+        </lk-stack>
+      </section>
 
-    <!-- ============ Theming & architecture ============ -->
-    <lk-stack id="theming" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">Theming &amp; architecture</h2>
-        <p class="lead sans muted">LayoutKit is built to consume a design system, not run parallel to one.</p>
-      </lk-stack>
+      <section id="scope" aria-labelledby="scope-heading">
+        <lk-grid responsive min="md" gap="4">
+          <article class="card">
+            <lk-stack gap="2">
+              <h2 id="scope-heading" class="h2">Scope</h2>
+              <p class="sans muted">LayoutKit covers common layout primitives: stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, spacer, divider, aspect ratio, and scroll area.</p>
+            </lk-stack>
+          </article>
+          <article class="card">
+            <lk-stack gap="2">
+              <h2 class="h2">Non-goals</h2>
+              <p class="sans muted">No buttons, forms, typography system, color themes, icons, animation system, JavaScript behavior, stateful app shell, data table styling, component library, or design system replacement.</p>
+            </lk-stack>
+          </article>
+        </lk-grid>
+      </section>
 
-      <lk-stack gap="3">
-        <h3 class="h2" style="font-size:18px;">Spacing maps to your tokens</h3>
-        <p class="sans muted">The semantic scale (<code class="sans">xs … 3xl</code>) resolves through <code class="sans">--lk-space-*</code> custom properties that default to your <code class="sans">--space-*</code> tokens. Define your tokens once and the whole <code class="sans">gap</code>/<code class="sans">padding</code> scale remaps onto them — no per-component overrides.</p>
-        <div class="code"><pre><span class="tok-com">/* layoutkit ships, inside @layer layoutkit: */</span>
-<span class="tok-tag">:root</span> { <span class="tok-attr">--lk-space-md</span>: <span class="tok-str">var(--space-md, 1rem)</span>; }
-<span class="tok-tag">lk-stack[gap="md"]</span> { <span class="tok-attr">gap</span>: <span class="tok-str">var(--lk-space-md)</span>; }
-
-<span class="tok-com">/* your app — remap the scale by defining tokens: */</span>
-<span class="tok-tag">:root</span> { <span class="tok-attr">--space-md</span>: <span class="tok-str">0.875rem</span>; <span class="tok-attr">--space-lg</span>: <span class="tok-str">1.25rem</span>; }
-<span class="tok-com">/* …or set LayoutKit's scale directly: */</span>
-<span class="tok-tag">:root</span> { <span class="tok-attr">--lk-space-lg</span>: <span class="tok-str">1.25rem</span>; }</pre></div>
-        <p class="sans muted" style="font-size:12px;">The fixed numeric scale (<code class="sans">gap="4"</code>) and <code class="sans">none</code>/<code class="sans">px</code> stay literal — they're a utility scale, not semantic tokens.</p>
-      </lk-stack>
-
-      <lk-stack gap="3">
-        <h3 class="h2" style="font-size:18px;">Everything is in <code class="sans">@layer layoutkit</code></h3>
-        <p class="sans muted">All rules live in a named cascade layer, so your own unlayered styles always win — overriding a LayoutKit rule never needs a specificity fight. Order the layer wherever you like:</p>
-        <div class="code"><pre><span class="tok-tag">@layer</span> reset, layoutkit, components, utilities;</pre></div>
-      </lk-stack>
-
-      <lk-stack gap="3">
-        <h3 class="h2" style="font-size:18px;">Logical properties</h3>
-        <p class="sans muted">Directional rules use logical properties (<code class="sans">border-inline-start</code>, <code class="sans">block-size</code>, <code class="sans">min-block-size</code>, <code class="sans">max-inline-size</code>, …), so layouts follow writing mode and RTL. In LTR top-to-bottom contexts the rendering is identical.</p>
-      </lk-stack>
-
-      <lk-stack gap="3">
-        <h3 class="h2" style="font-size:18px;">Axis-agnostic alignment: <code class="sans">place</code></h3>
-        <p class="sans muted">Flexbox makes you track which axis <code class="sans">align</code> vs <code class="sans">justify</code> controls — and it flips between rows and stacks. <code class="sans">place</code> is one attribute that names <em>where children sit</em>, resolved per container so the same word is visually consistent everywhere.</p>
-        <div class="code"><pre><span class="tok-com">&lt;!-- both put their children in the top-right, no axis math --&gt;</span>
-<span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">place</span>=<span class="tok-str">"top-end"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/lk-stack&gt;</span>
-<span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">place</span>=<span class="tok-str">"top-end"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/lk-row&gt;</span></pre></div>
-        <p class="sans muted">Positions: <code class="sans">center</code>, <code class="sans">top</code>, <code class="sans">bottom</code>, <code class="sans">start</code>, <code class="sans">end</code>, <code class="sans">top-start</code>, <code class="sans">top-end</code>, <code class="sans">bottom-start</code>, <code class="sans">bottom-end</code>. Distribution: <code class="sans">between</code>, <code class="sans">around</code>, <code class="sans">evenly</code>. Works on <code class="sans">lk-stack</code>, <code class="sans">lk-row</code>, <code class="sans">lk-center</code>, <code class="sans">lk-spread</code>, and <code class="sans">lk-grid</code>. <code class="sans">align</code>/<code class="sans">justify</code> still work for the low-level escape.</p>
-      </lk-stack>
-    </lk-stack>
-
-    <!-- ============ lk-stack ============ -->
-    <lk-stack id="lk-stack" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-stack&gt;</h2>
-        <p class="lead sans muted">Vertical flex column with consistent spacing.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span> <span class="tok-attr">align</span>=<span class="tok-str">"center"</span> <span class="tok-attr">padding</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;div&gt;</span>Item<span class="tok-tag">&lt;/div&gt;</span>
-  <span class="tok-tag">&lt;div&gt;</span>Item<span class="tok-tag">&lt;/div&gt;</span>
-<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">gap</code></td><td>GapSize</td><td>md (1rem)</td><td>Space between children</td></tr>
-              <tr><td><code class="sans">place</code></td><td>Place</td><td>—</td><td>Axis-agnostic alignment — where children sit (<code class="sans">center</code>, <code class="sans">top-end</code>, <code class="sans">between</code>, …). Recommended over align/justify.</td></tr>
-              <tr><td><code class="sans">align</code></td><td>Align</td><td>stretch</td><td>Cross-axis alignment (align-items)</td></tr>
-              <tr><td><code class="sans">justify</code></td><td>Justify</td><td>start</td><td>Main-axis alignment (justify-content)</td></tr>
-              <tr><td><code class="sans">center</code></td><td>boolean</td><td>off</td><td>Center both axes (shorthand)</td></tr>
-              <tr><td><code class="sans">fill</code></td><td>boolean</td><td>off</td><td>Grow to fill available space (flex: 1 1 0%)</td></tr>
-              <tr><td><code class="sans">full-height</code></td><td>boolean</td><td>off</td><td>Force a minimum full-viewport height (min-block-size: 100vh)</td></tr>
-              <tr><td><code class="sans">padding</code></td><td>Padding</td><td>none</td><td>Internal padding</td></tr>
-              <tr><td><code class="sans">wrap</code></td><td>boolean</td><td>off</td><td>Allow children to wrap</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-stack</code> (base)</td><td><code class="sans">display: flex; flex-direction: column; gap: var(--lk-space-md); align-items: stretch; justify-content: flex-start</code></td></tr>
-              <tr><td><code class="sans">[gap="none"]</code></td><td><code class="sans">gap: 0</code></td></tr>
-              <tr><td><code class="sans">[gap="xs"]</code></td><td><code class="sans">gap: 0.25rem</code></td></tr>
-              <tr><td><code class="sans">[gap="sm"]</code></td><td><code class="sans">gap: 0.5rem</code></td></tr>
-              <tr><td><code class="sans">[gap="md"]</code> (default)</td><td><code class="sans">gap: var(--lk-space-md)</code></td></tr>
-              <tr><td><code class="sans">[gap="lg"]</code></td><td><code class="sans">gap: 1.5rem</code></td></tr>
-              <tr><td><code class="sans">[gap="xl"]</code></td><td><code class="sans">gap: 2rem</code></td></tr>
-              <tr><td><code class="sans">[gap="2xl"]</code></td><td><code class="sans">gap: 3rem</code></td></tr>
-              <tr><td><code class="sans">[gap="3xl"]</code></td><td><code class="sans">gap: 4rem</code></td></tr>
-              <tr><td><code class="sans">[align="start"]</code></td><td><code class="sans">align-items: flex-start</code></td></tr>
-              <tr><td><code class="sans">[align="center"]</code></td><td><code class="sans">align-items: center</code></td></tr>
-              <tr><td><code class="sans">[align="end"]</code></td><td><code class="sans">align-items: flex-end</code></td></tr>
-              <tr><td><code class="sans">[align="stretch"]</code> (default)</td><td><code class="sans">align-items: stretch</code></td></tr>
-              <tr><td><code class="sans">[align="baseline"]</code></td><td><code class="sans">align-items: baseline</code></td></tr>
-              <tr><td><code class="sans">[justify="start"]</code> (default)</td><td><code class="sans">justify-content: flex-start</code></td></tr>
-              <tr><td><code class="sans">[justify="center"]</code></td><td><code class="sans">justify-content: center</code></td></tr>
-              <tr><td><code class="sans">[justify="end"]</code></td><td><code class="sans">justify-content: flex-end</code></td></tr>
-              <tr><td><code class="sans">[justify="between"]</code></td><td><code class="sans">justify-content: space-between</code></td></tr>
-              <tr><td><code class="sans">[justify="around"]</code></td><td><code class="sans">justify-content: space-around</code></td></tr>
-              <tr><td><code class="sans">[justify="evenly"]</code></td><td><code class="sans">justify-content: space-evenly</code></td></tr>
-              <tr><td><code class="sans">[center]</code></td><td><code class="sans">align-items: center; justify-content: center</code></td></tr>
-              <tr><td><code class="sans">[fill]</code></td><td><code class="sans">flex: 1 1 0%</code></td></tr>
-              <tr><td><code class="sans">[full-height]</code></td><td><code class="sans">min-block-size: 100vh</code></td></tr>
-              <tr><td><code class="sans">[wrap]</code></td><td><code class="sans">flex-wrap: wrap</code></td></tr>
-              <tr><td><code class="sans">[padding="md"]</code></td><td><code class="sans">padding: 1rem</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ lk-row ============ -->
-    <lk-stack id="lk-row" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-row&gt;</h2>
-        <p class="lead sans muted">Horizontal flex row. Same attributes as lk-stack, different axis.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span> <span class="tok-attr">justify</span>=<span class="tok-str">"between"</span> <span class="tok-attr">wrap</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;button&gt;</span>Save<span class="tok-tag">&lt;/button&gt;</span>
-  <span class="tok-tag">&lt;button&gt;</span>Cancel<span class="tok-tag">&lt;/button&gt;</span>
-<span class="tok-tag">&lt;/lk-row&gt;</span></pre></div>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">gap</code></td><td>GapSize</td><td>md (1rem)</td><td>Space between children</td></tr>
-              <tr><td><code class="sans">place</code></td><td>Place</td><td>—</td><td>Axis-agnostic alignment — where children sit (<code class="sans">center</code>, <code class="sans">top-end</code>, <code class="sans">between</code>, …). Recommended over align/justify.</td></tr>
-              <tr><td><code class="sans">align</code></td><td>Align</td><td>center</td><td>Cross-axis alignment (align-items)</td></tr>
-              <tr><td><code class="sans">justify</code></td><td>Justify</td><td>start</td><td>Main-axis alignment (justify-content)</td></tr>
-              <tr><td><code class="sans">center</code></td><td>boolean</td><td>off</td><td>Center both axes</td></tr>
-              <tr><td><code class="sans">wrap</code></td><td>boolean</td><td>off</td><td>Allow children to wrap</td></tr>
-              <tr><td><code class="sans">reverse</code></td><td>boolean</td><td>off</td><td>Reverse direction (flex-direction: row-reverse)</td></tr>
-              <tr><td><code class="sans">padding</code></td><td>Padding</td><td>none</td><td>Internal padding</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-row</code> (base)</td><td><code class="sans">display: flex; flex-direction: row; gap: var(--lk-space-md); align-items: center; justify-content: flex-start</code></td></tr>
-              <tr><td><code class="sans">[gap="xs"]</code> … <code class="sans">[gap="3xl"]</code></td><td><code class="sans">gap: 0.25rem … 4rem</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
-              <tr><td><code class="sans">[align="start"]</code></td><td><code class="sans">align-items: flex-start</code></td></tr>
-              <tr><td><code class="sans">[align="center"]</code> (default)</td><td><code class="sans">align-items: center</code></td></tr>
-              <tr><td><code class="sans">[align="end"]</code></td><td><code class="sans">align-items: flex-end</code></td></tr>
-              <tr><td><code class="sans">[align="stretch"]</code></td><td><code class="sans">align-items: stretch</code></td></tr>
-              <tr><td><code class="sans">[align="baseline"]</code></td><td><code class="sans">align-items: baseline</code></td></tr>
-              <tr><td><code class="sans">[justify="start"]</code> (default)</td><td><code class="sans">justify-content: flex-start</code></td></tr>
-              <tr><td><code class="sans">[justify="center"]</code></td><td><code class="sans">justify-content: center</code></td></tr>
-              <tr><td><code class="sans">[justify="end"]</code></td><td><code class="sans">justify-content: flex-end</code></td></tr>
-              <tr><td><code class="sans">[justify="between"]</code></td><td><code class="sans">justify-content: space-between</code></td></tr>
-              <tr><td><code class="sans">[justify="around"]</code></td><td><code class="sans">justify-content: space-around</code></td></tr>
-              <tr><td><code class="sans">[justify="evenly"]</code></td><td><code class="sans">justify-content: space-evenly</code></td></tr>
-              <tr><td><code class="sans">[center]</code></td><td><code class="sans">align-items: center; justify-content: center</code></td></tr>
-              <tr><td><code class="sans">[wrap]</code></td><td><code class="sans">flex-wrap: wrap</code></td></tr>
-              <tr><td><code class="sans">[reverse]</code></td><td><code class="sans">flex-direction: row-reverse</code></td></tr>
-              <tr><td><code class="sans">[padding="md"]</code></td><td><code class="sans">padding: 1rem</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ lk-center ============ -->
-    <lk-stack id="lk-center" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-center&gt;</h2>
-        <p class="lead sans muted">Center content on both axes. The #1 CSS pain point, solved — no JavaScript required.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">full-height</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;form&gt;</span>Login<span class="tok-tag">&lt;/form&gt;</span>
-<span class="tok-tag">&lt;/lk-center&gt;</span></pre></div>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">fill</code></td><td>boolean</td><td>off</td><td>Grow to fill available space in the parent flex container (flex: 1 1 0%)</td></tr>
-              <tr><td><code class="sans">full-height</code></td><td>boolean</td><td>off</td><td>Force a minimum full-viewport height (min-block-size: 100vh)</td></tr>
-              <tr><td><code class="sans">horizontal</code></td><td>boolean</td><td>off</td><td>Center only on the x-axis</td></tr>
-              <tr><td><code class="sans">vertical</code></td><td>boolean</td><td>off</td><td>Center only on the y-axis</td></tr>
-              <tr><td><code class="sans">inline</code></td><td>boolean</td><td>off</td><td>Use inline-flex instead of flex</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-center</code> (base)</td><td><code class="sans">display: flex; flex-direction: column; align-items: center; justify-content: center</code></td></tr>
-              <tr><td><code class="sans">[fill]</code></td><td><code class="sans">flex: 1 1 0%</code></td></tr>
-              <tr><td><code class="sans">[full-height]</code></td><td><code class="sans">min-block-size: 100vh</code></td></tr>
-              <tr><td><code class="sans">[inline]</code></td><td><code class="sans">display: inline-flex</code></td></tr>
-              <tr><td><code class="sans">[horizontal]:not([vertical])</code></td><td><code class="sans">justify-content: flex-start</code> (cancels y-centering, keeps x-centering)</td></tr>
-              <tr><td><code class="sans">[vertical]:not([horizontal])</code></td><td><code class="sans">align-items: stretch</code> (cancels x-centering, keeps y-centering)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ lk-box ============ -->
-    <lk-stack id="lk-box" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-box&gt;</h2>
-        <p class="lead sans muted">Generic block container. Fills space, holds content.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">fill</span> <span class="tok-attr">padding</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;div&gt;</span>Content<span class="tok-tag">&lt;/div&gt;</span>
+      <section id="semantic-html" aria-labelledby="semantic-heading">
+        <lk-stack gap="4">
+          <h2 id="semantic-heading" class="h2">Semantic HTML first</h2>
+          <p class="sans muted">LayoutKit is semantic to developers, not to the browser accessibility tree. It should not replace <code class="sans">main</code>, <code class="sans">nav</code>, <code class="sans">section</code>, <code class="sans">article</code>, <code class="sans">header</code>, <code class="sans">footer</code>, headings, buttons, links, lists, tables, or form controls.</p>
+          <lk-grid responsive min="md" gap="4">
+            <article>
+              <span class="eyebrow">Good</span>
+              <div class="code"><pre><span class="tok-tag">&lt;main&gt;</span>
+  <span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"dashboard-heading"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>
+      <span class="tok-tag">&lt;h1</span> <span class="tok-attr">id</span>=<span class="tok-str">"dashboard-heading"</span><span class="tok-tag">&gt;</span>Dashboard<span class="tok-tag">&lt;/h1&gt;</span>
+      <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h2&gt;</span>Open orders<span class="tok-tag">&lt;/h2&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+    <span class="tok-tag">&lt;/lk-stack&gt;</span>
+  <span class="tok-tag">&lt;/section&gt;</span>
+<span class="tok-tag">&lt;/main&gt;</span></pre></div>
+            </article>
+            <article>
+              <span class="eyebrow">Bad</span>
+              <div class="code"><pre><span class="tok-tag">&lt;lk-box&gt;</span>
+  <span class="tok-tag">&lt;lk-stack&gt;</span>
+    <span class="tok-tag">&lt;lk-text&gt;</span>Dashboard<span class="tok-tag">&lt;/lk-text&gt;</span>
+  <span class="tok-tag">&lt;/lk-stack&gt;</span>
 <span class="tok-tag">&lt;/lk-box&gt;</span></pre></div>
+              <p class="sans muted">This loses native document meaning.</p>
+            </article>
+          </lk-grid>
+        </lk-stack>
+      </section>
 
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">fill</code></td><td>boolean</td><td>off</td><td>Expand to fill available space (flex: 1 1 0%)</td></tr>
-              <tr><td><code class="sans">padding</code></td><td>Padding</td><td>none</td><td>Internal padding</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
+      <section id="primitives" aria-labelledby="primitives-heading">
+        <lk-stack gap="4">
+          <h2 id="primitives-heading" class="h2">Basic primitives</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tag</th><th>Purpose</th><th>Common attributes</th></tr></thead>
+              <tbody>
+                <tr><td><code>lk-stack</code></td><td>Vertical flow</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width</td></tr>
+                <tr><td><code>lk-row</code></td><td>Horizontal flow</td><td>gap, padding, align, justify, place, wrap, reverse</td></tr>
+                <tr><td><code>lk-center</code></td><td>Centered layout</td><td>fill, full-height, inline, horizontal, vertical, place</td></tr>
+                <tr><td><code>lk-box</code></td><td>Block wrapper</td><td>padding, fill, width, flow</td></tr>
+                <tr><td><code>lk-card</code></td><td>Neutral padded block</td><td>padding, radius, surface, border, width, flow</td></tr>
+                <tr><td><code>lk-spread</code></td><td>Space-between row</td><td>align, padding, place</td></tr>
+                <tr><td><code>lk-grid</code></td><td>Grid layout</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place-items</td></tr>
+                <tr><td><code>lk-cluster</code></td><td>Wrapping group</td><td>gap, place</td></tr>
+                <tr><td><code>lk-switcher</code></td><td>Intrinsic row-to-stack layout</td><td>gap</td></tr>
+                <tr><td><code>lk-sidebar</code></td><td>Wrapping side/content layout</td><td>gap, side</td></tr>
+                <tr><td><code>lk-cover</code></td><td>Min-height cover region</td><td>gap, center</td></tr>
+                <tr><td><code>lk-spacer</code></td><td>Flexible or fixed space</td><td>size</td></tr>
+                <tr><td><code>lk-divider</code></td><td>Visual divider</td><td>orientation, thickness</td></tr>
+                <tr><td><code>lk-aspect-ratio</code></td><td>Aspect-ratio wrapper</td><td>ratio</td></tr>
+                <tr><td><code>lk-scroll-area</code></td><td>Constrained scroll container</td><td>direction, max-h</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </lk-stack>
+      </section>
 
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-box</code> (base)</td><td><code class="sans">display: block</code></td></tr>
-              <tr><td><code class="sans">[fill]</code></td><td><code class="sans">flex: 1 1 0%</code></td></tr>
-              <tr><td><code class="sans">[padding="xs"]</code> … <code class="sans">[padding="3xl"]</code></td><td><code class="sans">padding: 0.25rem … 4rem</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
+      <section id="attributes" aria-labelledby="attributes-heading">
+        <lk-stack gap="4">
+          <h2 id="attributes-heading" class="h2">Attribute reference</h2>
+          <p class="sans muted">Attributes map to stable layout behavior. They are not a mirror of every CSS property.</p>
+          <lk-grid responsive min="md" gap="4">
+            <article class="card"><h3>Spacing</h3><p class="sans muted"><code>gap</code>, <code>padding</code>, <code>col-gap</code>, <code>row-gap</code>: <code>none</code>, <code>px</code>, <code>xs</code> through <code>3xl</code>, and the finite numeric scale.</p></article>
+            <article class="card"><h3>Alignment</h3><p class="sans muted"><code>align</code>, <code>justify</code>, <code>place</code>, <code>place-items</code>, and <code>center</code> cover common flex and grid alignment.</p></article>
+            <article class="card"><h3>Sizing</h3><p class="sans muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, <code>max-h</code>, and custom properties cover common sizing needs.</p></article>
+          </lk-grid>
+        </lk-stack>
+      </section>
 
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
+      <section id="tokens" aria-labelledby="tokens-heading">
+        <lk-stack gap="4">
+          <h2 id="tokens-heading" class="h2">Design token customization</h2>
+          <p class="sans muted">LayoutKit variables fall back to default values, but first look for app-level variables such as <code class="sans">--space-md</code>, <code class="sans">--text-md</code>, and <code class="sans">--radius-md</code>.</p>
+          <div class="code"><pre><span class="tok-tag">:root</span> {
+  <span class="tok-attr">--lk-space-sm</span>: <span class="tok-str">var(--space-sm, 0.5rem)</span>;
+  <span class="tok-attr">--lk-space-md</span>: <span class="tok-str">var(--space-md, 1rem)</span>;
+  <span class="tok-attr">--lk-space-lg</span>: <span class="tok-str">var(--space-lg, 1.5rem)</span>;
+  <span class="tok-attr">--lk-text-md</span>: <span class="tok-str">var(--text-md, 1rem)</span>;
+  <span class="tok-attr">--lk-radius-md</span>: <span class="tok-str">var(--radius-md, 0.75rem)</span>;
+}</pre></div>
+          <p class="sans muted">Map LayoutKit to your app tokens:</p>
+          <div class="code"><pre><span class="tok-tag">:root</span> {
+  <span class="tok-attr">--space-sm</span>: <span class="tok-str">var(--space-2)</span>;
+  <span class="tok-attr">--space-md</span>: <span class="tok-str">var(--space-4)</span>;
+  <span class="tok-attr">--space-lg</span>: <span class="tok-str">var(--space-6)</span>;
+}</pre></div>
+        </lk-stack>
+      </section>
 
-    <!-- ============ lk-spread ============ -->
-    <lk-stack id="lk-spread" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-spread&gt;</h2>
-        <p class="lead sans muted">Push children to opposite ends. Headers, footers, toolbars.</p>
-      </lk-stack>
+      <section id="accessibility" aria-labelledby="accessibility-heading">
+        <lk-stack gap="4">
+          <h2 id="accessibility-heading" class="h2">Accessibility</h2>
+          <ul class="sans muted">
+            <li>LayoutKit wraps and arranges semantic HTML.</li>
+            <li>LayoutKit does not replace semantic HTML.</li>
+            <li>Do not put click handlers on <code>lk-*</code> elements. Use <code>button</code> or <code>a</code>.</li>
+            <li>Do not use <code>lk-*</code> elements as headings, lists, tables, forms, landmarks, or controls.</li>
+            <li>If a LayoutKit wrapper has no semantic purpose, it usually does not need ARIA.</li>
+            <li>Do not add ARIA roles just to make layout wrappers seem semantic.</li>
+            <li>Prefer native HTML first.</li>
+            <li>LayoutKit should not interfere with focus order.</li>
+            <li>Avoid hiding overflow in ways that trap keyboard users.</li>
+            <li>Scroll containers should remain keyboard and screen-reader usable.</li>
+            <li>LayoutKit provides layout behavior only. Accessibility still depends on the underlying HTML and application code.</li>
+          </ul>
+        </lk-stack>
+      </section>
 
-      <div class="code"><pre><span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">align</span>=<span class="tok-str">"center"</span> <span class="tok-attr">padding</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;span&gt;</span>Logo<span class="tok-tag">&lt;/span&gt;</span>
-  <span class="tok-tag">&lt;nav&gt;</span>Menu<span class="tok-tag">&lt;/nav&gt;</span>
-<span class="tok-tag">&lt;/lk-spread&gt;</span></pre></div>
+      <section id="examples" aria-labelledby="examples-heading">
+        <lk-stack gap="4">
+          <h2 id="examples-heading" class="h2">Examples</h2>
+          <lk-grid responsive min="md" gap="4">
+            <article>
+              <h3>Form layout</h3>
+              <div class="code"><pre><span class="tok-tag">&lt;form</span> <span class="tok-attr">action</span>=<span class="tok-str">"/settings"</span> <span class="tok-attr">method</span>=<span class="tok-str">"post"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;label&gt;</span>Name <span class="tok-tag">&lt;input</span> <span class="tok-attr">name</span>=<span class="tok-str">"name"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;/label&gt;</span>
+    <span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"submit"</span><span class="tok-tag">&gt;</span>Save<span class="tok-tag">&lt;/button&gt;</span>
+  <span class="tok-tag">&lt;/lk-stack&gt;</span>
+<span class="tok-tag">&lt;/form&gt;</span></pre></div>
+            </article>
+            <article>
+              <h3>Scroll area</h3>
+              <div class="code"><pre><span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"activity"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;h2</span> <span class="tok-attr">id</span>=<span class="tok-str">"activity"</span><span class="tok-tag">&gt;</span>Recent activity<span class="tok-tag">&lt;/h2&gt;</span>
+  <span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">max-h</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;ol&gt;</span><span class="tok-tag">&lt;li&gt;</span>Order opened<span class="tok-tag">&lt;/li&gt;</span><span class="tok-tag">&lt;/ol&gt;</span>
+  <span class="tok-tag">&lt;/lk-scroll-area&gt;</span>
+<span class="tok-tag">&lt;/section&gt;</span></pre></div>
+            </article>
+          </lk-grid>
+        </lk-stack>
+      </section>
 
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">align</code></td><td>Align</td><td>center</td><td>Cross-axis alignment (align-items)</td></tr>
-              <tr><td><code class="sans">padding</code></td><td>Padding</td><td>none</td><td>Internal padding</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
+      <section id="jsx" aria-labelledby="jsx-heading">
+        <lk-stack gap="4">
+          <h2 id="jsx-heading" class="h2">Using LayoutKit with TSX/JSX</h2>
+          <p class="sans muted">The package includes <code class="sans">jsx.d.ts</code>. It only teaches TypeScript about known custom tags and attributes. No runtime JavaScript is required.</p>
+          <div class="code"><pre>{
+  <span class="tok-str">"compilerOptions"</span>: {
+    <span class="tok-str">"types"</span>: [<span class="tok-str">"layoutkit-css"</span>]
+  }
+}</pre></div>
+        </lk-stack>
+      </section>
 
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-spread</code> (base)</td><td><code class="sans">display: flex; flex-direction: row; justify-content: space-between; align-items: center</code></td></tr>
-              <tr><td><code class="sans">[align="start"]</code></td><td><code class="sans">align-items: flex-start</code></td></tr>
-              <tr><td><code class="sans">[align="center"]</code> (default)</td><td><code class="sans">align-items: center</code></td></tr>
-              <tr><td><code class="sans">[align="end"]</code></td><td><code class="sans">align-items: flex-end</code></td></tr>
-              <tr><td><code class="sans">[align="stretch"]</code></td><td><code class="sans">align-items: stretch</code></td></tr>
-              <tr><td><code class="sans">[align="baseline"]</code></td><td><code class="sans">align-items: baseline</code></td></tr>
-              <tr><td><code class="sans">[padding="xs"]</code> … <code class="sans">[padding="3xl"]</code></td><td><code class="sans">padding: 0.25rem … 4rem</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
+      <section id="browser-support" aria-labelledby="browser-heading">
+        <lk-stack gap="4">
+          <h2 id="browser-heading" class="h2">Browser support</h2>
+          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, and <code class="sans">color-mix()</code>.</p>
+        </lk-stack>
+      </section>
 
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ lk-grid ============ -->
-    <lk-stack id="lk-grid" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-grid&gt;</h2>
-        <p class="lead sans muted">CSS Grid with simple column counts.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;div&gt;</span>Card<span class="tok-tag">&lt;/div&gt;</span>
-  <span class="tok-tag">&lt;div&gt;</span>Card<span class="tok-tag">&lt;/div&gt;</span>
-  <span class="tok-tag">&lt;div&gt;</span>Card<span class="tok-tag">&lt;/div&gt;</span>
-<span class="tok-tag">&lt;/lk-grid&gt;</span>
-
-<span class="tok-com">&lt;!-- responsive: auto-fit columns --&gt;</span>
-<span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">responsive</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span> <span class="tok-attr">style</span>=<span class="tok-str">"--lk-min-child-width: 200px"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/lk-grid&gt;</span></pre></div>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">cols</code></td><td>1–12</td><td>1</td><td>Number of columns</td></tr>
-              <tr><td><code class="sans">rows</code></td><td>1–12</td><td>auto</td><td>Number of explicit rows</td></tr>
-              <tr><td><code class="sans">gap</code></td><td>GapSize</td><td>md (1rem)</td><td>Gap between grid items</td></tr>
-              <tr><td><code class="sans">col-gap</code></td><td>GapSize</td><td>—</td><td>Column gap only (column-gap)</td></tr>
-              <tr><td><code class="sans">row-gap</code></td><td>GapSize</td><td>—</td><td>Row gap only (row-gap)</td></tr>
-              <tr><td><code class="sans">flow</code></td><td>row | col | dense</td><td>row</td><td>Grid auto-flow direction</td></tr>
-              <tr><td><code class="sans">place-items</code></td><td>start | center | end | stretch</td><td>—</td><td>Shorthand for align + justify items</td></tr>
-              <tr><td><code class="sans">responsive</code></td><td>boolean</td><td>off</td><td>Auto-responsive columns via auto-fit</td></tr>
-              <tr><td><code class="sans">--lk-min-child-width</code></td><td>length (custom prop)</td><td>250px</td><td>Min child width when responsive (set inline via style)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-grid</code> (base)</td><td><code class="sans">display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: var(--lk-space-md)</code></td></tr>
-              <tr><td><code class="sans">[cols="N"]</code> (N = 1–12)</td><td><code class="sans">grid-template-columns: repeat(N, minmax(0, 1fr))</code></td></tr>
-              <tr><td><code class="sans">[rows="N"]</code> (N = 1–12)</td><td><code class="sans">grid-template-rows: repeat(N, minmax(0, 1fr))</code></td></tr>
-              <tr><td><code class="sans">[gap="…"]</code></td><td><code class="sans">gap: …</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
-              <tr><td><code class="sans">[col-gap="…"]</code></td><td><code class="sans">column-gap: …</code> (size scale)</td></tr>
-              <tr><td><code class="sans">[row-gap="…"]</code></td><td><code class="sans">row-gap: …</code> (size scale)</td></tr>
-              <tr><td><code class="sans">[flow="row"]</code></td><td><code class="sans">grid-auto-flow: row</code></td></tr>
-              <tr><td><code class="sans">[flow="col"]</code></td><td><code class="sans">grid-auto-flow: column</code></td></tr>
-              <tr><td><code class="sans">[flow="dense"]</code></td><td><code class="sans">grid-auto-flow: dense</code></td></tr>
-              <tr><td><code class="sans">[place-items="start|center|end|stretch"]</code></td><td><code class="sans">place-items: start | center | end | stretch</code></td></tr>
-              <tr><td><code class="sans">[responsive]</code></td><td><code class="sans">grid-template-columns: repeat(auto-fit, minmax(var(--lk-min-child-width, 250px), 1fr))</code></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ lk-spacer ============ -->
-    <lk-stack id="lk-spacer" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-spacer&gt;</h2>
-        <p class="lead sans muted">Flexible space that pushes siblings apart.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-tag">&lt;lk-row&gt;</span>
-  <span class="tok-tag">&lt;span&gt;</span>Logo<span class="tok-tag">&lt;/span&gt;</span>
-  <span class="tok-tag">&lt;lk-spacer&gt;&lt;/lk-spacer&gt;</span>          <span class="tok-com">&lt;!-- auto: grows to push apart --&gt;</span>
-  <span class="tok-tag">&lt;button&gt;</span>Action<span class="tok-tag">&lt;/button&gt;</span>
-<span class="tok-tag">&lt;/lk-row&gt;</span>
-
-<span class="tok-tag">&lt;lk-spacer</span> <span class="tok-attr">size</span>=<span class="tok-str">"4"</span><span class="tok-tag">&gt;&lt;/lk-spacer&gt;</span>     <span class="tok-com">&lt;!-- fixed 1rem height --&gt;</span></pre></div>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">size</code></td><td>GapSize | "auto"</td><td>auto</td><td>Fixed height, or flex grow when auto</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-spacer</code> (base)</td><td><code class="sans">display: block; flex: 1 1 0%</code></td></tr>
-              <tr><td><code class="sans">[size="auto"]</code> (default)</td><td><code class="sans">flex: 1 1 0%</code></td></tr>
-              <tr><td><code class="sans">[size="none"]</code></td><td><code class="sans">flex: none; block-size: 0</code></td></tr>
-              <tr><td><code class="sans">[size="xs"]</code></td><td><code class="sans">flex: none; block-size: 0.25rem</code></td></tr>
-              <tr><td><code class="sans">[size="sm"]</code></td><td><code class="sans">flex: none; block-size: 0.5rem</code></td></tr>
-              <tr><td><code class="sans">[size="md"]</code></td><td><code class="sans">flex: none; block-size: 1rem</code></td></tr>
-              <tr><td><code class="sans">[size="lg"]</code></td><td><code class="sans">flex: none; block-size: 1.5rem</code></td></tr>
-              <tr><td><code class="sans">[size="xl"]</code></td><td><code class="sans">flex: none; block-size: 2rem</code></td></tr>
-              <tr><td><code class="sans">[size="2xl"]</code></td><td><code class="sans">flex: none; block-size: 3rem</code></td></tr>
-              <tr><td><code class="sans">[size="3xl"]</code></td><td><code class="sans">flex: none; block-size: 4rem</code></td></tr>
-              <tr><td><code class="sans">[size="N"]</code> (numeric scale)</td><td><code class="sans">flex: none; block-size: …</code> (see <a class="navlink" href="#reference" style="padding:0;">size scale</a>)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ lk-divider ============ -->
-    <lk-stack id="lk-divider" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-divider&gt;</h2>
-        <p class="lead sans muted">Visual separator between content sections.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-tag">&lt;lk-divider&gt;&lt;/lk-divider&gt;</span>
-
-<span class="tok-tag">&lt;lk-divider</span> <span class="tok-attr">orientation</span>=<span class="tok-str">"vertical"</span> <span class="tok-attr">thickness</span>=<span class="tok-str">"medium"</span>
-  <span class="tok-attr">style</span>=<span class="tok-str">"--lk-divider-color: #ccc"</span><span class="tok-tag">&gt;&lt;/lk-divider&gt;</span></pre></div>
-
-      <lk-box class="card" padding="3" style="border-color: color-mix(in srgb, var(--purple, #8b5cf6) 25%, transparent);">
-        <p class="sans muted" style="margin: 0; font-size: 13px;">
-          Note: <code class="sans">&lt;lk-divider&gt;</code> is a purely visual border. It carries no implicit ARIA role —
-          if it should be announced as a separator, add <code class="sans">role="separator"</code> yourself.
-        </p>
-      </lk-box>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">orientation</code></td><td>horizontal | vertical</td><td>horizontal</td><td>Line direction</td></tr>
-              <tr><td><code class="sans">thickness</code></td><td>thin | medium | thick</td><td>thin (1px)</td><td>Line thickness</td></tr>
-              <tr><td><code class="sans">--lk-divider-color</code></td><td>color (custom prop)</td><td>#e5e7eb</td><td>Line color (set inline via style)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-divider</code> (base)</td><td><code class="sans">display: block; inline-size: 100%; border-block-start: 1px solid var(--lk-divider-color, #e5e7eb)</code></td></tr>
-              <tr><td><code class="sans">[thickness="medium"]</code></td><td><code class="sans">border-block-start-width: 2px</code></td></tr>
-              <tr><td><code class="sans">[thickness="thick"]</code></td><td><code class="sans">border-block-start-width: 4px</code></td></tr>
-              <tr><td><code class="sans">[orientation="vertical"]</code></td><td><code class="sans">inline-size: auto; block-size: 100%; align-self: stretch; border-block-start: 0; border-inline-start: 1px solid var(--lk-divider-color, #e5e7eb)</code></td></tr>
-              <tr><td><code class="sans">[orientation="vertical"][thickness="medium"]</code></td><td><code class="sans">border-inline-start-width: 2px</code></td></tr>
-              <tr><td><code class="sans">[orientation="vertical"][thickness="thick"]</code></td><td><code class="sans">border-inline-start-width: 4px</code></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ lk-aspect-ratio ============ -->
-    <lk-stack id="lk-aspect-ratio" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-aspect-ratio&gt;</h2>
-        <p class="lead sans muted">Hold a fixed width-to-height ratio. Media embeds, image placeholders, cards.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-com">&lt;!-- 16:9 video frame --&gt;</span>
-<span class="tok-tag">&lt;lk-aspect-ratio</span> <span class="tok-attr">style</span>=<span class="tok-str">"--lk-ratio: 16 / 9"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;iframe</span> <span class="tok-attr">src</span>=<span class="tok-str">"…"</span> <span class="tok-attr">style</span>=<span class="tok-str">"width: 100%; height: 100%"</span><span class="tok-tag">&gt;&lt;/iframe&gt;</span>
-<span class="tok-tag">&lt;/lk-aspect-ratio&gt;</span></pre></div>
-
-      <lk-box class="card" padding="3" style="border-color: color-mix(in srgb, var(--purple, #8b5cf6) 25%, transparent);">
-        <p class="sans muted" style="margin: 0; font-size: 13px;">
-          Note: the ratio is enforced on the <code class="sans">&lt;lk-aspect-ratio&gt;</code> box itself. Its child
-          must size itself to the box (e.g. <code class="sans">width: 100%; height: 100%</code> or
-          <code class="sans">object-fit: cover</code>) — the tag does not stretch children for you.
-        </p>
-      </lk-box>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">--lk-ratio</code></td><td>ratio (custom prop)</td><td>1</td><td>Width-to-height ratio, e.g. <code class="sans">16 / 9</code>. Set inline via style.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-aspect-ratio</code> (base)</td><td><code class="sans">display: block; aspect-ratio: var(--lk-ratio, 1)</code></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ lk-scroll-area ============ -->
-    <lk-stack id="lk-scroll-area" gap="4" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <h2 class="h2">&lt;lk-scroll-area&gt;</h2>
-        <p class="lead sans muted">A scrollable viewport with capped dimensions. Long lists, code panes, overflow regions.</p>
-      </lk-stack>
-
-      <div class="code"><pre><span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">style</span>=<span class="tok-str">"--lk-max-height: 320px"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;ul&gt;</span> … long list … <span class="tok-tag">&lt;/ul&gt;</span>
-<span class="tok-tag">&lt;/lk-scroll-area&gt;</span>
-
-<span class="tok-com">&lt;!-- horizontal scroller --&gt;</span>
-<span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">direction</span>=<span class="tok-str">"horizontal"</span> <span class="tok-attr">style</span>=<span class="tok-str">"--lk-max-width: 100%"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/lk-scroll-area&gt;</span></pre></div>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ATTRIBUTES</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">direction</code></td><td>vertical | horizontal | both</td><td>vertical*</td><td>Which axis scrolls. *Base behavior is vertical overflow even without the attribute.</td></tr>
-              <tr><td><code class="sans">--lk-max-height</code></td><td>length (custom prop)</td><td>none</td><td>Cap on height; content beyond it scrolls. Set inline via style.</td></tr>
-              <tr><td><code class="sans">--lk-max-width</code></td><td>length (custom prop)</td><td>none</td><td>Cap on width; content beyond it scrolls. Set inline via style.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">APPLIED CSS</span>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Selector</th><th>Applied CSS</th></tr></thead>
-            <tbody>
-              <tr><td><code class="sans">lk-scroll-area</code> (base)</td><td><code class="sans">display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none)</code></td></tr>
-              <tr><td><code class="sans">[direction="vertical"]</code></td><td><code class="sans">overflow-x: hidden; overflow-y: auto</code></td></tr>
-              <tr><td><code class="sans">[direction="horizontal"]</code></td><td><code class="sans">overflow-x: auto; overflow-y: hidden</code></td></tr>
-              <tr><td><code class="sans">[direction="both"]</code></td><td><code class="sans">overflow: auto</code></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ Text, surfaces & rhythm (1.2) ============ -->
-    <lk-stack id="surfaces" gap="5" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <span class="pill pill-green">1.2 · ADDITIVE</span>
-        <h2 class="h2">Text, surfaces &amp; rhythm</h2>
-        <p class="lead sans muted" style="max-width: 640px;">Style without dropping to raw CSS: a type scale, a token-driven card, content width, and vertical rhythm — all enumerated attributes, so they work under a strict <code class="sans">style-src 'self'</code> CSP.</p>
-      </lk-stack>
-
-      <lk-grid responsive gap="4" style="--lk-min-child-width: 280px;">
-        <lk-card>
-          <lk-stack gap="2">
-            <span class="eyebrow">TYPE SCALE</span>
-            <p class="sans muted"><code class="sans">lk-text</code> / <code class="sans">lk-weight</code> on any element. Sizes <code class="sans">xs…4xl</code> resolve through <code class="sans">--text-*</code> tokens.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;h2</span> <span class="tok-attr">lk-text</span>=<span class="tok-str">"2xl"</span> <span class="tok-attr">lk-weight</span>=<span class="tok-str">"semibold"</span><span class="tok-tag">&gt;</span>…<span class="tok-tag">&lt;/h2&gt;</span></pre></div>
-          </lk-stack>
-        </lk-card>
-        <lk-card>
-          <lk-stack gap="2">
-            <span class="eyebrow">CARD</span>
-            <p class="sans muted"><code class="sans">lk-card</code> — padded surface; <code class="sans">padding</code>, <code class="sans">radius</code>, <code class="sans">surface</code>, <code class="sans">border</code>. Radius via <code class="sans">--radius-*</code> tokens.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-card</span> <span class="tok-attr">surface</span> <span class="tok-attr">radius</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>…<span class="tok-tag">&lt;/lk-card&gt;</span></pre></div>
-          </lk-stack>
-        </lk-card>
-        <lk-card>
-          <lk-stack gap="2">
-            <span class="eyebrow">WIDTH</span>
-            <p class="sans muted"><code class="sans">width="prose | xs…xl | full"</code> constrains <code class="sans">max-inline-size</code> and centers. <code class="sans">prose</code> = the reading measure.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">width</span>=<span class="tok-str">"prose"</span><span class="tok-tag">&gt;</span>…<span class="tok-tag">&lt;/lk-box&gt;</span></pre></div>
-          </lk-stack>
-        </lk-card>
-        <lk-card>
-          <lk-stack gap="2">
-            <span class="eyebrow">FLOW (RHYTHM)</span>
-            <p class="sans muted"><code class="sans">flow</code> (or <code class="sans">flow="lg"</code>) spaces every flowing child via the owl selector — no per-item margins.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">flow</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/lk-box&gt;</span></pre></div>
-          </lk-stack>
-        </lk-card>
-      </lk-grid>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ Responsive primitives (1.2) ============ -->
-    <lk-stack id="responsive" gap="5" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <span class="pill pill-purple">1.2 · NO MEDIA QUERIES</span>
-        <h2 class="h2">Responsive primitives</h2>
-        <p class="lead sans muted" style="max-width: 640px;">Layouts that respond to their own available width through intrinsic sizing — no breakpoints, no media queries, no JavaScript. Resize the window.</p>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <h3 class="h2" style="font-size:18px;"><code class="sans">lk-switcher</code></h3>
-        <p class="sans muted">A row that flips to a stack below a threshold (<code class="sans">--lk-switch-at</code>, default 30rem).</p>
-        <div class="code"><pre><span class="tok-tag">&lt;lk-switcher&gt;</span><span class="tok-tag">&lt;div&gt;</span>…<span class="tok-tag">&lt;/div&gt;</span><span class="tok-tag">&lt;div&gt;</span>…<span class="tok-tag">&lt;/div&gt;</span><span class="tok-tag">&lt;/lk-switcher&gt;</span></pre></div>
-        <div class="demo"><lk-switcher style="--lk-switch-at: 24rem;"><span class="chip">One</span><span class="chip">Two</span><span class="chip">Three</span></lk-switcher></div>
-      </lk-stack>
-
-      <lk-stack gap="2">
-        <h3 class="h2" style="font-size:18px;"><code class="sans">lk-sidebar</code></h3>
-        <p class="sans muted">Fixed side (<code class="sans">--lk-sidebar-width</code>) + flexible content that wraps under when it would get too narrow. <code class="sans">side="end"</code> swaps sides.</p>
-        <div class="demo"><lk-sidebar><span class="chip">Sidebar</span><span class="chip">Content area that grows and then wraps below the sidebar on narrow screens.</span></lk-sidebar></div>
-      </lk-stack>
-
-      <lk-row class="navlinks" gap="3" style="flex-wrap:wrap;">
-        <span class="sans muted" style="font-size:13px;"><code class="sans">lk-cluster</code> — wrapping chip/button group (<code class="sans">gap</code> + <code class="sans">place</code>)</span>
-        <span class="sans muted" style="font-size:13px;"><code class="sans">lk-cover</code> — min-height region; <code class="sans">[center]</code> child centers, header/footer pin to edges</span>
-      </lk-row>
-
-      <lk-stack gap="2">
-        <span class="eyebrow">ENUMERATED FREE-FORM (CSP-CLEAN)</span>
-        <p class="sans muted"><code class="sans">ratio="16/9"</code> (aspect-ratio), <code class="sans">min="md"</code> (grid auto-fill min child width), <code class="sans">max-h="md"</code> (scroll-area) — attribute versions of the inline <code class="sans">--lk-*</code> knobs, so they work under a strict <code class="sans">style-src 'self'</code> CSP.</p>
-      </lk-stack>
-    </lk-stack>
-
-    <lk-divider style="margin-bottom: 64px;"></lk-divider>
-
-    <!-- ============ Reference ============ -->
-    <lk-stack id="reference" gap="5" style="scroll-margin-top: 80px; margin-bottom: 64px;">
-      <lk-stack gap="2">
-        <span class="pill">REFERENCE</span>
-        <h2 class="h2">Size scale &amp; attribute values</h2>
-        <p class="lead sans muted" style="max-width: 640px;">
-          The shared scale used by <code class="sans">gap</code>, <code class="sans">col-gap</code>,
-          <code class="sans">row-gap</code>, <code class="sans">padding</code>, and <code class="sans">size</code>.
-          The semantic sizes (<code class="sans">xs … 3xl</code>) are applied as
-          <code class="sans">var(--lk-space-&lt;size&gt;)</code>, defaulting to your
-          <code class="sans">--space-&lt;size&gt;</code> token then the length below — see
-          <a class="navlink" href="#theming" style="padding:0;">Theming</a>. The numeric steps are literal.
-        </p>
-      </lk-stack>
-
-      <lk-grid responsive gap="4" style="--lk-min-child-width: 280px;">
-        <lk-box class="card" padding="4">
-          <lk-stack gap="3">
-            <span class="eyebrow">SIZE SCALE (gap / padding / size)</span>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Token</th><th>Length</th></tr></thead>
-                <tbody>
-                  <tr><td><code class="sans">none</code></td><td>0</td></tr>
-                  <tr><td><code class="sans">px</code></td><td>1px</td></tr>
-                  <tr><td><code class="sans">0.5</code></td><td>0.125rem</td></tr>
-                  <tr><td><code class="sans">1</code> / <code class="sans">xs</code></td><td>0.25rem</td></tr>
-                  <tr><td><code class="sans">1.5</code></td><td>0.375rem</td></tr>
-                  <tr><td><code class="sans">2</code> / <code class="sans">sm</code></td><td>0.5rem</td></tr>
-                  <tr><td><code class="sans">2.5</code></td><td>0.625rem</td></tr>
-                  <tr><td><code class="sans">3</code></td><td>0.75rem</td></tr>
-                  <tr><td><code class="sans">3.5</code></td><td>0.875rem</td></tr>
-                  <tr><td><code class="sans">4</code> / <code class="sans">md</code></td><td>1rem</td></tr>
-                  <tr><td><code class="sans">5</code></td><td>1.25rem</td></tr>
-                  <tr><td><code class="sans">6</code> / <code class="sans">lg</code></td><td>1.5rem</td></tr>
-                  <tr><td><code class="sans">7</code></td><td>1.75rem</td></tr>
-                  <tr><td><code class="sans">8</code> / <code class="sans">xl</code></td><td>2rem</td></tr>
-                  <tr><td><code class="sans">9</code></td><td>2.25rem</td></tr>
-                  <tr><td><code class="sans">10</code></td><td>2.5rem</td></tr>
-                  <tr><td><code class="sans">11</code></td><td>2.75rem</td></tr>
-                  <tr><td><code class="sans">12</code> / <code class="sans">2xl</code></td><td>3rem</td></tr>
-                  <tr><td><code class="sans">14</code></td><td>3.5rem</td></tr>
-                  <tr><td><code class="sans">16</code> / <code class="sans">3xl</code></td><td>4rem</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="sans muted" style="margin: 0; font-size: 12px;">Note: <code class="sans">2xl</code> = 3rem and <code class="sans">3xl</code> = 4rem (aliases for 12 and 16). <code class="sans">size</code> on lk-spacer applies these as <code class="sans">height</code> with <code class="sans">flex: none</code>.</p>
-          </lk-stack>
-        </lk-box>
-
-        <lk-box class="card" padding="4">
-          <lk-stack gap="3">
-            <span class="eyebrow">ALIGN → ALIGN-ITEMS</span>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Value</th><th>align-items</th></tr></thead>
-                <tbody>
-                  <tr><td><code class="sans">start</code></td><td>flex-start</td></tr>
-                  <tr><td><code class="sans">center</code></td><td>center</td></tr>
-                  <tr><td><code class="sans">end</code></td><td>flex-end</td></tr>
-                  <tr><td><code class="sans">stretch</code></td><td>stretch</td></tr>
-                  <tr><td><code class="sans">baseline</code></td><td>baseline</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-            <span class="eyebrow">JUSTIFY → JUSTIFY-CONTENT</span>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Value</th><th>justify-content</th></tr></thead>
-                <tbody>
-                  <tr><td><code class="sans">start</code></td><td>flex-start</td></tr>
-                  <tr><td><code class="sans">center</code></td><td>center</td></tr>
-                  <tr><td><code class="sans">end</code></td><td>flex-end</td></tr>
-                  <tr><td><code class="sans">between</code></td><td>space-between</td></tr>
-                  <tr><td><code class="sans">around</code></td><td>space-around</td></tr>
-                  <tr><td><code class="sans">evenly</code></td><td>space-evenly</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </lk-stack>
-        </lk-box>
-
-        <lk-box class="card" padding="4">
-          <lk-stack gap="3">
-            <span class="eyebrow">CUSTOM PROPERTIES (FREE-FORM VALUES)</span>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Property</th><th>Used by</th><th>Default</th></tr></thead>
-                <tbody>
-                  <tr><td><code class="sans">--lk-ratio</code></td><td>lk-aspect-ratio</td><td>1</td></tr>
-                  <tr><td><code class="sans">--lk-divider-color</code></td><td>lk-divider</td><td>#e5e7eb</td></tr>
-                  <tr><td><code class="sans">--lk-min-child-width</code></td><td>lk-grid (responsive)</td><td>250px</td></tr>
-                  <tr><td><code class="sans">--lk-max-height</code></td><td>lk-scroll-area</td><td>none</td></tr>
-                  <tr><td><code class="sans">--lk-max-width</code></td><td>lk-scroll-area</td><td>none</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="sans muted" style="margin: 0; font-size: 12px;">Set these inline via the <code class="sans">style</code> attribute — they are plain CSS custom properties the stylesheet reads.</p>
-          </lk-stack>
-        </lk-box>
-      </lk-grid>
+      <section id="security" aria-labelledby="security-heading">
+        <lk-stack gap="4">
+          <h2 id="security-heading" class="h2">Security and package verification</h2>
+          <p class="sans muted">LayoutKit has no runtime JavaScript, no npm dependencies, no install scripts, no remote imports, and should not perform network requests.</p>
+          <div class="code"><pre>npm pack layoutkit-css
+tar -tzf layoutkit-css-*.tgz</pre></div>
+          <lk-row gap="3" wrap>
+            <a class="btn" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub repository</a>
+            <a class="btn" href="https://www.npmjs.com/package/layoutkit-css" target="_blank" rel="noopener">npm package</a>
+          </lk-row>
+        </lk-stack>
+      </section>
     </lk-stack>
   </main>
 
   <footer class="footer">
     <lk-spread class="container" align="center">
-      <span>LayoutKit — pure-CSS layout. MIT.</span>
-      <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
+      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
+      <lk-row gap="4">
+        <a class="navlink" href="/install">Install</a>
+        <a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a>
+      </lk-row>
     </lk-spread>
   </footer>
 </body>

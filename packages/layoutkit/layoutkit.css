@@ -1,13 +1,15 @@
 /*
- * layoutkit-css — a layout language for the web, as pure CSS.
- * Zero dependencies. No JavaScript. No build step. No FOUC.
+ * layoutkit-css — a tiny pure-CSS layout vocabulary for readable app structure.
+ * Zero dependencies. No JavaScript. No build step.
  *
  *   <link rel="stylesheet" href="layoutkit.css">
- *   <lk-stack gap="lg" padding="md">
- *     <lk-center full-height>You can finally center a div.</lk-center>
- *   </lk-stack>
+ *   <main>
+ *     <lk-stack gap="lg">
+ *       <h1>Dashboard</h1>
+ *     </lk-stack>
+ *   </main>
  *
- * Theming: remap the scale onto your design tokens by defining --space-*
+ * Tokens: remap the scale onto your design tokens by defining --space-*
  * (or override --lk-space-* directly). All rules are in @layer layoutkit.
  * Free-form values use custom properties:
  *   --lk-ratio, --lk-divider-color, --lk-min-child-width, --lk-max-height, --lk-max-width.

@@ -2,9 +2,10 @@
   "name": "layoutkit-site",
   "version": "0.1.0",
   "private": true,
-  "description": "layoutkit.dev — a static, no-framework, hypermedia docs site that dogfoods layoutkit-css.",
+  "description": "layoutkit.dev — a static, no-framework docs site for the layoutkit-css stylesheet.",
   "license": "MIT",
   "scripts": {
-    "build": "node packages/layoutkit/gen.mjs"
+    "build": "node packages/layoutkit/gen.mjs",
+    "check": "node scripts/check-package.mjs"
   }
 }

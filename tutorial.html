@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tutorial — LayoutKit</title>
-  <meta name="description" content="Learn LayoutKit step by step. Each example is rendered live by the stylesheet — pure CSS, no build.">
+  <title>Tutorial - LayoutKit layout wrappers inside semantic HTML</title>
+  <meta name="description" content="Learn LayoutKit as pure-CSS layout wrappers for native semantic HTML. No runtime JavaScript, no dependencies, no custom element registration.">
   <link rel="canonical" href="https://layoutkit.dev/tutorial">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
-  <meta property="og:title" content="Tutorial — LayoutKit">
-  <meta property="og:description" content="Learn LayoutKit step by step. Five tags, start to finish — each example rendered live by the stylesheet. Pure CSS, no build.">
+  <meta property="og:title" content="Tutorial - LayoutKit">
+  <meta property="og:description" content="Learn LayoutKit as pure-CSS layout wrappers for native semantic HTML.">
   <meta property="og:url" content="https://layoutkit.dev/tutorial">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit — a layout language for the web, as pure CSS.">
+  <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Tutorial — LayoutKit">
-  <meta name="twitter:description" content="Five tags, start to finish — each example rendered live by the stylesheet. Pure CSS, no build.">
+  <meta name="twitter:title" content="Tutorial - LayoutKit">
+  <meta name="twitter:description" content="Pure-CSS layout wrappers for native semantic HTML.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20260626b">
+  <link rel="stylesheet" href="/assets/site.css?v=20260705a">
   <style>
     /* Tutorial example frames — neutral surface so the lk-* layout reads clearly */
     .demo { border: 1px dashed var(--border); border-radius: 8px; padding: 12px; background: var(--surface-2); }
@@ -56,7 +56,7 @@
   <main id="main" class="container" style="padding-block: 40px;">
     <lk-stack gap="2" style="margin-bottom: 32px;">
       <h1 class="h2">Tutorial</h1>
-      <p class="sans muted">Five tags, start to finish. Every example below is rendered live by the stylesheet — view source, there's no JavaScript.</p>
+      <p class="sans muted">LayoutKit arranges native HTML. The examples keep headings, links, buttons, lists, and landmarks as real HTML elements.</p>
     </lk-stack>
 
     <lk-stack gap="8">
@@ -64,11 +64,13 @@
       <lk-box class="card">
         <lk-stack gap="4">
           <div><span class="eyebrow">Step 1</span><h2 class="h2" style="font-size:18px;">Center a div</h2></div>
-          <p class="sans muted">The CSS final boss. One tag, both axes.</p>
+          <p class="sans muted">Use <code class="code-inline">lk-center</code> as a wrapper around meaningful content.</p>
           <div class="code"><pre><span class="tok-tag">&lt;lk-center&gt;</span>
-  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"chip"</span><span class="tok-tag">&gt;</span>centered<span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"empty-heading"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;h2</span> <span class="tok-attr">id</span>=<span class="tok-str">"empty-heading"</span><span class="tok-tag">&gt;</span>No results<span class="tok-tag">&lt;/h2&gt;</span>
+  <span class="tok-tag">&lt;/section&gt;</span>
 <span class="tok-tag">&lt;/lk-center&gt;</span></pre></div>
-          <div class="demo"><lk-center style="min-height:120px;"><div class="chip">centered</div></lk-center></div>
+          <div class="demo"><lk-center style="min-height:120px;"><section aria-labelledby="empty-heading-demo"><h2 id="empty-heading-demo">No results</h2></section></lk-center></div>
         </lk-stack>
       </lk-box>
 
@@ -78,10 +80,10 @@
           <div><span class="eyebrow">Step 2</span><h2 class="h2" style="font-size:18px;">Stack with consistent spacing</h2></div>
           <p class="sans muted"><code class="code-inline">lk-stack</code> is a vertical flex column; <code class="code-inline">gap</code> sets the rhythm.</p>
           <div class="code"><pre><span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"chip"</span><span class="tok-tag">&gt;</span>one<span class="tok-tag">&lt;/div&gt;</span>
-  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"chip"</span><span class="tok-tag">&gt;</span>two<span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>Summary<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>Details<span class="tok-tag">&lt;/p&gt;</span>
 <span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-          <div class="demo"><lk-stack gap="md"><div class="chip">one</div><div class="chip">two</div><div class="chip">three</div></lk-stack></div>
+          <div class="demo"><lk-stack gap="md"><p>Summary</p><p>Details</p><p>Next steps</p></lk-stack></div>
         </lk-stack>
       </lk-box>
 
@@ -91,10 +93,12 @@
           <div><span class="eyebrow">Step 3</span><h2 class="h2" style="font-size:18px;">A header with <code class="code-inline">lk-spread</code></h2></div>
           <p class="sans muted">Push children to opposite ends — logo left, links right.</p>
           <div class="code"><pre><span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">align</span>=<span class="tok-str">"center"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;strong&gt;</span>Logo<span class="tok-tag">&lt;/strong&gt;</span>
-  <span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a&gt;</span>Home<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;a&gt;</span>About<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/lk-row&gt;</span>
+  <span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>Logo<span class="tok-tag">&lt;/a&gt;</span>
+  <span class="tok-tag">&lt;nav</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Primary"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>Home<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/docs"</span><span class="tok-tag">&gt;</span>Docs<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/lk-row&gt;</span>
+  <span class="tok-tag">&lt;/nav&gt;</span>
 <span class="tok-tag">&lt;/lk-spread&gt;</span></pre></div>
-          <div class="demo"><lk-spread align="center"><strong>Logo</strong><lk-row gap="sm"><span class="chip">Home</span><span class="chip">About</span></lk-row></lk-spread></div>
+          <div class="demo"><lk-spread align="center"><a href="/">Logo</a><nav aria-label="Demo"><lk-row gap="sm"><a href="/">Home</a><a href="/docs">Docs</a></lk-row></nav></lk-spread></div>
         </lk-stack>
       </lk-box>
 
@@ -104,9 +108,9 @@
           <div><span class="eyebrow">Step 4</span><h2 class="h2" style="font-size:18px;">A responsive grid</h2></div>
           <p class="sans muted"><code class="code-inline">responsive</code> auto-fits columns by available width — no breakpoints. Resize the window.</p>
           <div class="code"><pre><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">responsive</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span> <span class="tok-attr">style</span>=<span class="tok-str">"--lk-min-child-width: 140px"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"chip"</span><span class="tok-tag">&gt;</span>card<span class="tok-tag">&lt;/div&gt;</span> …
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Project<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span> …
 <span class="tok-tag">&lt;/lk-grid&gt;</span></pre></div>
-          <div class="demo"><lk-grid responsive gap="md" style="--lk-min-child-width: 140px;"><div class="chip">card 1</div><div class="chip">card 2</div><div class="chip">card 3</div><div class="chip">card 4</div></lk-grid></div>
+          <div class="demo"><lk-grid responsive gap="md" style="--lk-min-child-width: 140px;"><article><h3>Project 1</h3></article><article><h3>Project 2</h3></article><article><h3>Project 3</h3></article></lk-grid></div>
         </lk-stack>
       </lk-box>
 
@@ -114,12 +118,12 @@
       <lk-box class="card">
         <lk-stack gap="4">
           <div><span class="eyebrow">Step 5</span><h2 class="h2" style="font-size:18px;">Compose a page</h2></div>
-          <p class="sans muted"><code class="code-inline">fill</code> grows a region to take the remaining space — header, content, done.</p>
+          <p class="sans muted"><code class="code-inline">fill</code> grows a layout wrapper while the page keeps native landmarks.</p>
           <div class="code"><pre><span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">style</span>=<span class="tok-str">"height: 200px"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">padding</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;strong&gt;</span>App<span class="tok-tag">&lt;/strong&gt;</span><span class="tok-tag">&lt;a&gt;</span>Menu<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/lk-spread&gt;</span>
-  <span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">fill</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;lk-center&gt;</span>Content<span class="tok-tag">&lt;/lk-center&gt;</span><span class="tok-tag">&lt;/lk-box&gt;</span>
+  <span class="tok-tag">&lt;header&gt;</span><span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">padding</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>App<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"button"</span><span class="tok-tag">&gt;</span>Menu<span class="tok-tag">&lt;/button&gt;</span><span class="tok-tag">&lt;/lk-spread&gt;</span><span class="tok-tag">&lt;/header&gt;</span>
+  <span class="tok-tag">&lt;main&gt;</span><span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">fill</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;lk-center&gt;</span><span class="tok-tag">&lt;h2&gt;</span>Content<span class="tok-tag">&lt;/h2&gt;</span><span class="tok-tag">&lt;/lk-center&gt;</span><span class="tok-tag">&lt;/lk-box&gt;</span><span class="tok-tag">&lt;/main&gt;</span>
 <span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-          <div class="demo"><lk-stack style="height:200px;"><lk-spread padding="sm"><strong>App</strong><span class="chip">Menu</span></lk-spread><lk-box fill><lk-center>Content</lk-center></lk-box></lk-stack></div>
+          <div class="demo"><lk-stack style="height:200px;"><header><lk-spread padding="sm"><a href="/">App</a><button type="button">Menu</button></lk-spread></header><main><lk-box fill><lk-center><h2>Content</h2></lk-center></lk-box></main></lk-stack></div>
         </lk-stack>
       </lk-box>
 
@@ -131,7 +135,7 @@
 
   <footer class="footer">
     <lk-spread class="container" align="center">
-      <span>LayoutKit — pure-CSS layout. MIT.</span>
+      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
       <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
     </lk-spread>
   </footer>

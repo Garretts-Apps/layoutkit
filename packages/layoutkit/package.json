@@ -1,7 +1,7 @@
 {
   "name": "layoutkit-css",
-  "version": "1.2.0",
-  "description": "A layout language for the web — pure CSS. Style <lk-*> tags with attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.",
+  "version": "1.3.0",
+  "description": "A tiny pure-CSS layout vocabulary for readable app structure.",
   "license": "MIT",
   "homepage": "https://layoutkit.dev",
   "repository": {
@@ -15,18 +15,41 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["layout", "css", "flexbox", "grid", "design-system", "design-tokens", "cascade-layers", "logical-properties", "zero-dependency", "no-build", "custom-tags", "semantic-html", "html"],
+  "keywords": [
+    "layout",
+    "css",
+    "flexbox",
+    "grid",
+    "layout-primitives",
+    "cascade-layers",
+    "logical-properties",
+    "zero-dependency",
+    "no-build",
+    "custom-tags",
+    "html"
+  ],
+  "types": "./jsx.d.ts",
   "exports": {
-    ".": "./layoutkit.css",
-    "./layoutkit.css": "./layoutkit.css"
+    ".": {
+      "types": "./jsx.d.ts",
+      "default": "./layoutkit.css"
+    },
+    "./layoutkit.css": "./layoutkit.css",
+    "./jsx.d.ts": "./jsx.d.ts"
   },
   "main": "./layoutkit.css",
   "style": "./layoutkit.css",
   "unpkg": "./layoutkit.css",
   "jsdelivr": "./layoutkit.css",
-  "files": ["layoutkit.css", "gen.mjs", "README.md", "CHANGELOG.md", "LICENSE"],
-  "sideEffects": ["*.css"],
-  "scripts": {
-    "build": "node gen.mjs"
-  }
+  "files": [
+    "layoutkit.css",
+    "jsx.d.ts",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "sideEffects": [
+    "*.css"
+  ]
 }

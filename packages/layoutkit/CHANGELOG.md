@@ -3,6 +3,32 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 1.3.0
+
+Positioning, documentation, package quality, and publish-readiness update.
+
+### Added
+- Dependency-free `jsx.d.ts` declarations for known `lk-*` elements and common
+  attributes. These declarations are type-only and do not add runtime behavior.
+- Security documentation with package verification guidance.
+- No-dependency package validation for dependency, install-script, CSS, export,
+  and package allowlist checks.
+
+### Changed
+- Documentation now describes LayoutKit as a tiny pure-CSS layout vocabulary for
+  readable app structure.
+- Accessibility guidance now clearly says LayoutKit wraps native semantic HTML
+  and does not replace landmarks, headings, lists, forms, controls, buttons, or
+  links.
+- The npm package allowlist now ships only consumer-facing files.
+- The trusted publishing workflow validates the package before publishing and
+  uses npm provenance without token-based publishing.
+
+### Removed
+- Legacy CLI and VS Code extension folders were removed from the repository so
+  LayoutKit stays focused on the CSS package and does not imply a binary,
+  framework component installer, or editor-extension product surface.
+
 ## 1.2.0
 
 Ergonomics pass: spend less effort styling, and stop thinking in raw-CSS
@@ -83,8 +109,8 @@ so this is backward-compatible.
 First stable release: a complete rewrite to a single pure-CSS stylesheet.
 
 ### Changed
-- LayoutKit is now **pure CSS** — it styles semantic `<lk-*>` tags via attribute
-  selectors. No JavaScript, no runtime, no build step, no FOUC. (0.1.0 shipped
+- LayoutKit is now **pure CSS** and styles `<lk-*>` layout tags via attribute
+  selectors. No JavaScript, no runtime, no build step. (0.1.0 shipped
   React components that compiled to Tailwind.)
 
 ### Removed
