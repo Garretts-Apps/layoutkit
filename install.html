@@ -3,31 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Install LayoutKit — pure-CSS layout, zero JavaScript</title>
-  <meta name="description" content="Install LayoutKit: link the pure-CSS stylesheet from a CDN, install the layoutkit-css npm package, or vendor the file locally. Zero dependencies, no JavaScript, no build step.">
+  <title>Install LayoutKit - CSS package, CDN, or local file</title>
+  <meta name="description" content="Install LayoutKit from npm, a CDN, or a local stylesheet. Load the CSS early; LayoutKit has no runtime JavaScript fallback by design.">
   <link rel="canonical" href="https://layoutkit.dev/install">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
-  <meta property="og:title" content="Install LayoutKit — pure-CSS layout, zero JavaScript">
-  <meta property="og:description" content="Link the stylesheet from a CDN, install the layoutkit-css npm package, or vendor the file locally. Zero dependencies, no build step.">
+  <meta property="og:title" content="Install LayoutKit">
+  <meta property="og:description" content="Use one CSS file from npm, a CDN, or a local copy. No runtime JavaScript, no dependencies.">
   <meta property="og:url" content="https://layoutkit.dev/install">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit — a layout language for the web, as pure CSS.">
+  <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Install LayoutKit — pure-CSS layout, zero JavaScript">
-  <meta name="twitter:description" content="Link the stylesheet from a CDN, install layoutkit-css from npm, or vendor the file locally.">
+  <meta name="twitter:title" content="Install LayoutKit">
+  <meta name="twitter:description" content="Use one CSS file from npm, a CDN, or a local copy.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
-  <!-- LayoutKit styles itself with LayoutKit. The library stylesheet does the layout; -->
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20260626b">
+  <link rel="stylesheet" href="/assets/site.css?v=20260705a">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <!-- Nav (dogfooded: lk-spread = space-between row) -->
   <header>
     <nav class="nav" aria-label="Primary">
       <lk-spread align="center">
@@ -50,210 +48,71 @@
   </header>
 
   <main id="main" class="container" style="max-width: 840px;">
-    <lk-stack gap="none" style="padding-block: 56px 40px;">
+    <lk-stack gap="2" style="padding-block: 56px 40px;">
+      <span class="pill pill-green">ONE STYLESHEET</span>
+      <h1 class="hero-title" style="font-size: 40px;">Install LayoutKit</h1>
+      <p class="lead sans">Use one CSS file from npm, a CDN, or a local copy. Load it early when it controls initial layout.</p>
+    </lk-stack>
 
-      <!-- Header -->
-      <lk-stack gap="4" style="margin-bottom: 48px;">
-        <span class="pill pill-green">PURE CSS · ZERO JAVASCRIPT</span>
-        <h1 class="hero-title" style="font-size: 40px;">Install LayoutKit</h1>
-        <p class="lead sans">Link the stylesheet from a CDN, vendor it locally, or install the CSS package from npm.</p>
-      </lk-stack>
-
-      <!-- Link the stylesheet -->
-      <lk-stack gap="4" style="margin-bottom: 48px;">
-        <h2 class="h2">Link the stylesheet</h2>
-        <p class="sans muted">
-          LayoutKit is just CSS. Add one render-blocking <code class="code-inline accent">&lt;link&gt;</code>
-          and write semantic custom tags — no JavaScript, no build, no FOUC:
-        </p>
-        <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span>
-
-<span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span> <span class="tok-attr">padding</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span> <span class="tok-attr">justify</span>=<span class="tok-str">"between"</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;span&gt;</span>Logo<span class="tok-tag">&lt;/span&gt;</span>
-    <span class="tok-tag">&lt;nav&gt;</span>…<span class="tok-tag">&lt;/nav&gt;</span>
-  <span class="tok-tag">&lt;/lk-row&gt;</span>
-  <span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">full-height</span><span class="tok-tag">&gt;</span>You can finally center a div.<span class="tok-tag">&lt;/lk-center&gt;</span>
-  <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;div&gt;</span>1<span class="tok-tag">&lt;/div&gt;&lt;div&gt;</span>2<span class="tok-tag">&lt;/div&gt;&lt;div&gt;</span>3<span class="tok-tag">&lt;/div&gt;</span>
-  <span class="tok-tag">&lt;/lk-grid&gt;</span>
-<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-        <p class="sans muted" style="font-size: 12px;">Pure CSS, zero dependencies, no JavaScript runtime, no build step. ~2.3 KB brotli.</p>
-      </lk-stack>
-
-      <!-- npm (CSS package) -->
-      <lk-stack gap="4" style="margin-bottom: 48px;">
-        <h2 class="h2">npm (CSS package)</h2>
-        <div class="code"><pre><span class="tok-com"># it's a CSS package — import the stylesheet</span>
-npm install layoutkit-css</pre></div>
-        <p class="sans muted">
-          It's a CSS package — import the stylesheet once, then write
-          <code class="code-inline accent">&lt;lk-*&gt;</code> tags anywhere:
-        </p>
-        <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;
-
-<span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span> <span class="tok-attr">padding</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span> <span class="tok-attr">align</span>=<span class="tok-str">"center"</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;h1&gt;</span>Hello<span class="tok-tag">&lt;/h1&gt;</span>
-    <span class="tok-tag">&lt;span&gt;</span>World<span class="tok-tag">&lt;/span&gt;</span>
-  <span class="tok-tag">&lt;/lk-row&gt;</span>
-  <span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">fill</span><span class="tok-tag">&gt;</span>Centered content<span class="tok-tag">&lt;/lk-center&gt;</span>
-  <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;div&gt;</span>1<span class="tok-tag">&lt;/div&gt;&lt;div&gt;</span>2<span class="tok-tag">&lt;/div&gt;&lt;div&gt;</span>3<span class="tok-tag">&lt;/div&gt;</span>
-  <span class="tok-tag">&lt;/lk-grid&gt;</span>
-<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-        <p class="sans muted" style="font-size: 12px;">A single CSS import — no JavaScript, no Tailwind, no build step, no config.</p>
-      </lk-stack>
-
-      <!-- Vendor it -->
-      <lk-box class="card" padding="6" style="border-color: color-mix(in srgb, var(--accent) 30%, transparent); background: color-mix(in srgb, var(--accent) 5%, transparent); margin-bottom: 48px;">
+    <lk-stack gap="8">
+      <section aria-labelledby="npm-heading">
         <lk-stack gap="4">
-          <h2 class="h2">Vendor it — no package manager, no build, no JavaScript</h2>
-          <p class="sans muted">
-            One pure-CSS stylesheet. Drop a single <code class="code-inline accent">&lt;link&gt;</code>
-            tag into any HTML page — or any framework — and write the
-            <code class="code-inline accent">&lt;lk-*&gt;</code> tags. No npm, no bundler, no JavaScript
-            runtime. You own the file and can edit it freely.
-          </p>
-          <lk-row gap="3" wrap>
-            <a class="btn btn-primary" href="/layoutkit.css" download="layoutkit.css">Download layoutkit.css</a>
-            <a class="btn" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">View source on GitHub</a>
-          </lk-row>
-          <p class="sans muted" style="font-size: 13px;">Use it straight from the CDN — nothing to install:</p>
-          <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span>
-
-<span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span> <span class="tok-attr">padding</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span> <span class="tok-attr">justify</span>=<span class="tok-str">"between"</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;span&gt;</span>Logo<span class="tok-tag">&lt;/span&gt;</span>
-    <span class="tok-tag">&lt;nav&gt;</span>…<span class="tok-tag">&lt;/nav&gt;</span>
-  <span class="tok-tag">&lt;/lk-row&gt;</span>
-  <span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">full-height</span><span class="tok-tag">&gt;</span>You can finally center a div.<span class="tok-tag">&lt;/lk-center&gt;</span>
-  <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;div&gt;</span>1<span class="tok-tag">&lt;/div&gt;&lt;div&gt;</span>2<span class="tok-tag">&lt;/div&gt;&lt;div&gt;</span>3<span class="tok-tag">&lt;/div&gt;</span>
-  <span class="tok-tag">&lt;/lk-grid&gt;</span>
-<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-          <p class="sans muted" style="font-size: 12px;">
-            Ten semantic custom tags (<code class="code-inline">lk-stack</code>,
-            <code class="code-inline">lk-row</code>, <code class="code-inline">lk-center</code>, …) styled by
-            attribute selectors. Attributes are kebab-case (<code class="code-inline">full-height</code>,
-            <code class="code-inline">col-gap</code>); free-form values use inline custom properties
-            (<code class="code-inline">--lk-min-child-width</code>). Pure CSS, zero dependencies, no FOUC, ~2.3 KB brotli.
-          </p>
+          <h2 id="npm-heading" class="h2">npm usage</h2>
+          <div class="code"><pre>npm install layoutkit-css</pre></div>
+          <p class="sans muted">Import the stylesheet once at the application root or global CSS entry.</p>
+          <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
+          <p class="sans muted">In a global CSS file, use this form when your bundler resolves CSS package imports:</p>
+          <div class="code"><pre><span class="tok-tag">@import</span> <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
         </lk-stack>
-      </lk-box>
+      </section>
 
-      <!-- All tags -->
-      <lk-stack gap="5" style="margin-bottom: 48px;">
-        <h2 class="h2">All tags</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Tag</th>
-                <th>Description</th>
-                <th>Key attributes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><code>&lt;lk-stack&gt;</code></td><td class="muted">Vertical flex layout</td><td class="muted sans">gap, align, justify, padding, fill, full-height</td></tr>
-              <tr><td><code>&lt;lk-row&gt;</code></td><td class="muted">Horizontal flex layout</td><td class="muted sans">gap, align, justify, padding, wrap, reverse</td></tr>
-              <tr><td><code>&lt;lk-center&gt;</code></td><td class="muted">Center content</td><td class="muted sans">fill, full-height, horizontal, vertical, inline</td></tr>
-              <tr><td><code>&lt;lk-box&gt;</code></td><td class="muted">Container with padding</td><td class="muted sans">padding, fill, center</td></tr>
-              <tr><td><code>&lt;lk-spread&gt;</code></td><td class="muted">Space-between layout</td><td class="muted sans">align, padding</td></tr>
-              <tr><td><code>&lt;lk-grid&gt;</code></td><td class="muted">CSS Grid</td><td class="muted sans">cols, rows, gap, col-gap, row-gap, responsive</td></tr>
-              <tr><td><code>&lt;lk-spacer&gt;</code></td><td class="muted">Flexible space</td><td class="muted sans">size</td></tr>
-              <tr><td><code>&lt;lk-divider&gt;</code></td><td class="muted">Separator line</td><td class="muted sans">orientation, thickness</td></tr>
-              <tr><td><code>&lt;lk-aspect-ratio&gt;</code></td><td class="muted">Fixed aspect ratio</td><td class="muted sans">--lk-ratio</td></tr>
-              <tr><td><code>&lt;lk-scroll-area&gt;</code></td><td class="muted">Scrollable container</td><td class="muted sans">direction, --lk-max-height, --lk-max-width</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </lk-stack>
-
-      <!-- Attributes / values quick reference -->
-      <lk-stack gap="5" style="margin-bottom: 48px;">
-        <h2 class="h2">Attributes &amp; values</h2>
-        <p class="sans muted">
-          Attributes are kebab-case. The full set:
-          <code class="code-inline">gap</code>, <code class="code-inline">padding</code>,
-          <code class="code-inline">align</code>, <code class="code-inline">justify</code>,
-          <code class="code-inline">center</code>, <code class="code-inline">fill</code>,
-          <code class="code-inline">full-height</code>, <code class="code-inline">wrap</code>,
-          <code class="code-inline">reverse</code>, <code class="code-inline">cols</code>,
-          <code class="code-inline">col-gap</code>, <code class="code-inline">row-gap</code>,
-          <code class="code-inline">responsive</code>, <code class="code-inline">size</code>,
-          <code class="code-inline">orientation</code>, <code class="code-inline">thickness</code>,
-          <code class="code-inline">direction</code>.
-        </p>
-
-        <lk-stack gap="3">
-          <h3 style="font-size: 17px;">Free-form values</h3>
-          <p class="sans muted" style="font-size: 13px;">For values outside the preset scale, set an inline custom property:</p>
-          <div class="table-wrap">
-            <table>
-              <tbody>
-                <tr><td><code>--lk-ratio</code></td><td class="muted sans">Custom aspect ratio (e.g. <code class="code-inline">16/9</code>)</td></tr>
-                <tr><td><code>--lk-divider-color</code></td><td class="muted sans">Divider line color</td></tr>
-                <tr><td><code>--lk-min-child-width</code></td><td class="muted sans">Min child width for <code class="code-inline">responsive</code> grids</td></tr>
-                <tr><td><code>--lk-max-height</code></td><td class="muted sans">Scroll-area max height</td></tr>
-                <tr><td><code>--lk-max-width</code></td><td class="muted sans">Scroll-area max width</td></tr>
-              </tbody>
-            </table>
-          </div>
+      <section aria-labelledby="cdn-heading">
+        <lk-stack gap="4">
+          <h2 id="cdn-heading" class="h2">CDN usage</h2>
+          <p class="sans muted">For direct browser usage, put a normal stylesheet link in the document <code class="sans">&lt;head&gt;</code>.</p>
+          <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span></pre></div>
         </lk-stack>
+      </section>
 
-        <lk-stack gap="3">
-          <h3 style="font-size: 17px;">Size scale</h3>
-          <p class="sans muted" style="font-size: 13px;">Used for <code class="code-inline">gap</code> and <code class="code-inline">padding</code> attributes:</p>
-          <lk-grid responsive gap="4" style="--lk-min-child-width: 280px;">
-            <lk-stack gap="2">
-              <span class="eyebrow">Semantic</span>
-              <div class="code"><pre><span class="tok-str">"xs"</span>  → 0.25rem (4px)
-<span class="tok-str">"sm"</span>  → 0.5rem  (8px)
-<span class="tok-str">"md"</span>  → 1rem    (16px)
-<span class="tok-str">"lg"</span>  → 1.5rem  (24px)
-<span class="tok-str">"xl"</span>  → 2rem    (32px)
-<span class="tok-str">"2xl"</span> → 3rem    (48px)
-<span class="tok-str">"3xl"</span> → 4rem    (64px)</pre></div>
-            </lk-stack>
-            <lk-stack gap="2">
-              <span class="eyebrow">Numeric</span>
-              <div class="code"><pre><span class="tok-str">"none"</span> <span class="tok-str">"px"</span> <span class="tok-str">"0.5"</span>
-<span class="tok-str">"1"</span> <span class="tok-str">"1.5"</span> <span class="tok-str">"2"</span> <span class="tok-str">"2.5"</span>
-<span class="tok-str">"3"</span> <span class="tok-str">"3.5"</span> <span class="tok-str">"4"</span> <span class="tok-str">"5"</span>
-<span class="tok-str">"6"</span> <span class="tok-str">"7"</span> <span class="tok-str">"8"</span> <span class="tok-str">"9"</span>
-<span class="tok-str">"10"</span> <span class="tok-str">"11"</span> <span class="tok-str">"12"</span> <span class="tok-str">"14"</span> <span class="tok-str">"16"</span></pre></div>
-            </lk-stack>
-          </lk-grid>
+      <section aria-labelledby="local-heading">
+        <lk-stack gap="4">
+          <h2 id="local-heading" class="h2">Local stylesheet usage</h2>
+          <p class="sans muted">You can vendor the file and link it locally. This keeps usage simple and reviewable.</p>
+          <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="/css/layoutkit.css"&gt;</span></pre></div>
+          <a class="btn" href="/layoutkit.css" download="layoutkit.css">Download layoutkit.css</a>
         </lk-stack>
-      </lk-stack>
+      </section>
 
-      <!-- Links -->
-      <lk-stack gap="4">
-        <h2 class="h2">Links</h2>
-        <lk-grid responsive gap="3" style="--lk-min-child-width: 280px;">
-          <a href="https://www.npmjs.com/package/layoutkit-css" target="_blank" rel="noopener noreferrer">
-            <lk-box class="card">
-              <div class="accent" style="font-weight:700; font-size:13px;">npm</div>
-              <div class="muted sans" style="font-size:12px;">layoutkit-css on npm</div>
-            </lk-box>
-          </a>
-          <a href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener noreferrer">
-            <lk-box class="card">
-              <div class="accent" style="font-weight:700; font-size:13px;">GitHub</div>
-              <div class="muted sans" style="font-size:12px;">Source code + stylesheet</div>
-            </lk-box>
-          </a>
-        </lk-grid>
-      </lk-stack>
+      <section aria-labelledby="loading-heading">
+        <lk-box class="card" padding="6">
+          <lk-stack gap="3">
+            <h2 id="loading-heading" class="h2">CSS loading behavior</h2>
+            <p class="sans muted">Load LayoutKit before content that depends on it. Avoid lazy-loading it through JavaScript if it controls initial page layout.</p>
+            <p class="sans muted">LayoutKit has no JavaScript fallback by design. If the CSS does not load, <code class="sans">lk-*</code> tags remain plain unknown elements without intended layout styling.</p>
+          </lk-stack>
+        </lk-box>
+      </section>
 
+      <section aria-labelledby="verify-heading">
+        <lk-stack gap="4">
+          <h2 id="verify-heading" class="h2">Package verification</h2>
+          <p class="sans muted">The npm package is intentionally small and ships the stylesheet, declarations, docs, license, changelog, and security notes.</p>
+          <div class="code"><pre>npm pack layoutkit-css
+tar -tzf layoutkit-css-*.tgz</pre></div>
+          <p class="sans muted">Use pinned versions when reproducibility matters:</p>
+          <div class="code"><pre>npm install layoutkit-css@1.3.0</pre></div>
+        </lk-stack>
+      </section>
     </lk-stack>
   </main>
 
   <footer class="footer">
     <lk-spread class="container" align="center">
-      <span>LayoutKit — pure-CSS layout. MIT.</span>
-      <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
+      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
+      <lk-row gap="4">
+        <a class="navlink" href="/docs">Docs</a>
+        <a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a>
+      </lk-row>
     </lk-spread>
   </footer>
 </body>

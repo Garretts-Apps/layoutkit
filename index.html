@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LayoutKit — A layout language for the web, as pure CSS</title>
-  <meta name="description" content="A pure-CSS stylesheet that styles semantic <lk-*> tags through attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC, ~2.3 KB brotli. You can finally center a div.">
+  <title>LayoutKit - Tiny pure-CSS layout vocabulary</title>
+  <meta name="description" content="LayoutKit is a tiny pure-CSS layout vocabulary for readable app structure. One CSS file, no runtime JavaScript, no dependencies, and native semantic HTML first.">
   <link rel="canonical" href="https://layoutkit.dev/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
-  <meta property="og:title" content="LayoutKit — A layout language for the web, as pure CSS">
-  <meta property="og:description" content="A pure-CSS stylesheet that styles semantic lk-* tags through attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC, ~2.3 KB brotli.">
+  <meta property="og:title" content="LayoutKit - Tiny pure-CSS layout vocabulary">
+  <meta property="og:description" content="Readable layout wrappers for native semantic HTML. One CSS file, no runtime JavaScript, no dependencies.">
   <meta property="og:url" content="https://layoutkit.dev/">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit — a layout language for the web, as pure CSS.">
+  <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="LayoutKit — A layout language for the web, as pure CSS">
-  <meta name="twitter:description" content="Pure-CSS layout via semantic lk-* tags. Zero dependencies, no JavaScript, no build step, ~2.3 KB brotli.">
+  <meta name="twitter:title" content="LayoutKit - Tiny pure-CSS layout vocabulary">
+  <meta name="twitter:description" content="Readable layout wrappers for native semantic HTML. One CSS file, no runtime JavaScript, no dependencies.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <script type="application/ld+json">
   {
@@ -27,21 +27,19 @@
     "@type": "SoftwareApplication",
     "name": "LayoutKit",
     "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any (web browser)",
-    "description": "A layout language for the web, as pure CSS. A single stylesheet that styles semantic lk-* tags through attribute selectors. Zero dependencies, no JavaScript, no build step, no FOUC.",
+    "operatingSystem": "Any web browser",
+    "description": "A tiny pure-CSS layout vocabulary for readable app structure.",
     "url": "https://layoutkit.dev/",
     "downloadUrl": "https://www.npmjs.com/package/layoutkit-css",
     "license": "https://opensource.org/licenses/MIT",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
   </script>
-  <!-- LayoutKit styles itself with LayoutKit. The library stylesheet does the layout; -->
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20260626b">
+  <link rel="stylesheet" href="/assets/site.css?v=20260705a">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <!-- Nav (dogfooded: lk-spread = space-between row) -->
   <header>
     <nav class="nav" aria-label="Primary">
       <lk-spread align="center">
@@ -64,66 +62,93 @@
   </header>
 
   <main id="main" class="container">
-   <lk-stack gap="3xl">
-    <!-- Hero -->
-    <lk-stack class="center-text hero" align="center" gap="5" padding="none">
-      <span class="pill">YOU CAN FINALLY CENTER A DIV</span>
-      <h1 class="hero-title">10 semantic tags.<br>One pure-CSS stylesheet.</h1>
-      <p class="lead sans">
-        Zero dependencies. Zero JavaScript. No build. No FOUC.<br>
-        Centering a div: the CSS final boss, defeated in one tag.
-      </p>
-      <lk-cluster place="center" gap="3">
-        <a class="btn btn-primary" href="/playground">Open the Playground &rarr;</a>
-        <a class="btn" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">View on GitHub</a>
-      </lk-cluster>
+    <lk-stack gap="3xl">
+      <section class="hero center-text" aria-labelledby="home-heading">
+        <lk-stack align="center" gap="5">
+          <span class="pill">ONE CSS FILE · ZERO DEPENDENCIES</span>
+          <h1 id="home-heading" class="hero-title">Readable app structure from one CSS file.</h1>
+          <p class="lead sans">
+            LayoutKit is a tiny pure-CSS layout vocabulary: developer-readable
+            <code class="sans">lk-*</code> wrappers for stacks, rows, grids, centers, and scroll areas inside native semantic HTML.
+          </p>
+          <lk-cluster place="center" gap="3">
+            <a class="btn btn-primary" href="/install">Install LayoutKit</a>
+            <a class="btn" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a>
+            <a class="btn" href="https://www.npmjs.com/package/layoutkit-css" target="_blank" rel="noopener">npm</a>
+          </lk-cluster>
+        </lk-stack>
+      </section>
+
+      <section aria-labelledby="what-heading">
+        <lk-grid responsive min="md" gap="4">
+          <article class="card">
+            <lk-stack gap="2">
+              <h2 id="what-heading" class="h2">What it is</h2>
+              <p class="sans muted">A tiny CSS vocabulary that makes layout intent visible in markup without adding runtime JavaScript, dependencies, or a framework contract.</p>
+            </lk-stack>
+          </article>
+          <article class="card">
+            <lk-stack gap="2">
+              <h2 class="h2">What it is not</h2>
+              <p class="sans muted">Not a component library, design system, substitute for semantic HTML, button kit, form kit, theme, icon set, animation library, or JavaScript app shell.</p>
+            </lk-stack>
+          </article>
+        </lk-grid>
+      </section>
+
+      <section aria-labelledby="install-heading">
+        <lk-box class="card card-green" padding="8">
+          <lk-stack gap="4">
+            <span class="pill pill-green">INSTALL</span>
+            <h2 id="install-heading" class="h2">Load the CSS early</h2>
+            <p class="sans muted">Use a normal stylesheet link for CDN or direct browser usage. In frameworks, import LayoutKit at the root or global CSS layer. There is no JavaScript fallback by design.</p>
+            <div class="code"><pre>npm install layoutkit-css</pre></div>
+            <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
+            <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span></pre></div>
+          </lk-stack>
+        </lk-box>
+      </section>
+
+      <section aria-labelledby="example-heading">
+        <lk-stack gap="4">
+          <h2 id="example-heading" class="h2">Use layout wrappers around semantic HTML</h2>
+          <p class="sans muted">Browsers and assistive technologies do not understand <code class="sans">lk-*</code> tags as native landmarks, headings, controls, lists, or forms. Keep the native elements.</p>
+          <div class="code"><pre><span class="tok-tag">&lt;main&gt;</span>
+  <span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"dashboard-heading"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>
+      <span class="tok-tag">&lt;h1</span> <span class="tok-attr">id</span>=<span class="tok-str">"dashboard-heading"</span><span class="tok-tag">&gt;</span>Dashboard<span class="tok-tag">&lt;/h1&gt;</span>
+      <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">responsive</span><span class="tok-tag">&gt;</span>
+        <span class="tok-tag">&lt;article&gt;</span>
+          <span class="tok-tag">&lt;h2&gt;</span>Open orders<span class="tok-tag">&lt;/h2&gt;</span>
+          <span class="tok-tag">&lt;p&gt;</span>128<span class="tok-tag">&lt;/p&gt;</span>
+        <span class="tok-tag">&lt;/article&gt;</span>
+      <span class="tok-tag">&lt;/lk-grid&gt;</span>
+    <span class="tok-tag">&lt;/lk-stack&gt;</span>
+  <span class="tok-tag">&lt;/section&gt;</span>
+<span class="tok-tag">&lt;/main&gt;</span></pre></div>
+        </lk-stack>
+      </section>
+
+      <section aria-labelledby="accessibility-heading">
+        <lk-stack gap="4">
+          <h2 id="accessibility-heading" class="h2">Accessibility guidance</h2>
+          <lk-grid responsive min="md" gap="3">
+            <article class="card"><p class="sans muted">Use native HTML first. Do not put click handlers on <code class="sans">lk-*</code> elements; use <code class="sans">button</code> or <code class="sans">a</code>.</p></article>
+            <article class="card"><p class="sans muted">Do not add ARIA roles just to make layout wrappers seem semantic. If a wrapper has no semantic purpose, it usually does not need ARIA.</p></article>
+            <article class="card"><p class="sans muted">LayoutKit should not change focus order. Avoid hidden overflow that traps keyboard users, and keep scroll containers usable.</p></article>
+          </lk-grid>
+        </lk-stack>
+      </section>
     </lk-stack>
-
-    <!-- Drop in one link tag -->
-    <lk-box class="card card-purple" padding="8">
-      <lk-stack gap="4">
-        <span class="pill pill-purple">NO BUILD · NO JAVASCRIPT · NO FOUC</span>
-        <h2 class="h2">Link one stylesheet, write tags</h2>
-        <p class="sans muted">A render-blocking stylesheet styles the tags before first paint. Works in plain HTML or any framework — server-render the markup and it just works.</p>
-        <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span>
-
-<span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span> <span class="tok-attr">padding</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">full-height</span><span class="tok-tag">&gt;</span>You can finally center a div.<span class="tok-tag">&lt;/lk-center&gt;</span>
-  <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>...<span class="tok-tag">&lt;/lk-grid&gt;</span>
-<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-      </lk-stack>
-    </lk-box>
-
-    <!-- npm -->
-    <lk-box class="card card-green" padding="8">
-      <lk-stack gap="4">
-        <span class="pill pill-green">ON NPM</span>
-        <h2 class="h2">Or install the CSS package</h2>
-        <div class="code"><pre><span class="tok-com"># it's a CSS package — import the stylesheet</span>
-npm install layoutkit-css</pre></div>
-        <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
-      </lk-stack>
-    </lk-box>
-
-    <!-- Why -->
-    <lk-stack gap="5">
-      <h2 class="h2">Why pure CSS</h2>
-      <lk-grid min="md" gap="3">
-        <lk-box class="card"><div class="accent" lk-text="sm" lk-weight="bold">Pure CSS</div><div class="muted sans" lk-text="xs">No JavaScript, no runtime, nothing to hydrate</div></lk-box>
-        <lk-box class="card"><div class="accent" lk-text="sm" lk-weight="bold">Zero dependencies</div><div class="muted sans" lk-text="xs">One stylesheet — that's the whole supply chain</div></lk-box>
-        <lk-box class="card"><div class="accent" lk-text="sm" lk-weight="bold">No build step</div><div class="muted sans" lk-text="xs">Link it and write tags</div></lk-box>
-        <lk-box class="card"><div class="accent" lk-text="sm" lk-weight="bold">No FOUC</div><div class="muted sans" lk-text="xs">Render-blocking CSS styles tags before first paint</div></lk-box>
-        <lk-box class="card"><div class="accent" lk-text="sm" lk-weight="bold">Works anywhere</div><div class="muted sans" lk-text="xs">Any server-rendered HTML — plain HTML, Rails, Django, htmx</div></lk-box>
-        <lk-box class="card"><div class="accent" lk-text="sm" lk-weight="bold">~2.3 KB brotli</div><div class="muted sans" lk-text="xs">The entire layout vocabulary, gzipped tiny</div></lk-box>
-      </lk-grid>
-    </lk-stack>
-   </lk-stack>
   </main>
 
   <footer class="footer">
     <lk-spread class="container" align="center">
-      <span>LayoutKit — pure-CSS layout. MIT.</span>
-      <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
+      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
+      <lk-row gap="4">
+        <a class="navlink" href="/docs">Docs</a>
+        <a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a>
+      </lk-row>
     </lk-spread>
   </footer>
 </body>

@@ -1,111 +1,291 @@
 # LayoutKit
 
-**A layout language for the web, as pure CSS.** A single stylesheet that styles semantic `<lk-*>` tags through attribute selectors. Zero dependencies, zero JavaScript, no build step, no FOUC.
+LayoutKit is a tiny pure-CSS layout vocabulary for readable app structure.
 
-You can finally center a div. We're as shocked as you are.
+It ships as `layoutkit-css` on npm:
 
-## Why
+- npm: https://www.npmjs.com/package/layoutkit-css
+- Website: https://layoutkit.dev
+- GitHub: https://github.com/Garretts-Apps/layoutkit
 
-LayoutKit is just CSS. You load one render-blocking stylesheet and write semantic tags in plain HTML — the browser styles them before the first paint. No JavaScript runtime, no bundler, no config, no flash of unstyled content.
+LayoutKit gives you developer-readable layout primitives such as `lk-stack`,
+`lk-row`, `lk-grid`, and `lk-center`, so app structure is easier to scan without
+adopting a framework, runtime, or design system. These tags are intent-shaped
+layout markup styled by one CSS file. They are semantic to developers, but
+browsers and assistive technologies do not treat them like native semantic HTML.
 
-- **Pure CSS.** No JavaScript, no runtime, nothing to hydrate.
-- **Zero dependencies.** One stylesheet. That's the whole supply chain.
-- **No build step, no config.** Link it and write tags.
-- **No FOUC.** Render-blocking CSS styles your tags before the first paint.
-- **Hypermedia-native.** Works with any server-rendered HTML — plain HTML, htmx, Hotwire, Rails, Django, PHP, or any framework.
-- **Composes with your design system.** Spacing resolves through `--lk-space-*` (defaulting to your `--space-*` tokens), everything sits in `@layer layoutkit`, and directional rules use logical properties. It consumes a token system instead of running parallel to one.
-- **Tiny over the wire.** ~2.3 KB brotli.
+Use LayoutKit inside real HTML landmarks, sections, headings, links, buttons,
+lists, tables, and forms.
+
+## What LayoutKit Is
+
+- One CSS file from npm, a CDN, or a local copy.
+- No runtime JavaScript.
+- No npm dependencies.
+- No custom element registration.
+- Framework-agnostic.
+- A small set of layout wrappers for readable app structure.
+- Low-specificity CSS in `@layer layoutkit`.
+
+## What LayoutKit Is Not
+
+LayoutKit is not a component library, design system, substitute for semantic
+HTML, button kit, form kit, typography system, color theme, icon library,
+animation system, JavaScript behavior layer, stateful app shell, data table
+solution, or substitute for normal CSS.
+
+When a layout needs named grid areas, complex container-query logic, dense
+responsive rules, or component-specific behavior, use normal CSS.
 
 ## Install
-
-Link it from a CDN:
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css">
-```
-
-Or install the CSS package from npm and import the stylesheet:
 
 ```bash
 npm install layoutkit-css
 ```
 
+Import the stylesheet once at your application root or global CSS entry:
+
 ```js
 import "layoutkit-css/layoutkit.css";
 ```
 
-Or download `layoutkit.css` and vendor it locally — you own the file and can edit it freely.
-
-## Usage
-
-Write semantic tags in plain HTML:
+CDN usage:
 
 ```html
-<lk-stack gap="lg" padding="md">
-  <lk-row gap="sm" justify="between">
-    <span>Logo</span>
-    <nav>…</nav>
-  </lk-row>
-  <lk-center full-height>You can finally center a div.</lk-center>
-  <lk-grid cols="3" gap="md">
-    <div>1</div><div>2</div><div>3</div>
-  </lk-grid>
-</lk-stack>
+<link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css">
 ```
 
-## Tags
-
-All 10 semantic tags:
-
-`lk-stack` · `lk-row` · `lk-center` · `lk-box` · `lk-spread` · `lk-grid` · `lk-spacer` · `lk-divider` · `lk-aspect-ratio` · `lk-scroll-area`
-
-Attributes are kebab-case: `gap`, `padding`, `align`, `justify`, `center`, `fill`, `full-height`, `wrap`, `reverse`, `cols`, `col-gap`, `row-gap`, `responsive`, `size`, `orientation`, `thickness`, `direction`.
-
-Free-form values use inline custom properties: `--lk-ratio`, `--lk-divider-color`, `--lk-min-child-width`, `--lk-max-height`, `--lk-max-width`.
+Local copy:
 
 ```html
-<lk-aspect-ratio style="--lk-ratio: 16/9"><img src="…"></lk-aspect-ratio>
-<lk-grid responsive style="--lk-min-child-width: 200px"><div>…</div></lk-grid>
+<link rel="stylesheet" href="/css/layoutkit.css">
 ```
 
-Centering a div: the CSS final boss, defeated in one tag.
+Load LayoutKit CSS early in the document `<head>` when it controls initial page
+layout. Avoid lazy-loading it through JavaScript for initial layout. If the CSS
+does not load, `lk-*` tags are plain unknown elements without intended layout
+styling.
 
-## Theming
+## Semantic HTML Guidance
 
-The semantic scale (`xs … 3xl`) resolves through `--lk-space-*` custom properties that default to your `--space-*` design tokens, so you remap the whole scale by defining your tokens once:
+Good:
+
+```html
+<main>
+  <section aria-labelledby="dashboard-heading">
+    <lk-stack gap="lg">
+      <h1 id="dashboard-heading">Dashboard</h1>
+      <lk-grid cols="3" responsive>
+        <article>
+          <h2>Open orders</h2>
+          <p>128</p>
+        </article>
+      </lk-grid>
+    </lk-stack>
+  </section>
+</main>
+```
+
+Bad:
+
+```html
+<lk-box>
+  <lk-stack>
+    <lk-text>Dashboard</lk-text>
+  </lk-stack>
+</lk-box>
+```
+
+The bad example loses native document meaning. Do not use `lk-*` elements as
+headings, lists, tables, forms, landmarks, links, buttons, or controls.
+
+## Core Primitives
+
+`lk-stack`, `lk-row`, `lk-center`, `lk-box`, `lk-card`, `lk-spread`, `lk-grid`,
+`lk-cluster`, `lk-switcher`, `lk-sidebar`, `lk-cover`, `lk-spacer`,
+`lk-divider`, `lk-aspect-ratio`, and `lk-scroll-area`.
+
+Common attributes include `gap`, `padding`, `align`, `justify`, `place`,
+`center`, `fill`, `full-height`, `wrap`, `reverse`, `width`, `cols`, `rows`,
+`responsive`, `min`, `col-gap`, `row-gap`, `flow`, `place-items`, `size`,
+`orientation`, `thickness`, `direction`, `max-h`, `ratio`, `radius`, `surface`,
+`border`, `side`, `lk-text`, and `lk-weight`.
+
+## Examples
+
+Dashboard:
+
+```html
+<main>
+  <section aria-labelledby="orders-heading">
+    <lk-stack gap="lg">
+      <lk-spread align="center">
+        <h1 id="orders-heading">Orders</h1>
+        <a href="/orders">View all</a>
+      </lk-spread>
+      <lk-grid responsive min="md" gap="md">
+        <article>
+          <h2>Open orders</h2>
+          <p>128</p>
+        </article>
+        <article>
+          <h2>Delayed</h2>
+          <p>7</p>
+        </article>
+      </lk-grid>
+    </lk-stack>
+  </section>
+</main>
+```
+
+Native form controls:
+
+```html
+<form action="/settings" method="post">
+  <lk-stack gap="md">
+    <label>
+      Display name
+      <input name="name" autocomplete="name">
+    </label>
+    <lk-row gap="sm" wrap>
+      <button type="submit">Save</button>
+      <a href="/settings">Cancel</a>
+    </lk-row>
+  </lk-stack>
+</form>
+```
+
+Scroll area:
+
+```html
+<section aria-labelledby="activity-heading">
+  <lk-stack gap="sm">
+    <h2 id="activity-heading">Recent activity</h2>
+    <lk-scroll-area max-h="md" direction="vertical">
+      <ol>
+        <li>Order #128 opened</li>
+        <li>Order #127 shipped</li>
+      </ol>
+    </lk-scroll-area>
+  </lk-stack>
+</section>
+```
+
+## Design Tokens
+
+LayoutKit variables default to app-level variables when present:
 
 ```css
 :root {
-  --space-md: 0.875rem;   /* your design system's token — gap="md", padding="md", … all follow */
-  --space-lg: 1.25rem;
+  --lk-space-sm: var(--space-sm, 0.5rem);
+  --lk-space-md: var(--space-md, 1rem);
+  --lk-space-lg: var(--space-lg, 1.5rem);
+  --lk-text-md: var(--text-md, 1rem);
+  --lk-radius-md: var(--radius-md, 0.75rem);
 }
-/* or set LayoutKit's scale directly, bypassing tokens */
-:root { --lk-space-lg: 1.25rem; }
 ```
 
-Everything is declared in `@layer layoutkit`, so your own unlayered styles always win — no specificity fights — and you can order the layer wherever you like:
+Map LayoutKit to your app tokens:
 
 ```css
-@layer reset, layoutkit, components, utilities;
+:root {
+  --space-sm: var(--space-2);
+  --space-md: var(--space-4);
+  --space-lg: var(--space-6);
+}
 ```
 
-Directional rules use logical properties (`border-inline-start`, `block-size`, …) so layouts follow writing mode and RTL. The fixed numeric scale (`gap="4"`) and `none`/`px` stay literal.
+Or override LayoutKit directly:
 
----
+```css
+:root {
+  --lk-space-sm: 0.375rem;
+  --lk-space-md: 0.875rem;
+  --lk-space-lg: 1.25rem;
+  --lk-radius-md: 0.5rem;
+}
+```
 
-## The docs website (this repo)
+## Accessibility
 
-This repository also hosts the LayoutKit docs site — and it **dogfoods the library**: it's plain static HTML whose own layout is done with `<lk-*>` tags + `layoutkit.css`. No framework, no React, no build step, no client-side router. Navigation is real `<a href>` links between real HTML documents (hypermedia, the way the web intended); the only JavaScript on the whole site is the optional live editor on the Playground page, and that page works without it.
+- LayoutKit wraps and arranges semantic HTML.
+- LayoutKit does not replace semantic HTML.
+- Do not put click handlers on `lk-*` elements. Use `button` or `a`.
+- Do not use `lk-*` elements as headings, lists, tables, forms, landmarks, or
+  controls.
+- If a LayoutKit wrapper has no semantic purpose, it usually does not need ARIA.
+- Do not add ARIA roles just to make layout wrappers seem semantic.
+- Prefer native HTML first.
+- LayoutKit should not interfere with focus order.
+- Avoid hiding overflow in ways that trap keyboard users.
+- Scroll containers should remain keyboard and screen-reader usable.
+- LayoutKit provides layout behavior only. Accessibility still depends on the
+  underlying HTML and application code.
 
-- `index.html`, `install.html`, `docs.html`, `playground.html`, `tutorial.html` — the pages.
-- `assets/site.css` — the site's skin (color/type); **layout is `layoutkit.css`**.
-- `assets/playground.js` — the only script (progressive enhancement for the Playground).
-- `vercel.json` — static deploy: clean URLs + cache headers, no framework.
+## TSX/JSX
 
-Preview locally with any static server:
+The package includes `jsx.d.ts`, a dependency-free declaration file for known
+`lk-*` elements and common attributes. It only teaches TypeScript about the
+custom tags; it does not add runtime JavaScript or custom element behavior.
+
+```json
+{
+  "compilerOptions": {
+    "types": ["layoutkit-css"]
+  }
+}
+```
+
+React-specific HTML prop typing still comes from the consuming app's React and
+`@types/react` setup. LayoutKit does not depend on React.
+
+## Browser Support
+
+LayoutKit targets modern evergreen browsers with support for custom properties,
+flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`, and
+`color-mix()`.
+
+## Security And Package Verification
+
+LayoutKit has no runtime JavaScript, npm dependencies, remote imports, network
+requests, or install scripts.
 
 ```bash
-npx serve .      # or: python3 -m http.server
+npm pack layoutkit-css
+tar -tzf layoutkit-css-*.tgz
 ```
 
-`npm run build` just regenerates `layoutkit.css` from `packages/layoutkit/gen.mjs`.
+Use pinned installs when you need reproducible builds:
+
+```bash
+npm install layoutkit-css@1.3.0
+```
+
+## Repository
+
+This repository also hosts the static Vercel website for layoutkit.dev.
+
+- `index.html`, `install.html`, `docs.html`, `playground.html`, `tutorial.html`
+  are static pages.
+- `layoutkit.css` is the site copy of the package stylesheet, generated from
+  `packages/layoutkit/gen.mjs`.
+- `assets/site.css` is the website skin.
+- `assets/playground.js` powers only the optional playground page.
+- `vercel.json` preserves the static Vercel deployment model.
+
+Useful commands:
+
+```bash
+npm run build
+npm run check
+npm pack --dry-run --prefix packages/layoutkit
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the design rules that prevent
+attribute sprawl and dependency creep.
+
+## License
+
+MIT

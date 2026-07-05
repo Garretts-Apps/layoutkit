@@ -1,9 +1,8 @@
-/* LayoutKit Playground — vanilla JS, no dependencies.
+/* LayoutKit Playground - vanilla JS, no dependencies.
    Left: LayoutKit markup. Right: the rendered output (styled by the real
-   stylesheet). Below: the same layout written by hand without LayoutKit —
-   the plain HTML (<div class="…">) and the CSS you'd otherwise write. That's
-   what LayoutKit saves you. Nothing is compiled; the live preview is just the
-   attribute-selector rules layoutkit.css already applies. */
+   stylesheet). Below: equivalent layout CSS by hand. Nothing is compiled; the
+   live preview is just the attribute-selector rules layoutkit.css already
+   applies. */
 (() => {
   const SPACE = {
     none: "0", px: "1px", "0.5": "0.125rem", "1": "0.25rem", "1.5": "0.375rem",
@@ -163,8 +162,8 @@
     return blocks.join("\n\n");
   }
 
-  // The full hand-written equivalent: the HTML and the CSS you'd write without
-  // LayoutKit to get the same layout.
+  // The hand-written layout equivalent: semantic HTML stays semantic while
+  // LayoutKit wrappers are shown as plain divs with generated layout classes.
   function toByHand(input, results) {
     if (!results.length) return '<span class="tok-com">/* Type a &lt;lk-…&gt; tag to see the HTML + CSS it replaces */</span>';
     assignClasses(results);
@@ -173,10 +172,10 @@
   }
 
   const PRESETS = [
-    { label: "Center", code: '<lk-center full-height>\n  <h2>Hello World</h2>\n  <p>Centered perfectly</p>\n</lk-center>' },
-    { label: "Stack", code: '<lk-stack gap="lg" center>\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</lk-stack>' },
-    { label: "Page", code: '<lk-stack fill>\n  <lk-spread padding="md">\n    <strong>Logo</strong>\n    <lk-row gap="sm"><a>Home</a><a>About</a></lk-row>\n  </lk-spread>\n  <lk-box fill padding="lg"><lk-center><h2>Content</h2></lk-center></lk-box>\n</lk-stack>' },
-    { label: "Grid", code: '<lk-grid cols="3" gap="lg">\n  <div>1</div><div>2</div><div>3</div>\n</lk-grid>' },
+    { label: "Empty state", code: '<section aria-labelledby="empty-heading">\n  <lk-center full-height>\n    <lk-stack gap="sm" align="center">\n      <h2 id="empty-heading">No results</h2>\n      <p>Try changing the filters.</p>\n      <button type="button">Reset filters</button>\n    </lk-stack>\n  </lk-center>\n</section>' },
+    { label: "Form", code: '<form action="/settings" method="post">\n  <lk-stack gap="md">\n    <label>\n      Display name\n      <input name="name" autocomplete="name">\n    </label>\n    <lk-row gap="sm" wrap>\n      <button type="submit">Save</button>\n      <a href="/settings">Cancel</a>\n    </lk-row>\n  </lk-stack>\n</form>' },
+    { label: "Page", code: '<lk-stack fill>\n  <header>\n    <lk-spread padding="md" align="center">\n      <a href="/">Acme</a>\n      <nav aria-label="Primary"><lk-row gap="sm"><a href="/docs">Docs</a><a href="/pricing">Pricing</a></lk-row></nav>\n    </lk-spread>\n  </header>\n  <main><lk-box fill padding="lg"><lk-center><h1>Dashboard</h1></lk-center></lk-box></main>\n</lk-stack>' },
+    { label: "Grid", code: '<section aria-labelledby="projects-heading">\n  <lk-stack gap="md">\n    <h2 id="projects-heading">Projects</h2>\n    <lk-grid cols="3" gap="lg" responsive>\n      <article><h3>Website</h3><p>Updated today</p></article>\n      <article><h3>Docs</h3><p>Ready for review</p></article>\n      <article><h3>API</h3><p>Stable</p></article>\n    </lk-grid>\n  </lk-stack>\n</section>' },
   ];
 
   const input = document.getElementById("pg-input");
