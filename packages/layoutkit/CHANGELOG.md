@@ -3,6 +3,14 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 1.3.2
+
+Publishing metadata patch.
+
+### Changed
+- Restored provenance publishing now that the GitHub repository is public.
+- Updated pinned install examples to the latest patch version.
+
 ## 1.3.1
 
 Small trust and developer-experience patch.

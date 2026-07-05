@@ -1,6 +1,6 @@
 {
   "name": "layoutkit-css",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "A tiny pure-CSS layout vocabulary for readable app structure.",
   "license": "MIT",
   "homepage": "https://layoutkit.dev",

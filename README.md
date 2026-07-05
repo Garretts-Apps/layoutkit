@@ -265,7 +265,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.3.1
+npm install layoutkit-css@1.3.2
 ```
 
 ## Repository
