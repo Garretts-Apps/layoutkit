@@ -3,6 +3,20 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 1.3.1
+
+Small trust and developer-experience patch.
+
+### Added
+- `className`, `children`, and more permissive `style` values in the static JSX
+  declarations.
+- Package-local `CONTRIBUTING.md` so contribution and design rules are present
+  in the npm tarball.
+- Documentation that freezes `lk-card`, `lk-text`, and `lk-weight` as limited
+  convenience helpers rather than a component or typography system.
+- Corrected the optional Neovim plugin copy and snippets so they use `lk-*`
+  tags instead of the retired React/Tailwind component model.
+
 ## 1.3.0
 
 Positioning, documentation, package quality, and publish-readiness update.

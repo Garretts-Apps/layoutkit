@@ -48,9 +48,11 @@ type LayoutKitWeight = "normal" | "medium" | "semibold" | "bold";
 
 interface LayoutKitGlobalAttributes {
   class?: string;
+  className?: string;
+  children?: unknown;
   id?: string;
   role?: string;
-  style?: string | Record<string, string | number>;
+  style?: string | Record<string, string | number | undefined>;
   title?: string;
   "aria-label"?: string;
   "aria-labelledby"?: string;

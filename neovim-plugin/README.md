@@ -1,6 +1,10 @@
 # layoutkit.nvim
 
-Neovim plugin for [LayoutKit](https://layoutkit.dev) — snippets, completions, and utilities for the 10 semantic layout components.
+Neovim plugin for [LayoutKit](https://layoutkit.dev) snippets and completions.
+
+LayoutKit is a tiny pure-CSS layout vocabulary for readable app structure. This
+plugin only inserts `lk-*` layout wrapper markup. It does not add JavaScript,
+register custom elements, or provide React/Tailwind components.
 
 ## Install
 
@@ -12,7 +16,7 @@ Neovim plugin for [LayoutKit](https://layoutkit.dev) — snippets, completions, 
   config = function()
     require("layoutkit").setup()
   end,
-  ft = { "typescriptreact", "javascriptreact" },
+  ft = { "html", "typescriptreact", "javascriptreact" },
   subdirectory = "neovim-plugin",
 }
 ```
@@ -38,29 +42,27 @@ require("layoutkit").setup()
 
 | Trigger | Component |
 |---------|-----------|
-| `lkimport` | Import statement |
-| `lkstack` | `<Stack>` |
-| `lkrow` | `<Row>` |
-| `lkcenter` | `<Center>` |
-| `lkbox` | `<Box>` |
-| `lkgrid` | `<Grid>` |
-| `lkspread` | `<Spread>` |
-| `lkspacer` | `<Spacer />` |
-| `lkdivider` | `<Divider />` |
-| `lkaspect` | `<AspectRatio>` |
-| `lkscroll` | `<ScrollArea>` |
+| `lkstack` | `<lk-stack>` |
+| `lkrow` | `<lk-row>` |
+| `lkcenter` | `<lk-center>` |
+| `lkbox` | `<lk-box>` |
+| `lkgrid` | `<lk-grid>` |
+| `lkspread` | `<lk-spread>` |
+| `lkspacer` | `<lk-spacer>` |
+| `lkdivider` | `<lk-divider>` |
+| `lkaspect` | `<lk-aspect>` |
+| `lkscroll` | `<lk-scroll-area>` |
 
 ### Completions (requires nvim-cmp)
 
-- Component names after `<`
+- LayoutKit tag names after `<`
 - Gap/padding size values after `"`
 
 ### Commands
 
 | Command | Description |
 |---------|-------------|
-| `:LayoutKitList` | List all components and their props |
-| `:LayoutKitImport` | Insert full import statement at cursor |
+| `:LayoutKitList` | List LayoutKit tags and attributes |
 
 ## Requirements
 

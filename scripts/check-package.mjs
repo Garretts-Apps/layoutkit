@@ -25,7 +25,7 @@ for (const file of requiredRootFiles) {
   if (!existsSync(join(root, file))) fail(`${file} must exist`);
 }
 
-const requiredPackageFiles = ["layoutkit.css", "jsx.d.ts", "README.md", "CHANGELOG.md", "LICENSE", "SECURITY.md"];
+const requiredPackageFiles = ["layoutkit.css", "jsx.d.ts", "README.md", "CONTRIBUTING.md", "CHANGELOG.md", "LICENSE", "SECURITY.md"];
 for (const file of requiredPackageFiles) {
   if (!existsSync(join(pkgDir, file))) fail(`packages/layoutkit/${file} must exist`);
 }

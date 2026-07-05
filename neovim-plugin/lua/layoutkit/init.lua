@@ -1,76 +1,69 @@
 -- layoutkit.nvim — LayoutKit snippets and utilities for Neovim
--- 10 semantic layout components that compile to Tailwind CSS
+-- Pure-CSS lk-* layout vocabulary snippets.
 
 local M = {}
 
 M.components = {
-  Stack = {
+  ["lk-stack"] = {
     prefix = "lkstack",
-    body = '<Stack gap="${1:md}" ${2:padding="${3:none}"}>\n  $0\n</Stack>',
+    body = '<lk-stack gap="${1:4}">\n  $0\n</lk-stack>',
     description = "Vertical flex layout",
-    props = { "gap", "align", "justify", "center", "fill", "fullHeight", "padding", "wrap", "as" },
+    props = { "gap", "align", "justify", "padding", "wrap" },
   },
-  Row = {
+  ["lk-row"] = {
     prefix = "lkrow",
-    body = '<Row gap="${1:md}" ${2:align="${3:center}"}>\n  $0\n</Row>',
+    body = '<lk-row gap="${1:4}" align="${2:center}">\n  $0\n</lk-row>',
     description = "Horizontal flex layout",
-    props = { "gap", "align", "justify", "center", "fill", "padding", "wrap", "reverse", "as" },
+    props = { "gap", "align", "justify", "padding", "wrap" },
   },
-  Center = {
+  ["lk-center"] = {
     prefix = "lkcenter",
-    body = "<Center${1: fill}>\n  $0\n</Center>",
+    body = "<lk-center>\n  $0\n</lk-center>",
     description = "Center content horizontally and vertically",
-    props = { "fill", "fullHeight", "horizontal", "vertical", "inline", "as" },
+    props = { "place", "min-h", "padding" },
   },
-  Box = {
+  ["lk-box"] = {
     prefix = "lkbox",
-    body = '<Box padding="${1:md}">\n  $0\n</Box>',
+    body = '<lk-box padding="${1:4}">\n  $0\n</lk-box>',
     description = "Basic container with padding",
-    props = { "fill", "padding", "center", "as" },
+    props = { "padding", "surface", "border", "radius" },
   },
-  Grid = {
+  ["lk-grid"] = {
     prefix = "lkgrid",
-    body = '<Grid cols={${1:3}} gap="${2:md}">\n  $0\n</Grid>',
+    body = '<lk-grid cols="${1:3}" gap="${2:4}" responsive>\n  $0\n</lk-grid>',
     description = "CSS Grid with responsive columns",
-    props = { "cols", "rows", "gap", "colGap", "rowGap", "flow", "placeItems", "responsive", "minChildWidth", "as" },
+    props = { "cols", "gap", "responsive", "min-child-width" },
   },
-  Spread = {
+  ["lk-spread"] = {
     prefix = "lkspread",
-    body = "<Spread${1: align=\"${2:center}\"}>\n  $0\n</Spread>",
+    body = '<lk-spread align="${1:center}">\n  $0\n</lk-spread>',
     description = "Push children to opposite ends (space-between)",
-    props = { "align", "padding", "as" },
+    props = { "align", "gap", "padding" },
   },
-  Spacer = {
+  ["lk-spacer"] = {
     prefix = "lkspacer",
-    body = '<Spacer size="${1:md}" />',
+    body = '<lk-spacer size="${1:4}"></lk-spacer>',
     description = "Flexible space between elements",
     props = { "size" },
   },
-  Divider = {
+  ["lk-divider"] = {
     prefix = "lkdivider",
-    body = '<Divider${1: orientation="${2:horizontal}"} />',
+    body = '<lk-divider orientation="${1:horizontal}"></lk-divider>',
     description = "Horizontal or vertical divider line",
-    props = { "orientation", "color", "thickness" },
+    props = { "orientation", "thickness" },
   },
-  AspectRatio = {
+  ["lk-aspect"] = {
     prefix = "lkaspect",
-    body = "<AspectRatio ratio={${1:16 / 9}}>\n  $0\n</AspectRatio>",
+    body = '<lk-aspect ratio="${1:16/9}">\n  $0\n</lk-aspect>',
     description = "Constrain children to an aspect ratio",
     props = { "ratio" },
   },
-  ScrollArea = {
+  ["lk-scroll-area"] = {
     prefix = "lkscroll",
-    body = '<ScrollArea${1: direction="${2:vertical}"} maxHeight="${3:400px}">\n  $0\n</ScrollArea>',
+    body = '<lk-scroll-area max-h="${1:24rem}">\n  $0\n</lk-scroll-area>',
     description = "Scrollable container",
-    props = { "direction", "maxHeight", "maxWidth" },
+    props = { "max-h", "direction" },
   },
-}
-
--- Import statement snippet
-M.import_snippet = {
-  prefix = "lkimport",
-  body = 'import { ${1:Stack, Row, Center} } from "layoutkit-css"',
-  description = "Import LayoutKit components",
 }
 
 --- Setup function
@@ -87,12 +80,7 @@ function M.setup(opts)
 
     local snippets = {}
 
-    -- Import snippet
-    table.insert(snippets, s("lkimport", {
-      t('import { '), i(1, "Stack, Row, Center"), t(' } from "layoutkit-css"'),
-    }))
-
-    -- Component snippets
+    -- Layout wrapper snippets
     for name, comp in pairs(M.components) do
       table.insert(snippets, s(comp.prefix, {
         t("<" .. name), i(1, ""), t(">"),
@@ -103,6 +91,7 @@ function M.setup(opts)
 
     ls.add_snippets("typescriptreact", snippets)
     ls.add_snippets("javascriptreact", snippets)
+    ls.add_snippets("html", snippets)
   end
 
   -- Register completion source for nvim-cmp if available
@@ -118,7 +107,7 @@ function M.setup(opts)
     source.complete = function(self, request, callback)
       local items = {}
 
-      -- Component name completions (after <)
+      -- LayoutKit tag completions (after <)
       for name, comp in pairs(M.components) do
         table.insert(items, {
           label = name,
@@ -150,21 +139,14 @@ function M.setup(opts)
 
   -- User commands
   vim.api.nvim_create_user_command("LayoutKitList", function()
-    local lines = { "LayoutKit Components:", "" }
+    local lines = { "LayoutKit tags:", "" }
     for name, comp in pairs(M.components) do
       table.insert(lines, string.format("  <%s> — %s", name, comp.description))
-      table.insert(lines, string.format("    Props: %s", table.concat(comp.props, ", ")))
+      table.insert(lines, string.format("    Attributes: %s", table.concat(comp.props, ", ")))
       table.insert(lines, "")
     end
     vim.api.nvim_echo({{ table.concat(lines, "\n"), "Normal" }}, true, {})
-  end, { desc = "List all LayoutKit components and props" })
-
-  vim.api.nvim_create_user_command("LayoutKitImport", function()
-    local line = vim.api.nvim_win_get_cursor(0)[1]
-    vim.api.nvim_buf_set_lines(0, line - 1, line - 1, false, {
-      'import { Stack, Row, Center, Grid, Box, Spread, Spacer, Divider, AspectRatio, ScrollArea } from "layoutkit-css"',
-    })
-  end, { desc = "Insert LayoutKit import statement at cursor" })
+  end, { desc = "List all LayoutKit tags and attributes" })
 end
 
 return M

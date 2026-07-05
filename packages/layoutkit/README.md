@@ -150,6 +150,13 @@ custom properties such as `--lk-ratio`, `--lk-divider-color`,
 `--lk-min-child-width`, `--lk-max-height`, `--lk-max-width`, `--lk-measure`,
 `--lk-switch-at`, and `--lk-sidebar-width`.
 
+## Frozen Convenience Helpers
+
+`lk-card`, `lk-text`, and `lk-weight` are intentionally small convenience
+helpers. They are not the start of a component or typography system, and new
+visual styling primitives should be rejected unless they directly support
+layout.
+
 ## Examples
 
 Dashboard layout:
@@ -359,7 +366,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.3.0
+npm install layoutkit-css@1.3.1
 ```
 
 Review third-party packages before use.
@@ -371,9 +378,7 @@ kept backward-compatible unless a behavior is clearly a bug or unsafe.
 
 ## Contributing
 
-See the repository contribution rules:
-
-https://github.com/Garretts-Apps/layoutkit/blob/main/CONTRIBUTING.md
+See `CONTRIBUTING.md` in the package for contribution and design rules.
 
 ## License
 

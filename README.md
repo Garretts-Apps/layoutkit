@@ -111,6 +111,13 @@ Common attributes include `gap`, `padding`, `align`, `justify`, `place`,
 `orientation`, `thickness`, `direction`, `max-h`, `ratio`, `radius`, `surface`,
 `border`, `side`, `lk-text`, and `lk-weight`.
 
+## Frozen Convenience Helpers
+
+`lk-card`, `lk-text`, and `lk-weight` are intentionally small convenience
+helpers. They are not the start of a component or typography system, and new
+visual styling primitives should be rejected unless they directly support
+layout.
+
 ## Examples
 
 Dashboard:
@@ -258,7 +265,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.3.0
+npm install layoutkit-css@1.3.1
 ```
 
 ## Repository
