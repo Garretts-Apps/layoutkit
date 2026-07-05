@@ -25,6 +25,12 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
 
+      # Trusted publishing requires npm >= 11.5.1. Node 22 runners may still
+      # bundle npm 10.x, so upgrade the CLI in the release job without adding a
+      # repo dependency or registry token.
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
       # Regenerate the stylesheet from source so the published file always
       # matches gen.mjs.
       - name: Generate stylesheet
