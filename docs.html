@@ -23,6 +23,11 @@
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
   <link rel="stylesheet" href="/assets/site.css?v=20260705a">
+  <style>
+    .demo { border: 1px dashed var(--border); border-radius: 8px; padding: 12px; background: var(--surface-2); }
+    .demo article, .demo .cell { background: var(--surface); border-radius: 8px; padding: 8px 12px; }
+    .swatch { block-size: 6rem; inline-size: 100%; background: linear-gradient(120deg, #22d3ee, #a78bfa); }
+  </style>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -59,6 +64,7 @@
             <a class="navlink" href="#scope">Scope</a>
             <a class="navlink" href="#primitives">Primitives</a>
             <a class="navlink" href="#attributes">Attributes</a>
+            <a class="navlink" href="#layouts">CSS over JS</a>
             <a class="navlink" href="#helpers">Helpers</a>
             <a class="navlink" href="#tokens">Tokens</a>
             <a class="navlink" href="#accessibility">Accessibility</a>
@@ -84,7 +90,7 @@
           <article class="card">
             <lk-stack gap="2">
               <h2 id="scope-heading" class="h2">Scope</h2>
-              <p class="sans muted">LayoutKit covers common layout primitives: stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, spacer, divider, aspect ratio, and scroll area.</p>
+              <p class="sans muted">LayoutKit covers common layout primitives: stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, and menu. Container queries, subgrid, snap, sticky, and anchors are opt-in.</p>
             </lk-stack>
           </article>
           <article class="card">
@@ -132,21 +138,26 @@
             <table>
               <thead><tr><th>Tag</th><th>Purpose</th><th>Common attributes</th></tr></thead>
               <tbody>
-                <tr><td><code>lk-stack</code></td><td>Vertical flow</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width</td></tr>
-                <tr><td><code>lk-row</code></td><td>Horizontal flow</td><td>gap, padding, align, justify, place, fill, full-height, wrap, reverse, width</td></tr>
-                <tr><td><code>lk-center</code></td><td>Centered layout</td><td>fill, full-height, inline, horizontal, vertical, place, width</td></tr>
+                <tr><td><code>lk-stack</code></td><td>Vertical flow</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt</td></tr>
+                <tr><td><code>lk-row</code></td><td>Horizontal flow and opt-in snap carousel</td><td>gap, padding, align, justify, place, fill, full-height, wrap, reverse, width, adapt, snap, slide</td></tr>
+                <tr><td><code>lk-center</code></td><td>Centered layout. <code>overlay</code> covers a positioned parent.</td><td>fill, full-height, inline, horizontal, vertical, place, width, overlay</td></tr>
                 <tr><td><code>lk-box</code></td><td>Block wrapper</td><td>padding, fill, width, flow</td></tr>
-                <tr><td><code>lk-card</code></td><td>Neutral padded block</td><td>padding, radius, surface, border, width, flow</td></tr>
+                <tr><td><code>lk-card</code></td><td>Neutral padded block</td><td>padding, radius, surface, border, width, flow, adapt</td></tr>
                 <tr><td><code>lk-spread</code></td><td>Space-between row</td><td>align, padding, place</td></tr>
-                <tr><td><code>lk-grid</code></td><td>Grid layout</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items</td></tr>
+                <tr><td><code>lk-grid</code></td><td>Grid layout</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items, container, subgrid</td></tr>
                 <tr><td><code>lk-cluster</code></td><td>Wrapping group</td><td>gap, place</td></tr>
-                <tr><td><code>lk-switcher</code></td><td>Intrinsic row-to-stack layout</td><td>gap</td></tr>
-                <tr><td><code>lk-sidebar</code></td><td>Wrapping side/content layout</td><td>gap, side</td></tr>
+                <tr><td><code>lk-switcher</code></td><td>Intrinsic row-to-stack layout. <code>limit</code> stacks when there are too many children.</td><td>gap, container, limit</td></tr>
+                <tr><td><code>lk-sidebar</code></td><td>Wrapping side/content layout</td><td>gap, side, container, sticky</td></tr>
                 <tr><td><code>lk-cover</code></td><td>Min-height cover region</td><td>gap. Put <code>center</code> on the child that should sit in the middle.</td></tr>
                 <tr><td><code>lk-spacer</code></td><td>Flexible or fixed space</td><td>size</td></tr>
                 <tr><td><code>lk-divider</code></td><td>Visual divider</td><td>orientation, thickness</td></tr>
                 <tr><td><code>lk-aspect-ratio</code></td><td>Aspect-ratio wrapper. <code>img</code>, <code>video</code>, <code>iframe</code>, <code>canvas</code>, and <code>svg</code> fill the frame.</td><td>ratio</td></tr>
-                <tr><td><code>lk-scroll-area</code></td><td>Constrained scroll container</td><td>direction, max-h</td></tr>
+                <tr><td><code>lk-scroll-area</code></td><td>Constrained scroll container and opt-in carousel</td><td>direction, max-h, gap, snap, slide</td></tr>
+                <tr><td><code>lk-progress</code></td><td>Scroll progress bar. Static when scroll timelines are unsupported.</td><td>scope</td></tr>
+                <tr><td><code>lk-popover</code></td><td>Top-layer panel for a native <code>popover</code>. Does not set <code>display</code>.</td><td>anchor</td></tr>
+                <tr><td><code>lk-disclosure</code></td><td>Layout for native <code>details</code>/<code>summary</code></td><td>panel, anchor, side</td></tr>
+                <tr><td><code>lk-menu</code></td><td>Invoker plus <code>lk-popover</code>. The invoker is the first child.</td><td>anchor, side</td></tr>
+                <tr><td><code>lk-columns</code></td><td>Multi-column text flow. Children avoid splitting.</td><td>cols, gap</td></tr>
               </tbody>
             </table>
           </div>
@@ -163,6 +174,7 @@
             <article class="card"><h3>Sizing</h3><p class="sans muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. <code>full-height</code> and <code>lk-cover</code> use <code>100dvh</code> where supported, then <code>100svh</code>, then <code>100vh</code>. <code>--lk-cover-min</code> still overrides the cover.</p></article>
             <article class="card"><h3>Grid tracks</h3><p class="sans muted"><code>responsive</code> and <code>min</code> are both auto-fit, so items grow to fill the row and empty tracks collapse. <code>min</code> sets an enumerated minimum and overrides <code>responsive</code>. Both clamp a track that would be wider than the container. <code>flow</code> on a grid is <code>row</code>, <code>col</code>, or <code>dense</code>. On <code>lk-box</code> and <code>lk-card</code>, <code>flow</code> is the spacing scale.</p></article>
             <article class="card"><h3>Divider and frames</h3><p class="sans muted">The default divider is a <code>currentColor</code> mix, so it stays visible on dark pages. Browsers without <code>color-mix()</code> keep <code>#e5e7eb</code>. Set <code>--lk-divider-color</code> to choose a color. Replaced children of <code>lk-aspect-ratio</code> fill the frame with <code>object-fit: cover</code>.</p></article>
+            <article class="card"><h3>Opt-in layout</h3><p class="sans muted"><code>container</code>, <code>subgrid</code>, <code>adapt</code>, <code>snap</code>, <code>slide</code>, <code>sticky</code>, <code>anchor</code>, <code>panel</code>, and <code>scope</code> add behavior only when present. Omitting them keeps the previous layout.</p></article>
           </lk-grid>
         </lk-stack>
       </section>
@@ -185,7 +197,7 @@
   <span class="tok-attr">--lk-text-md</span>: <span class="tok-str">var(--text-md, 1rem)</span>;
   <span class="tok-attr">--lk-radius-md</span>: <span class="tok-str">var(--radius-md, 0.75rem)</span>;
 }</pre></div>
-          <p class="sans muted">Map LayoutKit to your app tokens:</p>
+          <p class="sans muted">Map LayoutKit to your app tokens. <code class="sans">--lk-space-fluid-xs</code> through <code class="sans">--lk-space-fluid-3xl</code> are optional clamp lengths. The static scale stays in place until a token points at one, for example <code class="sans">--space-md: var(--lk-space-fluid-md)</code>.</p>
           <div class="code"><pre><span class="tok-tag">:root</span> {
   <span class="tok-attr">--space-sm</span>: <span class="tok-str">var(--space-2)</span>;
   <span class="tok-attr">--space-md</span>: <span class="tok-str">var(--space-4)</span>;
@@ -207,9 +219,227 @@
             <li>Prefer native HTML first.</li>
             <li>LayoutKit should not interfere with focus order.</li>
             <li>Avoid hiding overflow in ways that trap keyboard users.</li>
-            <li>Scroll containers should remain keyboard and screen-reader usable. <code>lk-scroll-area</code> does not create a tab stop. If the region itself must be scrolled from the keyboard, set <code>tabindex="0"</code> and a name on it. Without <code>direction</code>, both axes scroll; <code>direction="vertical"</code> clips inline overflow.</li>
+            <li>Scroll containers should remain keyboard and screen-reader usable. <code>lk-scroll-area</code> does not create a tab stop. If the region itself must be scrolled from the keyboard, set <code>tabindex="0"</code> and a name on it. Without <code>direction</code>, both axes scroll; <code>direction="vertical"</code> clips inline overflow. A <code>snap</code> carousel follows the same rule. Its direct children are the slides.</li>
+            <li><code>lk-menu</code> and <code>lk-disclosure</code> do not invent buttons. The menu invoker is the first child and must be a <code>button</code>, link, or <code>summary</code>. Disclosure uses native <code>details</code>.</li>
+            <li><code>lk-progress</code> is decorative. It does not replace a status message.</li>
             <li>LayoutKit provides layout behavior only. Accessibility still depends on the underlying HTML and application code.</li>
           </ul>
+        </lk-stack>
+      </section>
+
+      <section id="layouts" aria-labelledby="layouts-heading">
+        <lk-stack gap="8">
+          <lk-stack gap="4">
+            <h2 id="layouts-heading" class="h2">CSS over JavaScript</h2>
+            <p class="sans muted">These attributes are off until you set them. A browser that lacks the feature keeps the layout you already had.</p>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Container queries</h3>
+            <p class="sans muted"><code class="sans">container</code> on <code class="sans">lk-switcher</code> measures <code class="sans">--lk-switch-at</code> with <code class="sans">100cqi</code>. On <code class="sans">lk-sidebar</code> the flexible region uses <code class="sans">50cqi</code>. On <code class="sans">lk-grid</code>, fixed <code class="sans">cols</code> stack when that grid is under 32rem. <code class="sans">container="sm"</code>, <code class="sans">md</code>, <code class="sans">lg</code>, and <code class="sans">xl</code> use 24rem, 32rem, 48rem, and 64rem. <code class="sans">responsive</code> and <code class="sans">min</code> stay auto-fit. <code class="sans">limit</code> on a switcher (<code class="sans">2</code>–<code class="sans">6</code>) stacks every child when there are more than that many.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">container</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>North<span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>South<span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>West<span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-grid&gt;</span></pre></div>
+            <div class="demo">
+              <lk-stack gap="sm">
+                <p class="sans muted">16rem container. The columns stack.</p>
+                <div style="inline-size: 16rem; max-inline-size: 100%;">
+                  <lk-grid id="demo-container-narrow" container cols="3" gap="sm">
+                    <article>North</article>
+                    <article>South</article>
+                    <article>West</article>
+                  </lk-grid>
+                </div>
+                <p class="sans muted">Wide container. Three columns stay in a row.</p>
+                <lk-grid id="demo-container-wide" container cols="3" gap="sm">
+                  <article>North</article>
+                  <article>South</article>
+                  <article>West</article>
+                </lk-grid>
+              </lk-stack>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3><code class="sans">:has()</code> adaptation</h3>
+            <p class="sans muted"><code class="sans">adapt="solo"</code> centers a row or stack that has one element child. <code class="sans">place</code> and <code class="sans">justify</code> still win. <code class="sans">adapt="figure"</code> bleeds a direct child <code class="sans">figure</code> and keeps the rest of the card inset.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">adapt</span>=<span class="tok-str">"solo"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"button"</span><span class="tok-tag">&gt;</span>Only action<span class="tok-tag">&lt;/button&gt;</span>
+<span class="tok-tag">&lt;/lk-row&gt;</span>
+<span class="tok-tag">&lt;lk-card</span> <span class="tok-attr">adapt</span>=<span class="tok-str">"figure"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;figure&gt;</span><span class="tok-tag">&lt;img</span> <span class="tok-attr">src</span>=<span class="tok-str">"/photos/shore.jpg"</span> <span class="tok-attr">alt</span>=<span class="tok-str">"Rocky shore"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;/figure&gt;</span>
+  <span class="tok-tag">&lt;h3&gt;</span>Shore<span class="tok-tag">&lt;/h3&gt;</span>
+<span class="tok-tag">&lt;/lk-card&gt;</span></pre></div>
+            <lk-grid responsive gap="4">
+              <div class="demo">
+                <lk-row id="demo-solo" adapt="solo" style="min-block-size: 4rem; outline: 1px dashed var(--border);">
+                  <button type="button">Only action</button>
+                </lk-row>
+              </div>
+              <lk-card id="demo-figure" adapt="figure" width="sm">
+                <figure>
+                  <div class="swatch" role="img" aria-label="Decorative gradient"></div>
+                </figure>
+                <h3>Shore</h3>
+                <p class="sans">The text stays inset while the figure runs to the edges.</p>
+              </lk-card>
+            </lk-grid>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Subgrid</h3>
+            <p class="sans muted">A nested <code class="sans">lk-grid</code> with <code class="sans">subgrid</code> spans the parent and uses its columns. Keep <code class="sans">cols</code> so a browser without subgrid still has a template. <code class="sans">subgrid="rows"</code> and <code class="sans">subgrid="both"</code> share row tracks. Gap is inherited unless you set one.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;strong&gt;</span>Name<span class="tok-tag">&lt;/strong&gt;</span>
+  <span class="tok-tag">&lt;strong&gt;</span>Status<span class="tok-tag">&lt;/strong&gt;</span>
+  <span class="tok-tag">&lt;strong&gt;</span>Updated<span class="tok-tag">&lt;/strong&gt;</span>
+  <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">subgrid</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;span&gt;</span>Website<span class="tok-tag">&lt;/span&gt;</span>
+    <span class="tok-tag">&lt;span&gt;</span>Ready<span class="tok-tag">&lt;/span&gt;</span>
+    <span class="tok-tag">&lt;span&gt;</span>Today<span class="tok-tag">&lt;/span&gt;</span>
+  <span class="tok-tag">&lt;/lk-grid&gt;</span>
+<span class="tok-tag">&lt;/lk-grid&gt;</span></pre></div>
+            <div class="demo">
+              <lk-grid id="demo-subgrid" cols="3" gap="sm">
+                <strong class="cell">Name</strong>
+                <strong class="cell">Status</strong>
+                <strong class="cell">Updated</strong>
+                <lk-grid cols="3" subgrid>
+                  <span class="cell">Website</span>
+                  <span class="cell">Ready</span>
+                  <span class="cell">Today</span>
+                </lk-grid>
+              </lk-grid>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Scroll-snap carousel</h3>
+            <p class="sans muted"><code class="sans">snap</code> on <code class="sans">lk-row</code> or <code class="sans">lk-scroll-area</code> makes each direct child a slide. <code class="sans">slide</code> is <code class="sans">full</code>, <code class="sans">half</code>, <code class="sans">third</code>, or <code class="sans">peek</code>. <code class="sans">direction="vertical"</code> on a scroll area snaps on the block axis. Set <code class="sans">tabindex="0"</code> and a name when the region itself must be scrolled from the keyboard.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">snap</span> <span class="tok-attr">slide</span>=<span class="tok-str">"peek"</span> <span class="tok-attr">tabindex</span>=<span class="tok-str">"0"</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Highlights"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>One<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Two<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Three<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-row&gt;</span></pre></div>
+            <div class="demo">
+              <lk-row id="demo-snap" snap slide="peek" tabindex="0" aria-label="Highlights">
+                <article><h3>One</h3><p class="sans">First slide</p></article>
+                <article><h3>Two</h3><p class="sans">Second slide</p></article>
+                <article><h3>Three</h3><p class="sans">Third slide</p></article>
+              </lk-row>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Sticky sidebar and scroll progress</h3>
+            <p class="sans muted"><code class="sans">sticky</code> pins the side panel to <code class="sans">--lk-sticky-top</code> (default 0). <code class="sans">side="end"</code> pins the last child. <code class="sans">lk-progress</code> is a static bar until <code class="sans">animation-timeline: scroll()</code> is available. <code class="sans">scope="nearest"</code> tracks the nearest scroller. Reduced motion keeps the static bar.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-sidebar</span> <span class="tok-attr">sticky</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;nav</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Sections"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"#layouts"</span><span class="tok-tag">&gt;</span>Layouts<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/nav&gt;</span>
+  <span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">max-h</span>=<span class="tok-str">"sm"</span> <span class="tok-attr">tabindex</span>=<span class="tok-str">"0"</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Notes"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;lk-progress</span> <span class="tok-attr">scope</span>=<span class="tok-str">"nearest"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;/lk-progress&gt;</span>
+    <span class="tok-tag">&lt;p&gt;</span>Notes<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;/lk-scroll-area&gt;</span>
+<span class="tok-tag">&lt;/lk-sidebar&gt;</span></pre></div>
+            <div class="demo">
+              <lk-sidebar id="demo-sticky" sticky>
+                <nav aria-label="Demo sections">
+                  <lk-stack gap="xs">
+                    <a href="#layouts">Layouts</a>
+                    <a href="#examples">Examples</a>
+                    <a href="#jsx">JSX</a>
+                  </lk-stack>
+                </nav>
+                <lk-stack gap="md">
+                  <lk-scroll-area id="demo-progress" max-h="sm" tabindex="0" aria-label="Notes">
+                    <lk-progress scope="nearest"></lk-progress>
+                    <lk-stack gap="sm">
+                      <p>Scroll this region. The bar above tracks it where scroll timelines are supported, and stays a static line where they are not.</p>
+                      <p>Second paragraph, long enough to overflow the max height.</p>
+                      <p>Third paragraph keeps the scroller honest.</p>
+                      <p>Fourth paragraph is the end of the notes.</p>
+                    </lk-stack>
+                  </lk-scroll-area>
+                  <p style="min-block-size: 28rem;">The side panel sticks while this column is on screen.</p>
+                </lk-stack>
+              </lk-sidebar>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Popover and disclosure</h3>
+            <p class="sans muted"><code class="sans">lk-menu</code> expects the invoker as its first child, then an <code class="sans">lk-popover</code> with the HTML <code class="sans">popover</code> attribute. <code class="sans">anchor</code> tethers the panel with <code class="sans">position-area</code> where that exists, and leaves the user-agent centered top layer otherwise. <code class="sans">lk-disclosure</code> lays out <code class="sans">details</code>. <code class="sans">panel="overlay"</code> stacks the open panel. <code class="sans">anchor</code> tethers it, and the absolute panel remains the fallback. <code class="sans">side="end"</code> flips the inline edge.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-menu</span> <span class="tok-attr">anchor</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"button"</span> <span class="tok-attr">popovertarget</span>=<span class="tok-str">"account-menu"</span><span class="tok-tag">&gt;</span>Account<span class="tok-tag">&lt;/button&gt;</span>
+  <span class="tok-tag">&lt;lk-popover</span> <span class="tok-attr">id</span>=<span class="tok-str">"account-menu"</span> <span class="tok-attr">popover</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;nav</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Account"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/install"</span><span class="tok-tag">&gt;</span>Install<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/nav&gt;</span>
+  <span class="tok-tag">&lt;/lk-popover&gt;</span>
+<span class="tok-tag">&lt;/lk-menu&gt;</span>
+<span class="tok-tag">&lt;lk-disclosure</span> <span class="tok-attr">panel</span>=<span class="tok-str">"overlay"</span> <span class="tok-attr">anchor</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;details&gt;</span>
+    <span class="tok-tag">&lt;summary&gt;</span>Filters<span class="tok-tag">&lt;/summary&gt;</span>
+    <span class="tok-tag">&lt;label&gt;</span><span class="tok-tag">&lt;input</span> <span class="tok-attr">type</span>=<span class="tok-str">"checkbox"</span><span class="tok-tag">&gt;</span> Open<span class="tok-tag">&lt;/label&gt;</span>
+  <span class="tok-tag">&lt;/details&gt;</span>
+<span class="tok-tag">&lt;/lk-disclosure&gt;</span></pre></div>
+            <div class="demo">
+              <lk-cluster gap="lg">
+                <lk-menu id="demo-menu" anchor>
+                  <button type="button" popovertarget="docs-menu">Account</button>
+                  <lk-popover id="docs-menu" popover>
+                    <nav aria-label="Account">
+                      <lk-stack gap="xs">
+                        <a href="/install">Install</a>
+                        <a href="/docs">Docs</a>
+                      </lk-stack>
+                    </nav>
+                  </lk-popover>
+                </lk-menu>
+                <lk-disclosure id="demo-disclosure" panel="overlay" anchor>
+                  <details>
+                    <summary>Filters</summary>
+                    <lk-stack gap="xs">
+                      <label><input type="checkbox"> Open</label>
+                      <label><input type="checkbox"> Closed</label>
+                    </lk-stack>
+                  </details>
+                </lk-disclosure>
+              </lk-cluster>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Columns, overlay, and fluid space</h3>
+            <p class="sans muted"><code class="sans">lk-columns</code> flows text across <code class="sans">cols</code> of 2, 3, or 4. Direct children do not split. <code class="sans">overlay</code> on <code class="sans">lk-center</code> covers a positioned parent. <code class="sans">--lk-space-fluid-xs</code> through <code class="sans">--lk-space-fluid-3xl</code> are clamp lengths. They do not change <code class="sans">gap</code> until you point a <code class="sans">--space-*</code> token at one.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-columns</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>First point.<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>Second point.<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>Third point.<span class="tok-tag">&lt;/p&gt;</span>
+<span class="tok-tag">&lt;/lk-columns&gt;</span>
+<span class="tok-tag">&lt;lk-switcher</span> <span class="tok-attr">limit</span>=<span class="tok-str">"2"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>One<span class="tok-tag">&lt;/p&gt;</span><span class="tok-tag">&lt;p&gt;</span>Two<span class="tok-tag">&lt;/p&gt;</span><span class="tok-tag">&lt;p&gt;</span>Three<span class="tok-tag">&lt;/p&gt;</span>
+<span class="tok-tag">&lt;/lk-switcher&gt;</span></pre></div>
+            <div class="demo">
+              <lk-stack gap="md">
+                <lk-columns id="demo-columns" cols="3" gap="lg">
+                  <p>First point stays in one column.</p>
+                  <p>Second point follows the flow.</p>
+                  <p>Third point fills the last column.</p>
+                </lk-columns>
+                <lk-switcher id="demo-limit" limit="2" gap="sm">
+                  <article>One</article>
+                  <article>Two</article>
+                  <article>Three</article>
+                </lk-switcher>
+                <div style="position: relative; min-block-size: 6rem;">
+                  <p>Under the overlay.</p>
+                  <lk-center id="demo-overlay" overlay>
+                    <strong>Centered overlay</strong>
+                  </lk-center>
+                </div>
+              </lk-stack>
+            </div>
+          </lk-stack>
         </lk-stack>
       </section>
 
@@ -252,7 +482,7 @@
       <section id="browser-support" aria-labelledby="browser-heading">
         <lk-stack gap="4">
           <h2 id="browser-heading" class="h2">Browser support</h2>
-          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, <code class="sans">dvh</code>, <code class="sans">min()</code>, <code class="sans">object-fit</code>, and <code class="sans">color-mix()</code>. Older browsers keep the <code>100vh</code> and <code>#e5e7eb</code> fallbacks.</p>
+          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, <code class="sans">dvh</code>, <code class="sans">min()</code>, <code class="sans">object-fit</code>, and <code class="sans">color-mix()</code>. Older browsers keep the <code>100vh</code> and <code>#e5e7eb</code> fallbacks. Container queries, <code class="sans">:has()</code>, subgrid, scroll snap, sticky positioning, <code class="sans">animation-timeline: scroll()</code>, and anchor positioning (<code class="sans">position-area</code>, with <code class="sans">inset-area</code> as the earlier name) are opt-in. Each one is wrapped in <code class="sans">@supports</code>.</p>
         </lk-stack>
       </section>
 

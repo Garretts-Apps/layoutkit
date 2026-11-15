@@ -64,6 +64,7 @@
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
       if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
       if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
+      if (has(p, "snap")) d.push(["flex-wrap", "nowrap"], ["overflow-x", "auto"], ["overflow-y", "hidden"], ["scroll-snap-type", "x mandatory"]);
       d.push(...widthDecls(p), ...placeDecls(p, false));
       return d;
     },
@@ -74,6 +75,7 @@
         ["justify-content", both || has(p, "vertical") ? "center" : "flex-start"]];
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
       if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
+      if (has(p, "overlay")) d.push(["position", "absolute"], ["inset", "var(--lk-overlay-inset, 0)"]);
       d.push(...widthDecls(p), ...placeDecls(p, true));
       return d;
     },
@@ -89,6 +91,7 @@
       const d = [["display", "block"], ["padding", sp(str(p, "padding", "lg"))], ["border-radius", radius],
         ["border", p.border === "none" ? "0" : "1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent))"]];
       if (has(p, "surface")) d.push(["background", "var(--lk-surface, color-mix(in srgb, currentColor 6%, transparent))"]);
+      if (p.adapt === "figure") d.push(["padding", "0"], ["overflow", "clip"]);
       d.push(...widthDecls(p));
       return d;
     },
@@ -114,16 +117,28 @@
       const place = str(p, "place", "");
       if (PLACE[place]) d.push(["justify-items", PLACE[place][0]], ["align-items", PLACE[place][1]]);
       else if (place === "between" || place === "around" || place === "evenly") d.push(["justify-content", JUSTIFY[place]], ["align-content", JUSTIFY[place]]);
+      if (has(p, "subgrid") && p.subgrid !== "rows") d.push(["grid-template-columns", "subgrid"], ["grid-column", "1 / -1"]);
+      if (p.subgrid === "rows" || p.subgrid === "both") d.push(["grid-template-rows", "subgrid"], ["grid-row", "1 / -1"]);
+      if (has(p, "container")) d.push(["container-type", "inline-size"], ["container-name", "lk-grid"]);
       return d;
     },
     "lk-cluster"(p) {
       return [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "sm"))], ["align-items", "center"], ...placeDecls(p, false)];
     },
     "lk-switcher"(p) {
-      return [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
+      const d = [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
+      if (has(p, "container")) d.push(["container-type", "inline-size"], ["container-name", "lk-switcher"]);
+      return d;
+    },
+    "lk-columns"(p) {
+      const count = ["2", "3", "4"].includes(p.cols) ? p.cols : "2";
+      const d = [["display", "block"], ["column-count", count], ["column-gap", p.gap ? sp(p.gap) : "var(--lk-space-md)"]];
+      return d;
     },
     "lk-sidebar"(p) {
-      return [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
+      const d = [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
+      if (has(p, "container")) d.push(["container-type", "inline-size"], ["container-name", "lk-sidebar"]);
+      return d;
     },
     "lk-cover"(p) {
       return [["display", "flex"], ["flex-direction", "column"], ["min-block-size", "var(--lk-cover-min, 100vh)"], ["gap", sp(str(p, "gap", "md"))], ["padding", sp("md")]];
@@ -150,6 +165,31 @@
       else if (p.direction === "both") d.push(["overflow", "auto"]);
       else { d.push(["overflow-y", "auto"]); if (p.direction === "vertical") d.push(["overflow-x", "hidden"]); }
       d.push(["max-block-size", MAXH[p["max-h"]] || "var(--lk-max-height, none)"], ["max-inline-size", "var(--lk-max-width, none)"]);
+      if (p.gap) d.push(["gap", sp(p.gap)]);
+      if (has(p, "snap")) {
+        const vertical = p.direction === "vertical";
+        d.push(
+          ["display", "flex"],
+          ["flex-flow", vertical ? "column nowrap" : "row nowrap"],
+          ["overflow-x", vertical ? "hidden" : "auto"],
+          ["overflow-y", vertical ? "auto" : "hidden"],
+          ["scroll-snap-type", vertical ? "y mandatory" : p.snap === "proximity" ? "x proximity" : "x mandatory"],
+        );
+      }
+      return d;
+    },
+    "lk-progress"(p) {
+      return [["display", "block"], ["block-size", "0.25rem"], ["inline-size", "100%"], ["animation-timeline", p.scope === "nearest" ? "scroll(nearest)" : "scroll(root)"]];
+    },
+    "lk-popover"() {
+      return [["padding", sp("md")], ["inline-size", "max-content"], ["max-inline-size", "min(20rem, calc(100vw - 2rem))"], ["background", "var(--lk-popover-bg, canvas)"]];
+    },
+    "lk-disclosure"(p) {
+      return [["display", "block"], ["position", p.panel === "overlay" ? "relative" : "static"]];
+    },
+    "lk-menu"(p) {
+      const d = [["display", "inline-block"], ["position", "relative"], ["max-inline-size", "100%"]];
+      if (has(p, "anchor")) d.push(["anchor-scope", "--lk-menu"]);
       return d;
     },
   };
@@ -161,21 +201,51 @@
       rules.push([" > * + *", [["margin-block-start", sp(key)]]]);
     }
     if (tag === "lk-switcher") {
-      rules.push([" > *", [["flex-grow", "1"], ["flex-basis", "calc((var(--lk-switch-at, 30rem) - 100%) * 999)"]]]);
+      const basis = has(attrs, "container") ? "calc((var(--lk-switch-at, 30rem) - 100cqi) * 999)" : "calc((var(--lk-switch-at, 30rem) - 100%) * 999)";
+      rules.push([" > *", [["flex-grow", "1"], ["flex-basis", basis]]]);
+      const limit = Number(attrs.limit);
+      if (limit >= 2 && limit <= 6) {
+        const from = limit + 1;
+        rules.push([` > :nth-last-child(n + ${from})`, [["flex-basis", "100%"]]]);
+        rules.push([` > :nth-last-child(n + ${from}) ~ *`, [["flex-basis", "100%"]]]);
+      }
+    }
+    if (tag === "lk-columns") {
+      rules.push([" > *", [["break-inside", "avoid"]]]);
     }
     if (tag === "lk-sidebar") {
       const end = attrs.side === "end";
+      const contentMin = has(attrs, "container") ? "var(--lk-sidebar-content-min, 50cqi)" : "var(--lk-sidebar-content-min, 50%)";
       rules.push(
         [" > :first-child", end
-          ? [["flex-grow", "999"], ["flex-basis", "0"], ["min-inline-size", "var(--lk-sidebar-content-min, 50%)"]]
+          ? [["flex-grow", "999"], ["flex-basis", "0"], ["min-inline-size", contentMin]]
           : [["flex-grow", "1"], ["flex-basis", "var(--lk-sidebar-width, 18rem)"]]],
         [" > :last-child", end
           ? [["flex-grow", "1"], ["flex-basis", "var(--lk-sidebar-width, 18rem)"], ["min-inline-size", "0"]]
-          : [["flex-grow", "999"], ["flex-basis", "0"], ["min-inline-size", "var(--lk-sidebar-content-min, 50%)"]]],
+          : [["flex-grow", "999"], ["flex-basis", "0"], ["min-inline-size", contentMin]]],
       );
+      if (has(attrs, "sticky")) {
+        const stickySel = end ? " > :last-child" : " > :first-child";
+        rules.push([stickySel, [["position", "sticky"], ["inset-block-start", "var(--lk-sticky-top, 0px)"], ["align-self", "start"], ["max-block-size", "100dvh"]]]);
+      }
     }
     if (tag === "lk-cover") {
       rules.push([" > :is([center], :only-child)", [["margin-block", "auto"]]]);
+    }
+    if ((tag === "lk-row" || tag === "lk-stack") && attrs.adapt === "solo" && !attrs.justify && !attrs.place) {
+      rules.push([":has(> :only-child)", [["justify-content", "center"]]]);
+    }
+    if ((tag === "lk-row" || tag === "lk-scroll-area") && has(attrs, "snap")) {
+      const slide = attrs.slide === "full" ? "100%"
+        : attrs.slide === "half" ? "calc((100% - var(--lk-snap-gap, var(--lk-space-md))) / 2)"
+        : attrs.slide === "third" ? "calc((100% - 2 * var(--lk-snap-gap, var(--lk-space-md))) / 3)"
+        : attrs.slide === "peek" ? "80%"
+        : "auto";
+      rules.push([" > *", [["scroll-snap-align", attrs.snap === "center" ? "center" : "start"], ["flex", `0 0 ${slide}`]]]);
+    }
+    if (tag === "lk-menu" && has(attrs, "anchor")) {
+      rules.push([" > button:first-child", [["anchor-name", "--lk-menu"]]]);
+      rules.push([" > lk-popover", [["position-anchor", "--lk-menu"], ["position-area", attrs.side === "end" ? "block-end span-inline-start" : "block-end span-inline-end"], ["justify-self", attrs.side === "end" ? "end" : "start"]]]);
     }
     if (tag === "lk-aspect-ratio") {
       rules.push([" > :is(img, video, iframe, canvas, svg)", [
@@ -305,6 +375,8 @@
     { label: "Form", code: '<form action="/settings" method="post">\n  <lk-stack gap="md">\n    <label>\n      Display name\n      <input name="name" autocomplete="name">\n    </label>\n    <lk-row gap="sm" wrap>\n      <button type="submit">Save</button>\n      <a href="/settings">Cancel</a>\n    </lk-row>\n  </lk-stack>\n</form>' },
     { label: "Page", code: '<lk-stack style="min-block-size: 16rem;">\n  <header>\n    <lk-spread padding="md" align="center">\n      <a href="/">Acme</a>\n      <nav aria-label="Primary"><lk-row gap="sm"><a href="/docs">Docs</a><a href="/pricing">Pricing</a></lk-row></nav>\n    </lk-spread>\n  </header>\n  <lk-box fill padding="lg">\n    <main><lk-center><h1>Dashboard</h1></lk-center></main>\n  </lk-box>\n</lk-stack>' },
     { label: "Grid", code: '<section aria-labelledby="projects-heading">\n  <lk-stack gap="md">\n    <h2 id="projects-heading">Projects</h2>\n    <lk-grid cols="3" gap="lg" responsive>\n      <article><h3>Website</h3><p>Updated today</p></article>\n      <article><h3>Docs</h3><p>Ready for review</p></article>\n      <article><h3>API</h3><p>Stable</p></article>\n    </lk-grid>\n  </lk-stack>\n</section>' },
+    { label: "Snap", code: '<section aria-labelledby="slides-heading">\n  <lk-stack gap="sm">\n    <h2 id="slides-heading">Highlights</h2>\n    <lk-row snap slide="peek" tabindex="0" aria-label="Highlights">\n      <article><h3>One</h3><p>First slide</p></article>\n      <article><h3>Two</h3><p>Second slide</p></article>\n      <article><h3>Three</h3><p>Third slide</p></article>\n    </lk-row>\n  </lk-stack>\n</section>' },
+    { label: "Menu", code: '<lk-menu anchor>\n  <button type="button" popovertarget="demo-menu">Menu</button>\n  <lk-popover id="demo-menu" popover>\n    <nav aria-label="Demo">\n      <lk-stack gap="xs">\n        <a href="/docs">Docs</a>\n        <a href="/install">Install</a>\n      </lk-stack>\n    </nav>\n  </lk-popover>\n</lk-menu>' },
   ];
 
   const input = document.getElementById("pg-input");
