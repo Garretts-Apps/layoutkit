@@ -103,12 +103,13 @@ Bad: LayoutKit stands in for document meaning.
 ```html
 <lk-box>
   <lk-stack>
-    <lk-text>Dashboard</lk-text>
+    <lk-box lk-text="2xl">Dashboard</lk-box>
   </lk-stack>
 </lk-box>
 ```
 
-The bad example loses native document meaning. Use `main`, `section`,
+The bad example loses native document meaning. `lk-text` is an attribute for a
+real element, not a tag. Use `main`, `section`,
 `article`, `header`, `footer`, `nav`, headings, links, buttons, lists, tables,
 and form controls for their real HTML jobs. Use `lk-*` tags for layout around
 them.
@@ -150,6 +151,20 @@ custom properties such as `--lk-ratio`, `--lk-divider-color`,
 `--lk-min-child-width`, `--lk-max-height`, `--lk-max-width`, `--lk-measure`,
 `--lk-switch-at`, and `--lk-sidebar-width`.
 
+`min` on `lk-grid` sets an auto-fill track size and overrides `responsive` when
+both are present. Empty tracks keep their space. Use `responsive` alone when
+items should grow to fill the row. Both clamp a track that would otherwise be
+wider than the container.
+
+`flow` on `lk-box` and `lk-card` uses the same spacing scale as `gap`. On
+`lk-grid`, `flow` is `row`, `col`, or `dense`.
+
+`full-height` is `min-block-size: 100vh`. `lk-cover` defaults to `100svh`. Those
+are different heights when mobile browser chrome is visible.
+
+Put `center` on the child of `lk-cover` that should sit in the middle. It is not
+an attribute of `lk-cover` itself.
+
 ## Frozen Convenience Helpers
 
 `lk-card`, `lk-text`, and `lk-weight` are intentionally small convenience
@@ -169,7 +184,7 @@ Dashboard layout:
         <h1 id="orders-heading">Orders</h1>
         <a href="/orders">View all</a>
       </lk-spread>
-      <lk-grid responsive min="md" gap="md">
+      <lk-grid responsive gap="md">
         <article>
           <h2>Open orders</h2>
           <p>128</p>
@@ -207,7 +222,7 @@ Card grid:
 <section aria-labelledby="projects-heading">
   <lk-stack gap="lg">
     <h2 id="projects-heading">Projects</h2>
-    <lk-grid responsive min="sm" gap="md">
+    <lk-grid responsive gap="md">
       <article>
         <h3>Website</h3>
         <p>Updated today</p>
@@ -323,7 +338,10 @@ normally. If your app uses cascade layers, place `layoutkit` where you want it:
 - Avoid hiding overflow in ways that trap keyboard users.
 - Scroll containers should remain keyboard and screen-reader usable.
 - `lk-scroll-area` only applies overflow and max-size behavior; the content
-  inside it still needs usable native markup.
+  inside it still needs usable native markup. It does not create a tab stop. If
+  the region itself must be scrolled from the keyboard, set `tabindex="0"` and
+  a name on it. Without `direction`, both axes scroll; `direction="vertical"`
+  clips inline overflow.
 - LayoutKit provides layout behavior only. Accessibility still depends on the
   underlying HTML and application code.
 
@@ -333,8 +351,20 @@ LayoutKit includes a small `jsx.d.ts` file. It teaches TypeScript about the
 known `lk-*` elements and common attributes. It does not import React types, add
 a runtime, register custom elements, or imply any browser behavior.
 
-For TSX projects, make sure TypeScript includes package types. One option is to
-add the package to `compilerOptions.types`:
+Importing the stylesheet resolves these types:
+
+```ts
+import "layoutkit-css/layoutkit.css";
+```
+
+You can also include them without importing the CSS:
+
+```ts
+/// <reference types="layoutkit-css" />
+```
+
+`compilerOptions.types` replaces TypeScript's automatic `@types` list, so only
+use that array when it names every package you still need:
 
 ```json
 {
@@ -345,13 +375,14 @@ add the package to `compilerOptions.types`:
 ```
 
 React-specific HTML prop typing still comes from your own React and
-`@types/react` setup. LayoutKit does not depend on React.
+`@types/react` setup. LayoutKit does not depend on React. The declarations only
+accept attributes the stylesheet implements.
 
 ## Browser Support
 
 LayoutKit targets modern evergreen browsers with support for custom properties,
-flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`, and
-`color-mix()`.
+flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`,
+`min()`, and `color-mix()`.
 
 ## Security And Package Verification
 
@@ -366,7 +397,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.3.2
+npm install layoutkit-css@1.3.3
 ```
 
 Review third-party packages before use.

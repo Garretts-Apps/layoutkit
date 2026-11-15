@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
@@ -71,6 +72,71 @@ for (const field of ["main", "style", "unpkg", "jsdelivr", "types"]) {
   if (packageJson[field] && !existsSync(join(pkgDir, packageJson[field]))) {
     fail(`${field} points to missing file ${packageJson[field]}`);
   }
+}
+
+const generated = spawnSync(process.execPath, [join(pkgDir, "gen.mjs"), "--check"], { cwd: root, encoding: "utf8" });
+if (generated.status !== 0) fail((generated.stdout || generated.stderr || "generated CSS check failed").trim());
+
+const version = packageJson.version;
+const pinFiles = [
+  ["README.md", join(root, "README.md")],
+  ["SECURITY.md", join(root, "SECURITY.md")],
+  ["packages/layoutkit/README.md", join(pkgDir, "README.md")],
+  ["packages/layoutkit/SECURITY.md", join(pkgDir, "SECURITY.md")],
+  ["install.html", join(root, "install.html")],
+];
+for (const [label, path] of pinFiles) {
+  const text = readFileSync(path, "utf8");
+  if (!text.includes(`layoutkit-css@${version}`)) fail(`${label} must pin layoutkit-css@${version}`);
+}
+
+const rootChangelog = readFileSync(join(root, "CHANGELOG.md"), "utf8");
+const packageChangelog = readFileSync(join(pkgDir, "CHANGELOG.md"), "utf8");
+if (rootChangelog !== packageChangelog) fail("root CHANGELOG.md and packages/layoutkit/CHANGELOG.md must match");
+if (!packageChangelog.includes(`## ${version}`)) fail(`changelog must document ${version}`);
+
+const cssExport = packageJson.exports?.["./layoutkit.css"];
+if (!cssExport || cssExport.default !== "./layoutkit.css" || cssExport.style !== "./layoutkit.css" || cssExport.types !== "./jsx.d.ts") {
+  fail("exports['./layoutkit.css'] must type as jsx.d.ts and default to layoutkit.css");
+}
+
+if (!/lk-spacer\[size="md"\] \{ flex: 0 0 /.test(css)) fail("sized lk-spacer must set a main-axis flex basis");
+if (!css.includes('lk-box[flow="5"]')) fail("flow must honor the numeric spacing scale");
+if (!css.includes("minmax(min(var(--lk-min-child-width, 250px), 100%), 1fr)")) fail("responsive grids must clamp their minimum track to the container");
+if (!css.includes('lk-grid[place="between"]')) fail("lk-grid must implement place distribution");
+
+const cssAttrs = new Map();
+for (const match of css.matchAll(/(lk-[a-z0-9-]+)\[([a-z][\w-]*)/g)) {
+  if (!cssAttrs.has(match[1])) cssAttrs.set(match[1], new Set());
+  cssAttrs.get(match[1]).add(match[2]);
+}
+if (!css.includes('[lk-text="md"]')) fail("lk-text scale must be declared");
+if (!css.includes('[lk-weight="normal"]')) fail("lk-weight scale must be declared");
+
+const dts = readFileSync(join(pkgDir, "jsx.d.ts"), "utf8");
+const typeAttrs = new Map();
+const elementPattern = /"(lk-[a-z0-9-]+)":\s*LayoutKitGlobalAttributes\s*&\s*\{([\s\S]*?)\n\s*\};/g;
+for (const match of dts.matchAll(elementPattern)) {
+  const props = new Set();
+  for (const prop of match[2].matchAll(/(?:^|\n)\s*(?:"([^"]+)"|([A-Za-z][\w-]*))\??:/g)) props.add(prop[1] || prop[2]);
+  typeAttrs.set(match[1], props);
+}
+const cssTags = [...cssAttrs.keys()].sort();
+const typeTags = [...typeAttrs.keys()].sort();
+if (cssTags.join() !== typeTags.join()) {
+  fail(`JSX tags and CSS tags differ\nCSS: ${cssTags.join(", ")}\nJSX: ${typeTags.join(", ")}`);
+}
+for (const tag of cssTags) {
+  const fromCss = [...cssAttrs.get(tag)].sort();
+  const fromTypes = [...typeAttrs.get(tag)].sort();
+  if (fromCss.join() !== fromTypes.join()) {
+    fail(`${tag} attributes differ\nCSS: ${fromCss.join(", ")}\nJSX: ${fromTypes.join(", ")}`);
+  }
+}
+
+const playground = readFileSync(join(root, "assets", "playground.js"), "utf8");
+for (const tag of cssTags) {
+  if (!playground.includes(`"${tag}"`)) fail(`playground builders must include ${tag}`);
 }
 
 if (errors.length) {

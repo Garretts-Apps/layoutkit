@@ -80,7 +80,7 @@
       </section>
 
       <section id="scope" aria-labelledby="scope-heading">
-        <lk-grid responsive min="md" gap="4">
+        <lk-grid responsive gap="4">
           <article class="card">
             <lk-stack gap="2">
               <h2 id="scope-heading" class="h2">Scope</h2>
@@ -100,7 +100,7 @@
         <lk-stack gap="4">
           <h2 id="semantic-heading" class="h2">Semantic HTML first</h2>
           <p class="sans muted">LayoutKit is semantic to developers, not to the browser accessibility tree. It should not replace <code class="sans">main</code>, <code class="sans">nav</code>, <code class="sans">section</code>, <code class="sans">article</code>, <code class="sans">header</code>, <code class="sans">footer</code>, headings, buttons, links, lists, tables, or form controls.</p>
-          <lk-grid responsive min="md" gap="4">
+          <lk-grid responsive gap="4">
             <article>
               <span class="eyebrow">Good</span>
               <div class="code"><pre><span class="tok-tag">&lt;main&gt;</span>
@@ -116,10 +116,10 @@
               <span class="eyebrow">Bad</span>
               <div class="code"><pre><span class="tok-tag">&lt;lk-box&gt;</span>
   <span class="tok-tag">&lt;lk-stack&gt;</span>
-    <span class="tok-tag">&lt;lk-text&gt;</span>Dashboard<span class="tok-tag">&lt;/lk-text&gt;</span>
+    <span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">lk-text</span>=<span class="tok-str">"2xl"</span><span class="tok-tag">&gt;</span>Dashboard<span class="tok-tag">&lt;/lk-box&gt;</span>
   <span class="tok-tag">&lt;/lk-stack&gt;</span>
 <span class="tok-tag">&lt;/lk-box&gt;</span></pre></div>
-              <p class="sans muted">This loses native document meaning.</p>
+              <p class="sans muted">This loses native document meaning. <code class="sans">lk-text</code> is an attribute, not a tag.</p>
             </article>
           </lk-grid>
         </lk-stack>
@@ -133,16 +133,16 @@
               <thead><tr><th>Tag</th><th>Purpose</th><th>Common attributes</th></tr></thead>
               <tbody>
                 <tr><td><code>lk-stack</code></td><td>Vertical flow</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width</td></tr>
-                <tr><td><code>lk-row</code></td><td>Horizontal flow</td><td>gap, padding, align, justify, place, wrap, reverse</td></tr>
-                <tr><td><code>lk-center</code></td><td>Centered layout</td><td>fill, full-height, inline, horizontal, vertical, place</td></tr>
+                <tr><td><code>lk-row</code></td><td>Horizontal flow</td><td>gap, padding, align, justify, place, fill, full-height, wrap, reverse, width</td></tr>
+                <tr><td><code>lk-center</code></td><td>Centered layout</td><td>fill, full-height, inline, horizontal, vertical, place, width</td></tr>
                 <tr><td><code>lk-box</code></td><td>Block wrapper</td><td>padding, fill, width, flow</td></tr>
                 <tr><td><code>lk-card</code></td><td>Neutral padded block</td><td>padding, radius, surface, border, width, flow</td></tr>
                 <tr><td><code>lk-spread</code></td><td>Space-between row</td><td>align, padding, place</td></tr>
-                <tr><td><code>lk-grid</code></td><td>Grid layout</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place-items</td></tr>
+                <tr><td><code>lk-grid</code></td><td>Grid layout</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items</td></tr>
                 <tr><td><code>lk-cluster</code></td><td>Wrapping group</td><td>gap, place</td></tr>
                 <tr><td><code>lk-switcher</code></td><td>Intrinsic row-to-stack layout</td><td>gap</td></tr>
                 <tr><td><code>lk-sidebar</code></td><td>Wrapping side/content layout</td><td>gap, side</td></tr>
-                <tr><td><code>lk-cover</code></td><td>Min-height cover region</td><td>gap, center</td></tr>
+                <tr><td><code>lk-cover</code></td><td>Min-height cover region</td><td>gap. Put <code>center</code> on the child that should sit in the middle.</td></tr>
                 <tr><td><code>lk-spacer</code></td><td>Flexible or fixed space</td><td>size</td></tr>
                 <tr><td><code>lk-divider</code></td><td>Visual divider</td><td>orientation, thickness</td></tr>
                 <tr><td><code>lk-aspect-ratio</code></td><td>Aspect-ratio wrapper</td><td>ratio</td></tr>
@@ -157,10 +157,11 @@
         <lk-stack gap="4">
           <h2 id="attributes-heading" class="h2">Attribute reference</h2>
           <p class="sans muted">Attributes map to stable layout behavior. They are not a mirror of every CSS property.</p>
-          <lk-grid responsive min="md" gap="4">
+          <lk-grid responsive gap="4">
             <article class="card"><h3>Spacing</h3><p class="sans muted"><code>gap</code>, <code>padding</code>, <code>col-gap</code>, <code>row-gap</code>: <code>none</code>, <code>px</code>, <code>xs</code> through <code>3xl</code>, and the finite numeric scale.</p></article>
             <article class="card"><h3>Alignment</h3><p class="sans muted"><code>align</code>, <code>justify</code>, <code>place</code>, <code>place-items</code>, and <code>center</code> cover common flex and grid alignment.</p></article>
-            <article class="card"><h3>Sizing</h3><p class="sans muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, <code>max-h</code>, and custom properties cover common sizing needs.</p></article>
+            <article class="card"><h3>Sizing</h3><p class="sans muted"><code>fill</code>, <code>full-height</code> (<code>100vh</code>), <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. <code>lk-cover</code> defaults to <code>100svh</code>, which is shorter than <code>100vh</code> while mobile browser chrome is visible.</p></article>
+            <article class="card"><h3>Grid tracks</h3><p class="sans muted"><code>responsive</code> is auto-fit, so items grow to fill the row. <code>min</code> is auto-fill and overrides <code>responsive</code>; empty tracks keep their space. Both clamp a track that would be wider than the container. <code>flow</code> on a grid is <code>row</code>, <code>col</code>, or <code>dense</code>. On <code>lk-box</code> and <code>lk-card</code>, <code>flow</code> is the spacing scale.</p></article>
           </lk-grid>
         </lk-stack>
       </section>
@@ -205,7 +206,7 @@
             <li>Prefer native HTML first.</li>
             <li>LayoutKit should not interfere with focus order.</li>
             <li>Avoid hiding overflow in ways that trap keyboard users.</li>
-            <li>Scroll containers should remain keyboard and screen-reader usable.</li>
+            <li>Scroll containers should remain keyboard and screen-reader usable. <code>lk-scroll-area</code> does not create a tab stop. If the region itself must be scrolled from the keyboard, set <code>tabindex="0"</code> and a name on it. Without <code>direction</code>, both axes scroll; <code>direction="vertical"</code> clips inline overflow.</li>
             <li>LayoutKit provides layout behavior only. Accessibility still depends on the underlying HTML and application code.</li>
           </ul>
         </lk-stack>
@@ -214,7 +215,7 @@
       <section id="examples" aria-labelledby="examples-heading">
         <lk-stack gap="4">
           <h2 id="examples-heading" class="h2">Examples</h2>
-          <lk-grid responsive min="md" gap="4">
+          <lk-grid responsive gap="4">
             <article>
               <h3>Form layout</h3>
               <div class="code"><pre><span class="tok-tag">&lt;form</span> <span class="tok-attr">action</span>=<span class="tok-str">"/settings"</span> <span class="tok-attr">method</span>=<span class="tok-str">"post"</span><span class="tok-tag">&gt;</span>
@@ -240,19 +241,17 @@
       <section id="jsx" aria-labelledby="jsx-heading">
         <lk-stack gap="4">
           <h2 id="jsx-heading" class="h2">Using LayoutKit with TSX/JSX</h2>
-          <p class="sans muted">The package includes <code class="sans">jsx.d.ts</code>. It only teaches TypeScript about known custom tags and attributes. No runtime JavaScript is required.</p>
-          <div class="code"><pre>{
-  <span class="tok-str">"compilerOptions"</span>: {
-    <span class="tok-str">"types"</span>: [<span class="tok-str">"layoutkit-css"</span>]
-  }
-}</pre></div>
+          <p class="sans muted">The package includes <code class="sans">jsx.d.ts</code>. It only teaches TypeScript about known custom tags and the attributes each one implements. Importing the stylesheet picks up those types. A triple-slash reference works when you do not want <code class="sans">compilerOptions.types</code> to replace the automatic <code class="sans">@types</code> list.</p>
+          <div class="code"><pre><span class="tok-tag">import</span> <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;
+
+<span class="tok-com">/// &lt;reference types="layoutkit-css" /&gt;</span></pre></div>
         </lk-stack>
       </section>
 
       <section id="browser-support" aria-labelledby="browser-heading">
         <lk-stack gap="4">
           <h2 id="browser-heading" class="h2">Browser support</h2>
-          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, and <code class="sans">color-mix()</code>.</p>
+          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, <code class="sans">min()</code>, and <code class="sans">color-mix()</code>.</p>
         </lk-stack>
       </section>
 

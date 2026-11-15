@@ -3,6 +3,35 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 1.3.3
+
+Layout bug fixes and a tighter public contract. Existing markup keeps its
+layout, except where an attribute value was previously ignored or a grid track
+overflowed a narrower container.
+
+### Fixed
+- Sized `lk-spacer` values set the flex main size as well as `block-size`. A
+  spacer in a row now creates inline space. The vertical size is unchanged,
+  including when the spacer is not a flex item.
+- `flow` on `lk-box` and `lk-card` honors the full spacing scale. Values other
+  than `xs`–`3xl` previously fell through to the `md` rhythm.
+- `lk-grid[responsive]` and `lk-grid[min]` clamp each minimum track with
+  `min(<size>, 100%)`, so a container narrower than the preferred track no
+  longer forces horizontal overflow. Wider containers keep the same tracks.
+- `place="between"`, `place="around"`, and `place="evenly"` on `lk-grid`
+  distribute extra space. Those values previously had no effect. Position
+  values are unchanged.
+
+### Changed
+- `jsx.d.ts` lists only the attributes each tag implements. Importing
+  `layoutkit-css/layoutkit.css` resolves its types from that file.
+- Docs describe `min` as an auto-fill override of `responsive`, `full-height`
+  as `100vh` (distinct from `lk-cover`'s `100svh`), and the keyboard requirement
+  for `lk-scroll-area`.
+- Examples no longer use a fictional `<lk-text>` tag. `lk-text` is an attribute.
+- Package checks compare the generated CSS, JSX attributes, version pins, and
+  the two changelogs.
+
 ## 1.3.2
 
 Publishing metadata patch.

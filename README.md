@@ -91,13 +91,14 @@ Bad:
 ```html
 <lk-box>
   <lk-stack>
-    <lk-text>Dashboard</lk-text>
+    <lk-box lk-text="2xl">Dashboard</lk-box>
   </lk-stack>
 </lk-box>
 ```
 
-The bad example loses native document meaning. Do not use `lk-*` elements as
-headings, lists, tables, forms, landmarks, links, buttons, or controls.
+The bad example loses native document meaning. `lk-text` is an attribute for a
+real element, not a tag. Do not use `lk-*` elements as headings, lists, tables,
+forms, landmarks, links, buttons, or controls.
 
 ## Core Primitives
 
@@ -110,6 +111,12 @@ Common attributes include `gap`, `padding`, `align`, `justify`, `place`,
 `responsive`, `min`, `col-gap`, `row-gap`, `flow`, `place-items`, `size`,
 `orientation`, `thickness`, `direction`, `max-h`, `ratio`, `radius`, `surface`,
 `border`, `side`, `lk-text`, and `lk-weight`.
+
+`min` on `lk-grid` is auto-fill and overrides `responsive`. Empty tracks keep
+their space, so use `responsive` alone when items should fill the row. `flow`
+on `lk-box` and `lk-card` uses the spacing scale; on `lk-grid` it is `row`,
+`col`, or `dense`. `full-height` is `100vh`, while `lk-cover` defaults to
+`100svh`. Put `center` on the `lk-cover` child that should sit in the middle.
 
 ## Frozen Convenience Helpers
 
@@ -130,7 +137,7 @@ Dashboard:
         <h1 id="orders-heading">Orders</h1>
         <a href="/orders">View all</a>
       </lk-spread>
-      <lk-grid responsive min="md" gap="md">
+      <lk-grid responsive gap="md">
         <article>
           <h2>Open orders</h2>
           <p>128</p>
@@ -226,31 +233,36 @@ Or override LayoutKit directly:
 - LayoutKit should not interfere with focus order.
 - Avoid hiding overflow in ways that trap keyboard users.
 - Scroll containers should remain keyboard and screen-reader usable.
+- `lk-scroll-area` does not create a tab stop. If the region itself must be
+  scrolled from the keyboard, set `tabindex="0"` and a name on it. Without
+  `direction`, both axes scroll; `direction="vertical"` clips inline overflow.
 - LayoutKit provides layout behavior only. Accessibility still depends on the
   underlying HTML and application code.
 
 ## TSX/JSX
 
 The package includes `jsx.d.ts`, a dependency-free declaration file for known
-`lk-*` elements and common attributes. It only teaches TypeScript about the
-custom tags; it does not add runtime JavaScript or custom element behavior.
+`lk-*` elements and the attributes each one implements. It only teaches
+TypeScript about the custom tags; it does not add runtime JavaScript or custom
+element behavior.
 
-```json
-{
-  "compilerOptions": {
-    "types": ["layoutkit-css"]
-  }
-}
+```ts
+import "layoutkit-css/layoutkit.css";
 ```
 
-React-specific HTML prop typing still comes from the consuming app's React and
-`@types/react` setup. LayoutKit does not depend on React.
+```ts
+/// <reference types="layoutkit-css" />
+```
+
+`compilerOptions.types` replaces TypeScript's automatic `@types` list. Use that
+array only when it still names every package you need. React prop typing still
+comes from the consuming app. LayoutKit does not depend on React.
 
 ## Browser Support
 
 LayoutKit targets modern evergreen browsers with support for custom properties,
-flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`, and
-`color-mix()`.
+flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`,
+`min()`, and `color-mix()`.
 
 ## Security And Package Verification
 
@@ -265,7 +277,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.3.2
+npm install layoutkit-css@1.3.3
 ```
 
 ## Repository

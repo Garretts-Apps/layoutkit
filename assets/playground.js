@@ -13,29 +13,58 @@
   };
   const ALIGN = { start: "flex-start", center: "center", end: "flex-end", stretch: "stretch", baseline: "baseline" };
   const JUSTIFY = { start: "flex-start", center: "center", end: "flex-end", between: "space-between", around: "space-around", evenly: "space-evenly" };
+  const WIDTH = { xs: "20rem", sm: "30rem", md: "40rem", lg: "50rem", xl: "64rem", prose: "var(--lk-measure, 65ch)", full: "100%" };
+  const MINW = { "2xs": "8rem", xs: "10rem", sm: "12rem", md: "16rem", lg: "20rem", xl: "24rem" };
+  const MAXH = { sm: "16rem", md: "24rem", lg: "32rem", screen: "100svh" };
+  const PLACE = {
+    center: ["center", "center"], top: ["center", "start"], bottom: ["center", "end"],
+    start: ["start", "center"], end: ["end", "center"],
+    "top-start": ["start", "start"], "top-end": ["end", "start"],
+    "bottom-start": ["start", "end"], "bottom-end": ["end", "end"],
+  };
+  const FLEX = { start: "flex-start", center: "center", end: "flex-end" };
   const has = (p, k) => Boolean(p[k]);
   const str = (p, k, f) => (typeof p[k] === "string" ? p[k] : f);
   const sp = (v) => SPACE[v] ?? "0";
+  const widthDecls = (p) => {
+    if (!WIDTH[p.width]) return [];
+    const decls = [["max-inline-size", WIDTH[p.width]]];
+    if (p.width !== "full") decls.push(["margin-inline", "auto"]);
+    return decls;
+  };
+  const placeDecls = (p, mainIsBlock) => {
+    const value = str(p, "place", "");
+    if (PLACE[value]) {
+      const [inl, blk] = PLACE[value];
+      const [jc, ai] = mainIsBlock ? [FLEX[blk], FLEX[inl]] : [FLEX[inl], FLEX[blk]];
+      return [["justify-content", jc], ["align-items", ai]];
+    }
+    if (value === "between" || value === "around" || value === "evenly") return [["justify-content", JUSTIFY[value]]];
+    return [];
+  };
 
   const BUILDERS = {
     "lk-stack"(p) {
+      const placed = placeDecls(p, true);
       const d = [["display", "flex"], ["flex-direction", "column"], ["gap", sp(str(p, "gap", "md"))],
         ["align-items", has(p, "center") ? "center" : ALIGN[str(p, "align", "stretch")]],
         ["justify-content", has(p, "center") ? "center" : JUSTIFY[str(p, "justify", "start")]]];
-      if (p.padding && p.padding !== "none") d.push(["padding", sp(p.padding)]);
+      if (p.padding) d.push(["padding", sp(p.padding)]);
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
-      if (has(p, "full-height")) d.push(["min-height", "100vh"]);
+      if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
       if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
+      d.push(...widthDecls(p), ...placed);
       return d;
     },
     "lk-row"(p) {
       const d = [["display", "flex"], ["flex-direction", has(p, "reverse") ? "row-reverse" : "row"], ["gap", sp(str(p, "gap", "md"))],
         ["align-items", has(p, "center") ? "center" : ALIGN[str(p, "align", "center")]],
         ["justify-content", has(p, "center") ? "center" : JUSTIFY[str(p, "justify", "start")]]];
-      if (p.padding && p.padding !== "none") d.push(["padding", sp(p.padding)]);
+      if (p.padding) d.push(["padding", sp(p.padding)]);
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
-      if (has(p, "full-height")) d.push(["min-height", "100vh"]);
+      if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
       if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
+      d.push(...widthDecls(p), ...placeDecls(p, false));
       return d;
     },
     "lk-center"(p) {
@@ -44,37 +73,66 @@
         ["align-items", both || has(p, "horizontal") ? "center" : "stretch"],
         ["justify-content", both || has(p, "vertical") ? "center" : "flex-start"]];
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
-      if (has(p, "full-height")) d.push(["min-height", "100vh"]);
+      if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
+      d.push(...widthDecls(p), ...placeDecls(p, true));
       return d;
     },
     "lk-box"(p) {
       const d = [["display", "block"]];
-      if (p.padding && p.padding !== "none") d.push(["padding", sp(p.padding)]);
+      if (p.padding) d.push(["padding", sp(p.padding)]);
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+      d.push(...widthDecls(p));
+      return d;
+    },
+    "lk-card"(p) {
+      const radius = p.radius === "none" ? "0" : p.radius === "full" ? "9999px" : p.radius ? `var(--lk-radius-${p.radius})` : "var(--lk-radius-md)";
+      const d = [["display", "block"], ["padding", sp(str(p, "padding", "lg"))], ["border-radius", radius],
+        ["border", p.border === "none" ? "0" : "1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent))"]];
+      if (has(p, "surface")) d.push(["background", "var(--lk-surface, color-mix(in srgb, currentColor 6%, transparent))"]);
+      d.push(...widthDecls(p));
       return d;
     },
     "lk-spread"(p) {
       const d = [["display", "flex"], ["flex-direction", "row"], ["justify-content", "space-between"], ["align-items", ALIGN[str(p, "align", "center")]]];
-      if (p.padding && p.padding !== "none") d.push(["padding", sp(p.padding)]);
+      if (p.padding) d.push(["padding", sp(p.padding)]);
+      d.push(...placeDecls(p, false));
       return d;
     },
     "lk-grid"(p) {
       const d = [["display", "grid"]];
-      d.push(["grid-template-columns", has(p, "responsive")
-        ? "repeat(auto-fit, minmax(var(--lk-min-child-width, 250px), 1fr))"
-        : `repeat(${str(p, "cols", "1")}, minmax(0, 1fr))`]);
+      if (MINW[p.min]) d.push(["grid-template-columns", `repeat(auto-fill, minmax(min(${MINW[p.min]}, 100%), 1fr))`]);
+      else if (has(p, "responsive")) d.push(["grid-template-columns", "repeat(auto-fit, minmax(min(var(--lk-min-child-width, 250px), 100%), 1fr))"]);
+      else d.push(["grid-template-columns", `repeat(${str(p, "cols", "1")}, minmax(0, 1fr))`]);
       if (p.rows) d.push(["grid-template-rows", `repeat(${str(p, "rows", "1")}, minmax(0, 1fr))`]);
       if (!p["col-gap"] && !p["row-gap"]) d.push(["gap", sp(str(p, "gap", "md"))]);
       if (p["col-gap"]) d.push(["column-gap", sp(p["col-gap"])]);
       if (p["row-gap"]) d.push(["row-gap", sp(p["row-gap"])]);
       if (p.flow === "col") d.push(["grid-auto-flow", "column"]);
       else if (p.flow === "dense") d.push(["grid-auto-flow", "dense"]);
+      else if (p.flow === "row") d.push(["grid-auto-flow", "row"]);
       if (p["place-items"]) d.push(["place-items", str(p, "place-items", "stretch")]);
+      const place = str(p, "place", "");
+      if (PLACE[place]) d.push(["justify-items", PLACE[place][0]], ["align-items", PLACE[place][1]]);
+      else if (place === "between" || place === "around" || place === "evenly") d.push(["justify-content", JUSTIFY[place]], ["align-content", JUSTIFY[place]]);
       return d;
+    },
+    "lk-cluster"(p) {
+      return [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "sm"))], ["align-items", "center"], ...placeDecls(p, false)];
+    },
+    "lk-switcher"(p) {
+      return [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
+    },
+    "lk-sidebar"(p) {
+      return [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
+    },
+    "lk-cover"(p) {
+      return [["display", "flex"], ["flex-direction", "column"], ["min-block-size", "var(--lk-cover-min, 100svh)"], ["gap", sp(str(p, "gap", "md"))], ["padding", sp("md")]];
     },
     "lk-spacer"(p) {
       const size = str(p, "size", "auto");
-      return size === "auto" || !(size in SPACE) ? [["display", "block"], ["flex", "1 1 0%"]] : [["display", "block"], ["flex", "none"], ["height", sp(size)]];
+      if (size === "auto" || !(size in SPACE)) return [["display", "block"], ["flex", "1 1 0%"]];
+      const v = sp(size);
+      return [["display", "block"], ["flex", `0 0 ${v}`], ["block-size", v]];
     },
     "lk-divider"(p) {
       const w = p.thickness === "thick" ? "4px" : p.thickness === "medium" ? "2px" : "1px";
@@ -82,16 +140,45 @@
         ? [["display", "block"], ["height", "100%"], ["align-self", "stretch"], ["border-left", w + " solid var(--lk-divider-color, #e5e7eb)"]]
         : [["display", "block"], ["width", "100%"], ["border-top", w + " solid var(--lk-divider-color, #e5e7eb)"]];
     },
-    "lk-aspect-ratio"() { return [["display", "block"], ["aspect-ratio", "var(--lk-ratio, 1)"]]; },
+    "lk-aspect-ratio"(p) {
+      const ratio = typeof p.ratio === "string" ? p.ratio : "var(--lk-ratio, 1)";
+      return [["display", "block"], ["aspect-ratio", ratio]];
+    },
     "lk-scroll-area"(p) {
       const d = [["display", "block"]];
       if (p.direction === "horizontal") d.push(["overflow-x", "auto"], ["overflow-y", "hidden"]);
       else if (p.direction === "both") d.push(["overflow", "auto"]);
       else { d.push(["overflow-y", "auto"]); if (p.direction === "vertical") d.push(["overflow-x", "hidden"]); }
-      d.push(["max-height", "var(--lk-max-height, none)"], ["max-width", "var(--lk-max-width, none)"]);
+      d.push(["max-block-size", MAXH[p["max-h"]] || "var(--lk-max-height, none)"], ["max-inline-size", "var(--lk-max-width, none)"]);
       return d;
     },
   };
+
+  function childRules(tag, attrs) {
+    const rules = [];
+    if ((tag === "lk-box" || tag === "lk-card") && has(attrs, "flow")) {
+      const key = typeof attrs.flow === "string" && attrs.flow in SPACE ? attrs.flow : "md";
+      rules.push([" > * + *", [["margin-block-start", sp(key)]]]);
+    }
+    if (tag === "lk-switcher") {
+      rules.push([" > *", [["flex-grow", "1"], ["flex-basis", "calc((var(--lk-switch-at, 30rem) - 100%) * 999)"]]]);
+    }
+    if (tag === "lk-sidebar") {
+      const end = attrs.side === "end";
+      rules.push(
+        [" > :first-child", end
+          ? [["flex-grow", "999"], ["flex-basis", "0"], ["min-inline-size", "var(--lk-sidebar-content-min, 50%)"]]
+          : [["flex-grow", "1"], ["flex-basis", "var(--lk-sidebar-width, 18rem)"]]],
+        [" > :last-child", end
+          ? [["flex-grow", "1"], ["flex-basis", "var(--lk-sidebar-width, 18rem)"], ["min-inline-size", "0"]]
+          : [["flex-grow", "999"], ["flex-basis", "0"], ["min-inline-size", "var(--lk-sidebar-content-min, 50%)"]]],
+      );
+    }
+    if (tag === "lk-cover") {
+      rules.push([" > :is([center], :only-child)", [["margin-block", "auto"]]]);
+    }
+    return rules;
+  }
 
   function parse(input) {
     const results = [];
@@ -102,7 +189,7 @@
       for (const a of m[2].matchAll(/(?:^|\s)([a-z][\w-]*)(?!\s*=)\b/g)) attrs[a[1]] = true;
       for (const a of m[2].matchAll(/([a-z][\w-]*)="([^"]*)"/g)) attrs[a[1]] = a[2];
       const decls = BUILDERS[tag](attrs).filter(([, v]) => v != null && v !== "");
-      results.push({ tag, raw: m[0].replace(/\s+/g, " ").trim(), decls });
+      results.push({ tag, raw: m[0].replace(/\s+/g, " ").trim(), decls, children: childRules(tag, attrs) });
     }
     return results;
   }
@@ -117,7 +204,8 @@
     const count = new Map();
     for (const r of results) {
       const base = r.tag.replace(/^lk-/, "");
-      const key = base + "|" + r.decls.map(([k, v]) => k + ":" + v).join(";");
+      const childKey = (r.children || []).map(([sel, decls]) => sel + decls.map(([k, v]) => k + ":" + v).join(";")).join("|");
+      const key = base + "|" + r.decls.map(([k, v]) => k + ":" + v).join(";") + "|" + childKey;
       if (byKey.has(key)) { r.cls = byKey.get(key); continue; }
       const n = (count.get(base) || 0) + 1;
       count.set(base, n);
@@ -158,6 +246,12 @@
         .map(([k, v]) => '  <span class="tok-attr">' + esc(k) + '</span>: <span class="tok-str">' + esc(v) + "</span>;")
         .join("\n");
       blocks.push('<span class="tok-com">/* ' + esc(r.raw) + ' */</span>\n<span class="tok-tag">.' + esc(r.cls) + " {</span>\n" + body + '\n<span class="tok-tag">}</span>');
+      for (const [sel, decls] of r.children || []) {
+        const childBody = decls
+          .map(([k, v]) => '  <span class="tok-attr">' + esc(k) + '</span>: <span class="tok-str">' + esc(v) + "</span>;")
+          .join("\n");
+        blocks.push('<span class="tok-tag">.' + esc(r.cls) + esc(sel) + " {</span>\n" + childBody + '\n<span class="tok-tag">}</span>');
+      }
     }
     return blocks.join("\n\n");
   }
@@ -174,7 +268,7 @@
   const PRESETS = [
     { label: "Empty state", code: '<section aria-labelledby="empty-heading">\n  <lk-center full-height>\n    <lk-stack gap="sm" align="center">\n      <h2 id="empty-heading">No results</h2>\n      <p>Try changing the filters.</p>\n      <button type="button">Reset filters</button>\n    </lk-stack>\n  </lk-center>\n</section>' },
     { label: "Form", code: '<form action="/settings" method="post">\n  <lk-stack gap="md">\n    <label>\n      Display name\n      <input name="name" autocomplete="name">\n    </label>\n    <lk-row gap="sm" wrap>\n      <button type="submit">Save</button>\n      <a href="/settings">Cancel</a>\n    </lk-row>\n  </lk-stack>\n</form>' },
-    { label: "Page", code: '<lk-stack fill>\n  <header>\n    <lk-spread padding="md" align="center">\n      <a href="/">Acme</a>\n      <nav aria-label="Primary"><lk-row gap="sm"><a href="/docs">Docs</a><a href="/pricing">Pricing</a></lk-row></nav>\n    </lk-spread>\n  </header>\n  <main><lk-box fill padding="lg"><lk-center><h1>Dashboard</h1></lk-center></lk-box></main>\n</lk-stack>' },
+    { label: "Page", code: '<lk-stack style="min-block-size: 16rem;">\n  <header>\n    <lk-spread padding="md" align="center">\n      <a href="/">Acme</a>\n      <nav aria-label="Primary"><lk-row gap="sm"><a href="/docs">Docs</a><a href="/pricing">Pricing</a></lk-row></nav>\n    </lk-spread>\n  </header>\n  <lk-box fill padding="lg">\n    <main><lk-center><h1>Dashboard</h1></lk-center></main>\n  </lk-box>\n</lk-stack>' },
     { label: "Grid", code: '<section aria-labelledby="projects-heading">\n  <lk-stack gap="md">\n    <h2 id="projects-heading">Projects</h2>\n    <lk-grid cols="3" gap="lg" responsive>\n      <article><h3>Website</h3><p>Updated today</p></article>\n      <article><h3>Docs</h3><p>Ready for review</p></article>\n      <article><h3>API</h3><p>Stable</p></article>\n    </lk-grid>\n  </lk-stack>\n</section>' },
   ];
 
