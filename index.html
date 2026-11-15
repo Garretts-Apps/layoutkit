@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LayoutKit — Pure-CSS layout primitives that replace JavaScript</title>
-  <meta name="description" content="LayoutKit is pure-CSS layout primitives that replace JavaScript for layout. One stylesheet: container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. No runtime and no dependencies.">
+  <meta name="description" content="LayoutKit 2.1.0 is pure-CSS layout primitives that replace JavaScript for layout. One stylesheet, 80,010 bytes. No runtime and no dependencies. Container queries are on. Newer CSS stays behind @supports.">
   <link rel="canonical" href="https://layoutkit.dev/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="LayoutKit — Pure-CSS layout primitives that replace JavaScript">
-  <meta property="og:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet. No runtime.">
+  <meta property="og:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet, 80,010 bytes. No runtime. Version 2.1.0.">
   <meta property="og:url" content="https://layoutkit.dev/">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -20,11 +20,11 @@
   <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="LayoutKit — Pure-CSS layout primitives that replace JavaScript">
-  <meta name="twitter:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet. No runtime.">
+  <meta name="twitter:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet, 80,010 bytes. No runtime. Version 2.1.0.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115h">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -33,11 +33,11 @@
       <lk-box width="3xl" padding="4">
         <nav aria-label="Primary">
           <lk-row align="center" gap="sm" wrap>
-            <a class="brand-link" href="/" aria-label="LayoutKit home">
+            <a class="brand-link" href="/">
               <lk-row gap="2" align="center">
                 <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
                 <span class="brand">LayoutKit</span>
-                <span class="badge">2.0.0</span>
+                <span class="badge">2.1.0</span>
               </lk-row>
             </a>
             <lk-spacer></lk-spacer>
@@ -61,7 +61,7 @@
           <lk-stack gap="lg">
             <p class="kicker">One stylesheet · zero runtime</p>
             <h1 id="home-heading" class="display">Pure-CSS layout primitives that <em>replace JavaScript</em> for layout.</h1>
-            <p class="lede">LayoutKit is a readable vocabulary of <code>lk-*</code> wrappers — stack, switcher, sidebar, grid, and snap scrolling — used inside real HTML landmarks. Version 2.0 measures those layouts from their own container.</p>
+            <p class="lede">LayoutKit is a readable vocabulary of <code>lk-*</code> wrappers — stack, switcher, sidebar, grid, and snap scrolling — used inside real HTML landmarks. Version 2.0 measures those layouts from their own container. Version 2.1 adds opt-in tags and does not change those defaults.</p>
             <lk-cluster gap="sm">
               <a class="btn btn-primary" href="/install">Install LayoutKit</a>
               <a class="btn" href="/docs">Read the docs</a>
@@ -75,66 +75,164 @@
             <lk-stack gap="sm">
               <p class="kicker">Live, no JavaScript</p>
               <h2 id="live-heading">The layout follows the container.</h2>
-              <p class="lede">Drag the corner of the stage. The group labeled “This stage” reflows. The 16rem frame stays capped. Nothing on this page listens for resize.</p>
+              <p class="lede">Each example is the same markup twice: a 16rem frame and a 36rem frame. On a phone, scroll the wide frame sideways. Nothing on this page listens for resize.</p>
             </lk-stack>
-            <lk-card class="stage" surface radius="lg" padding="md">
-              <lk-stack gap="lg">
-                <lk-stack gap="sm">
-                  <p class="kicker">This stage</p>
-                  <lk-switcher gap="sm">
-                    <article class="demo-cell">
-                      <h3>Switcher</h3>
-                      <p class="muted">A row above 30rem.</p>
-                    </article>
-                    <article class="demo-cell">
-                      <h3>Same switcher</h3>
-                      <p class="muted">A stack below 30rem.</p>
-                    </article>
-                  </lk-switcher>
-                  <lk-sidebar gap="sm">
-                    <p class="demo-cell">Side</p>
-                    <p class="demo-cell">Sidebar content keeps the rest of the row, then wraps.</p>
-                  </lk-sidebar>
-                  <lk-grid cols="3" gap="sm">
-                    <p class="demo-cell">Grid one</p>
-                    <p class="demo-cell">Grid two</p>
-                    <p class="demo-cell">Stacks under 32rem</p>
-                  </lk-grid>
-                </lk-stack>
-                <lk-stack gap="sm">
-                  <p class="kicker">Capped at 16rem</p>
-                  <lk-box class="specimen cap-16" padding="3">
-                    <lk-stack gap="xs">
-                      <lk-switcher gap="xs">
-                        <p class="demo-cell">Switcher</p>
-                        <p class="demo-cell">Stacked</p>
+            <lk-card surface radius="lg" padding="md">
+              <lk-stack gap="xl">
+                <lk-stack gap="md">
+                  <lk-stack gap="sm">
+                    <h3>Switcher: a row when there is room, a stack when there is not</h3>
+                    <p class="muted">Below 30rem each child takes the full width. Above that, the two children share one row.</p>
+                  </lk-stack>
+                  <figure class="code">
+                    <figcaption class="code-label">markup</figcaption>
+                    <pre><code><span class="tok-tag">&lt;lk-switcher</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>
+    <span class="tok-tag">&lt;h3&gt;</span>Open orders<span class="tok-tag">&lt;/h3&gt;</span>
+    <span class="tok-tag">&lt;p&gt;</span>128 waiting<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>
+    <span class="tok-tag">&lt;h3&gt;</span>Shipped today<span class="tok-tag">&lt;/h3&gt;</span>
+    <span class="tok-tag">&lt;p&gt;</span>64 left the dock<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-switcher&gt;</span></code></pre>
+                  </figure>
+                  <lk-stack gap="xs">
+                    <p class="kicker">16rem</p>
+                    <lk-box class="specimen cap-16" padding="3">
+                      <lk-switcher gap="sm">
+                        <article class="demo-cell">
+                          <h3>Open orders</h3>
+                          <p class="muted">128 waiting</p>
+                        </article>
+                        <article class="demo-cell">
+                          <h3>Shipped today</h3>
+                          <p class="muted">64 left the dock</p>
+                        </article>
                       </lk-switcher>
-                      <lk-grid cols="3" gap="xs">
-                        <p class="demo-cell">One</p>
-                        <p class="demo-cell">Two</p>
-                        <p class="demo-cell">Three</p>
-                      </lk-grid>
-                      <lk-sidebar gap="xs">
-                        <p class="demo-cell">Side</p>
-                        <p class="demo-cell">Wraps</p>
-                      </lk-sidebar>
-                    </lk-stack>
-                  </lk-box>
+                    </lk-box>
+                  </lk-stack>
+                  <lk-stack gap="xs">
+                    <p class="kicker">36rem, scroll sideways</p>
+                    <lk-scroll-area direction="horizontal" snap="off" tabindex="0" aria-label="Switcher at 36rem">
+                      <lk-box class="specimen cap-wide" padding="3">
+                        <lk-switcher gap="sm">
+                          <article class="demo-cell">
+                            <h3>Open orders</h3>
+                            <p class="muted">128 waiting</p>
+                          </article>
+                          <article class="demo-cell">
+                            <h3>Shipped today</h3>
+                            <p class="muted">64 left the dock</p>
+                          </article>
+                        </lk-switcher>
+                      </lk-box>
+                    </lk-scroll-area>
+                  </lk-stack>
                 </lk-stack>
-                <lk-stack gap="sm">
-                  <p class="kicker">Snap scrolling</p>
-                  <lk-scroll-area direction="horizontal" snap slide="peek" tabindex="0" aria-label="Snapping slides" gap="sm">
+
+                <lk-stack gap="md">
+                  <lk-stack gap="sm">
+                    <h3>Sidebar: sections beside the notes, until the frame is too narrow</h3>
+                    <p class="muted">The tinted block is the side. The notes take the rest of the row, then drop below.</p>
+                  </lk-stack>
+                  <figure class="code">
+                    <figcaption class="code-label">markup</figcaption>
+                    <pre><code><span class="tok-tag">&lt;lk-sidebar</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span> <span class="tok-attr">style</span>=<span class="tok-str">"--lk-sidebar-width: 11rem"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;nav</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Order sections"</span><span class="tok-tag">&gt;</span>Sections<span class="tok-tag">&lt;/nav&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>Morning notes stay beside the sections.<span class="tok-tag">&lt;/p&gt;</span>
+<span class="tok-tag">&lt;/lk-sidebar&gt;</span></code></pre>
+                  </figure>
+                  <lk-stack gap="xs">
+                    <p class="kicker">16rem</p>
+                    <lk-box class="specimen cap-16" padding="3">
+                      <lk-sidebar gap="sm" style="--lk-sidebar-width: 11rem">
+                        <nav class="demo-cell tint-cell" aria-label="Order sections, narrow">
+                          <strong>Sections</strong>
+                          <p class="muted">Open, shipped</p>
+                        </nav>
+                        <p class="demo-cell">Morning notes stay beside the sections while the frame is wide enough.</p>
+                      </lk-sidebar>
+                    </lk-box>
+                  </lk-stack>
+                  <lk-stack gap="xs">
+                    <p class="kicker">36rem, scroll sideways</p>
+                    <lk-scroll-area direction="horizontal" snap="off" tabindex="0" aria-label="Sidebar at 36rem">
+                      <lk-box class="specimen cap-wide" padding="3">
+                        <lk-sidebar gap="sm" style="--lk-sidebar-width: 11rem">
+                          <nav class="demo-cell tint-cell" aria-label="Order sections, wide">
+                            <strong>Sections</strong>
+                            <p class="muted">Open, shipped</p>
+                          </nav>
+                          <p class="demo-cell">Morning notes stay beside the sections while the frame is wide enough.</p>
+                        </lk-sidebar>
+                      </lk-box>
+                    </lk-scroll-area>
+                  </lk-stack>
+                </lk-stack>
+
+                <lk-stack gap="md">
+                  <lk-stack gap="sm">
+                    <h3>Grid: three berths in a row, one column when the frame is under 32rem</h3>
+                    <p class="muted">Fixed columns stack from the grid’s own width. The middle berth uses the tint already on this site.</p>
+                  </lk-stack>
+                  <figure class="code">
+                    <figcaption class="code-label">markup</figcaption>
+                    <pre><code><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>North berth<span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>South berth<span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>West berth<span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-grid&gt;</span></code></pre>
+                  </figure>
+                  <lk-stack gap="xs">
+                    <p class="kicker">16rem</p>
+                    <lk-box class="specimen cap-16" padding="3">
+                      <lk-grid cols="3" gap="sm">
+                        <article class="demo-cell"><h3>North berth</h3><p class="muted">12 ships</p></article>
+                        <article class="demo-cell tint-cell"><h3>South berth</h3><p class="muted">7 ships</p></article>
+                        <article class="demo-cell"><h3>West berth</h3><p class="muted">3 ships</p></article>
+                      </lk-grid>
+                    </lk-box>
+                  </lk-stack>
+                  <lk-stack gap="xs">
+                    <p class="kicker">36rem, scroll sideways</p>
+                    <lk-scroll-area direction="horizontal" snap="off" tabindex="0" aria-label="Grid at 36rem">
+                      <lk-box class="specimen cap-wide" padding="3">
+                        <lk-grid cols="3" gap="sm">
+                          <article class="demo-cell"><h3>North berth</h3><p class="muted">12 ships</p></article>
+                          <article class="demo-cell tint-cell"><h3>South berth</h3><p class="muted">7 ships</p></article>
+                          <article class="demo-cell"><h3>West berth</h3><p class="muted">3 ships</p></article>
+                        </lk-grid>
+                      </lk-box>
+                    </lk-scroll-area>
+                  </lk-stack>
+                </lk-stack>
+
+                <lk-stack gap="md">
+                  <lk-stack gap="sm">
+                    <h3>Snap scrolling: the next manifest waits at the edge</h3>
+                    <p class="muted">A horizontal scroll area snaps its children. Swipe or use the keyboard. No carousel script.</p>
+                  </lk-stack>
+                  <figure class="code">
+                    <figcaption class="code-label">markup</figcaption>
+                    <pre><code><span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">direction</span>=<span class="tok-str">"horizontal"</span> <span class="tok-attr">slide</span>=<span class="tok-str">"peek"</span> <span class="tok-attr">tabindex</span>=<span class="tok-str">"0"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>Monday manifest<span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>Tuesday delay<span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>Wednesday clearance<span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-scroll-area&gt;</span></code></pre>
+                  </figure>
+                  <lk-scroll-area direction="horizontal" snap slide="peek" tabindex="0" aria-label="Daily manifests" gap="sm">
                     <article class="demo-cell">
-                      <h3>One</h3>
-                      <p class="muted">Mandatory snap.</p>
+                      <h3>Monday manifest</h3>
+                      <p class="muted">North berth, 12 ships.</p>
+                    </article>
+                    <article class="demo-cell tint-cell">
+                      <h3>Tuesday delay</h3>
+                      <p class="muted">South berth, weather hold.</p>
                     </article>
                     <article class="demo-cell">
-                      <h3>Two</h3>
-                      <p class="muted">Keyboard and pointer.</p>
-                    </article>
-                    <article class="demo-cell">
-                      <h3>Three</h3>
-                      <p class="muted">No carousel script.</p>
+                      <h3>Wednesday clearance</h3>
+                      <p class="muted">West berth, released.</p>
                     </article>
                   </lk-scroll-area>
                 </lk-stack>
@@ -150,13 +248,13 @@
               <lk-card surface padding="lg">
                 <lk-stack gap="sm">
                   <h3>What it is</h3>
-                  <p class="muted">One CSS file of layout primitives. No runtime, no dependencies, no custom-element registration. Low-specificity rules live in <code>@layer layoutkit</code>, so your stylesheet wins.</p>
+                  <p class="muted">One CSS file of layout primitives, 80,010 bytes (12,795 gzipped). No runtime, no dependencies, no custom-element registration. Rules live in <code>@layer layoutkit</code>, so an unlayered rule you write later wins.</p>
                 </lk-stack>
               </lk-card>
               <lk-card surface padding="lg">
                 <lk-stack gap="sm">
                   <h3>What it is not</h3>
-                  <p class="muted">Not a component library, design system, or a substitute for semantic HTML. Not a button kit, form kit, theme, icon set, or JavaScript app shell.</p>
+                  <p class="muted">Not a component library, design system, or a substitute for semantic HTML. Not a button kit, form kit, theme, icon set, or JavaScript app shell. Not a utility class for every property.</p>
                 </lk-stack>
               </lk-card>
             </lk-grid>
@@ -211,12 +309,12 @@
             <lk-stack gap="sm">
               <p class="kicker">Install</p>
               <h2 id="install-heading">Load the stylesheet early.</h2>
-              <p class="measure muted">2.0.0 is not published yet, so the public registry still serves 1.x. Use the file in this repository, or pin the package version when you install. This site loads <code>/layoutkit.css</code> from the 2.0.0 build.</p>
+              <p class="measure muted">2.1.0 is not published yet, so the public registry still serves 1.x. Use the file in this repository, or pin the package version when you install. This site loads <code>/layoutkit.css</code> from the 2.1.0 build. If that file does not load, nothing in JavaScript rebuilds the layout.</p>
             </lk-stack>
             <lk-switcher gap="md" at="lg">
               <figure class="code">
                 <figcaption class="code-label">npm</figcaption>
-                <pre><code>npm install layoutkit-css@2.0.0</code></pre>
+                <pre><code>npm install layoutkit-css@2.1.0</code></pre>
               </figure>
               <figure class="code">
                 <figcaption class="code-label">stylesheet</figcaption>
@@ -281,7 +379,7 @@
   <footer class="site-footer">
     <lk-box width="3xl" padding="8">
       <lk-stack gap="md">
-        <p>LayoutKit 2.0.0. Pure-CSS layout primitives. MIT.</p>
+        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
         <lk-cluster gap="md">
           <a href="/docs">Docs</a>
           <a href="/install">Install</a>

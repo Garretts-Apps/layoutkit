@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Docs — LayoutKit primitives, attributes, and 2.0 defaults</title>
-  <meta name="description" content="LayoutKit 2.0 documentation: container-query switcher, sidebar, and grid, fluid spacing, snap scrolling, width tokens, accessibility, and JSX types.">
+  <title>Docs — LayoutKit primitives, attributes, and 2.1 additions</title>
+  <meta name="description" content="LayoutKit 2.1.0 documentation: container-query switcher, sidebar, and grid, fluid spacing, snap scrolling, and opt-in frame, dock, and select. No runtime.">
   <link rel="canonical" href="https://layoutkit.dev/docs">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="LayoutKit Docs">
-  <meta property="og:description" content="Reference for pure-CSS layout primitives. Version 2.0 measures switcher, sidebar, and grid from their container.">
+  <meta property="og:description" content="Reference for pure-CSS layout primitives. Version 2.0 measures switcher, sidebar, and grid from their container. Version 2.1 does not change those defaults.">
   <meta property="og:url" content="https://layoutkit.dev/docs">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -20,11 +20,11 @@
   <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="LayoutKit Docs">
-  <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, and the 2.0.0 defaults.">
+  <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, the 2.0.0 defaults, and the 2.1.0 additions.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115h">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -33,11 +33,11 @@
       <lk-box width="3xl" padding="4">
         <nav aria-label="Primary">
           <lk-row align="center" gap="sm" wrap>
-            <a class="brand-link" href="/" aria-label="LayoutKit home">
+            <a class="brand-link" href="/">
               <lk-row gap="2" align="center">
                 <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
                 <span class="brand">LayoutKit</span>
-                <span class="badge">2.0.0</span>
+                <span class="badge">2.1.0</span>
               </lk-row>
             </a>
             <lk-spacer></lk-spacer>
@@ -67,6 +67,7 @@
               <a class="navlink" href="#primitives">Primitives</a>
               <a class="navlink" href="#attributes">Attributes</a>
               <a class="navlink" href="#layouts">Live layouts</a>
+              <a class="navlink" href="#additions">2.1 additions</a>
               <a class="navlink" href="#gallery">Gallery</a>
               <a class="navlink" href="#helpers">Helpers</a>
               <a class="navlink" href="#tokens">Tokens</a>
@@ -82,9 +83,9 @@
         <lk-stack gap="2xl">
           <section aria-labelledby="docs-heading">
             <lk-stack gap="md">
-              <p class="kicker">Reference · 2.0.0</p>
+              <p class="kicker">Reference · 2.1.0</p>
               <h1 id="docs-heading" class="title">LayoutKit docs</h1>
-              <p class="lede">A pure-CSS layout vocabulary. <code>lk-*</code> tags make layout intent visible. Native HTML carries the meaning. Types ship in <code>jsx.d.ts</code>.</p>
+              <p class="lede">A pure-CSS layout vocabulary, 80,010 bytes. <code>lk-*</code> tags make layout intent visible. Native HTML carries the meaning. 2.1.0 adds opt-in tags and does not change the 2.0 defaults. Types ship in <code>jsx.d.ts</code>.</p>
               <p class="measure">Coming from 1.5? <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">MIGRATION.md</a> lists every default that changed, including the restore snippet. The path in the repo is <code>packages/layoutkit/MIGRATION.md</code>.</p>
             </lk-stack>
           </section>
@@ -92,10 +93,10 @@
           <section id="install" aria-labelledby="install-heading">
             <lk-stack gap="md">
               <h2 id="install-heading">Install and load CSS</h2>
-              <p class="measure muted">Load LayoutKit in the document head, or import it from the root of a framework. If the file does not load, the tags render as plain unknown elements. 2.0.0 is not on the public registry yet, so link a local copy of this build instead of a package CDN.</p>
+              <p class="measure muted">Load LayoutKit in the document head, or import it from the root of a framework. If the file does not load, the tags render as plain unknown elements and no script fills in. 2.1.0 is not on the public registry yet, so link a local copy of this build instead of a package CDN.</p>
               <figure class="code">
                 <figcaption class="code-label">npm</figcaption>
-                <pre><code>npm install layoutkit-css@2.0.0</code></pre>
+                <pre><code>npm install layoutkit-css@2.1.0</code></pre>
               </figure>
               <figure class="code">
                 <figcaption class="code-label">import</figcaption>
@@ -113,13 +114,13 @@
               <lk-card surface padding="lg">
                 <lk-stack gap="sm">
                   <h2 id="scope-heading">Scope</h2>
-                  <p class="muted">Stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, menu, and columns. Switcher, sidebar, and grid query their own size. Subgrid, row snap, sticky regions, and anchors stay opt-in.</p>
+                  <p class="muted">Stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, frame, bleed, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, menu, dock, select, and columns. Switcher, sidebar, and grid query their own size. Subgrid, row snap, sticky regions, anchors, and the 2.1 tags stay opt-in.</p>
                 </lk-stack>
               </lk-card>
               <lk-card surface padding="lg">
                 <lk-stack gap="sm">
                   <h2>Non-goals</h2>
-                  <p class="muted">No buttons, forms, type system, color themes, icons, animation kit, JavaScript behavior, app shell, or data-table styling. <code>lk-card</code>, <code>lk-text</code>, and <code>lk-weight</code> are frozen helpers, not the start of a design system.</p>
+                  <p class="muted">No button kit, form theme, icon set, or JavaScript behavior. <code>lk-select</code> styles a native select only where <code>appearance: base-select</code> exists. <code>--lk-base</code> does not paint until you use it. <code>lk-card</code>, <code>lk-text</code>, and <code>lk-weight</code> stay small helpers.</p>
                 </lk-stack>
               </lk-card>
             </lk-grid>
@@ -165,15 +166,15 @@
               <h2 id="primitives-heading">Primitives</h2>
               <div class="table-wrap" tabindex="0" role="region" aria-label="Layout primitives">
                 <table>
-                  <caption>Tags in layoutkit.css 2.0.0</caption>
+                  <caption>Tags in layoutkit.css 2.1.0</caption>
                   <thead>
                     <tr><th scope="col">Tag</th><th scope="col">Purpose</th><th scope="col">Common attributes</th></tr>
                   </thead>
                   <tbody>
-                    <tr><td><code>lk-stack</code></td><td>Vertical flow. One child centers unless <code>adapt="off"</code>.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt, sticky</td></tr>
-                    <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> is a snap row that becomes a column below 32rem.</td><td>gap, padding, align, justify, place, fill, wrap, reverse, width, adapt, sticky, snap, slide</td></tr>
+                    <tr><td><code>lk-stack</code></td><td>Vertical flow. One child centers unless <code>adapt="off"</code>. Children keep <code>min-inline-size: auto</code>.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt, sticky, bands</td></tr>
+                    <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> is a snap row that becomes a column below 32rem.</td><td>gap, padding, align, justify, place, fill, wrap, reverse, width, adapt, sticky, snap, slide, bands</td></tr>
                     <tr><td><code>lk-center</code></td><td>Centers its content. Covers a positioned parent unless <code>overlay="off"</code>.</td><td>fill, full-height, inline, horizontal, vertical, place, width, overlay, square</td></tr>
-                    <tr><td><code>lk-box</code></td><td>Block wrapper.</td><td>padding, fill, width, flow, sticky, square, reveal</td></tr>
+                    <tr><td><code>lk-box</code></td><td>Block wrapper. <code>pattern</code> and <code>blend</code> are opt-in.</td><td>padding, fill, width, flow, sticky, square, reveal, pattern, blend</td></tr>
                     <tr><td><code>lk-card</code></td><td>Neutral padded block.</td><td>padding, radius, surface, border, width, flow, adapt, reveal</td></tr>
                     <tr><td><code>lk-spread</code></td><td>Space-between row. Accepts <code>width</code>.</td><td>align, padding, place, width</td></tr>
                     <tr><td><code>lk-grid</code></td><td>Grid. Fixed <code>cols</code> stack from the grid’s own width, default 32rem.</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items, container, subgrid</td></tr>
@@ -187,9 +188,13 @@
                     <tr><td><code>lk-scroll-area</code></td><td>Bounded scroller. Horizontal direction snaps unless <code>snap="off"</code>.</td><td>direction, max-h, gap, snap, slide</td></tr>
                     <tr><td><code>lk-progress</code></td><td>Scroll progress. Static when timelines are missing. A bare element tracks the viewport.</td><td>scope</td></tr>
                     <tr><td><code>lk-popover</code></td><td>Top-layer panel. Does not set <code>display</code>.</td><td>anchor</td></tr>
-                    <tr><td><code>lk-disclosure</code></td><td>Layout for native <code>details</code> and <code>summary</code>.</td><td>panel, anchor, side, animate</td></tr>
+                    <tr><td><code>lk-disclosure</code></td><td>Layout for native <code>details</code> and <code>summary</code>. The same <code>name</code> opens one at a time.</td><td>panel, anchor, side, animate, look</td></tr>
                     <tr><td><code>lk-menu</code></td><td>Invoker plus <code>lk-popover</code>. The invoker is the first child.</td><td>anchor, side</td></tr>
                     <tr><td><code>lk-columns</code></td><td>Multi-column text. Children avoid splitting.</td><td>cols, gap</td></tr>
+                    <tr><td><code>lk-frame</code></td><td>Full-width grid. The center track is the measure. Side tracks are the gutter.</td><td>width, padding</td></tr>
+                    <tr><td><code>lk-bleed</code></td><td>Spans a frame. Subgrid returns its children to the column where subgrid exists.</td><td>padding</td></tr>
+                    <tr><td><code>lk-dock</code></td><td>Hover grows an item and its neighbors. <code>:has()</code> reaches the previous item.</td><td>gap</td></tr>
+                    <tr><td><code>lk-select</code></td><td>Native <code>select</code>. Custom picker only where <code>appearance: base-select</code> exists.</td><td>width</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -431,6 +436,65 @@
             </lk-stack>
           </section>
 
+          <section id="additions" aria-labelledby="additions-heading">
+            <lk-stack gap="xl">
+              <lk-stack gap="sm">
+                <h2 id="additions-heading">2.1 additions</h2>
+                <p class="measure muted">These are off until you use the tag or the attribute. <code>pattern</code>, <code>blend</code>, and <code>bands</code> are in the stylesheet and do nothing until set. <code>--lk-base</code> derives <code>--lk-complement</code>, <code>--lk-tetrad</code>, and <code>--lk-tetrad-2</code> where relative <code>oklch()</code> parses. <code>--lk-hue</code> is a registered angle so a transition can interpolate it. This page does not animate it.</p>
+              </lk-stack>
+              <lk-stack gap="md">
+                <h3>Frame</h3>
+                <p class="measure muted">The center track is <code>min(100% - gutters, measure)</code>. Side tracks are at least a fluid gutter. <code>lk-bleed</code> spans the frame. Where subgrid exists, its children sit back in the column. <code>width="sm"</code> here is 30rem.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-frame id="demo-frame" width="sm">
+                      <h3>In the column</h3>
+                      <p>The measure stays put. Gutters take the rest.</p>
+                      <lk-bleed class="tint-cell" padding="sm">
+                        <p>This band is the width of the frame.</p>
+                      </lk-bleed>
+                    </lk-frame>
+                  </lk-box>
+                </div>
+              </lk-stack>
+              <lk-stack gap="md">
+                <h3>Disclosure, dock, and select</h3>
+                <p class="measure muted"><code>look="panel"</code> is the border. The shared <code>name</code> is HTML, so one details group stays open. The dock grows a hovered item and its neighbors. The select is native. Custom picker styling applies only where <code>appearance: base-select</code> exists.</p>
+                <div class="demo">
+                  <lk-box padding="4">
+                    <lk-stack gap="lg">
+                      <lk-disclosure id="demo-panel" look="panel">
+                        <details name="docs-faq">
+                          <summary>Shipping</summary>
+                          <p>Orders leave on weekday mornings.</p>
+                        </details>
+                        <details name="docs-faq">
+                          <summary>Returns</summary>
+                          <p>Opening this closes Shipping.</p>
+                        </details>
+                      </lk-disclosure>
+                      <lk-dock id="demo-dock" aria-label="Sample dock">
+                        <button type="button" class="cell">A</button>
+                        <button type="button" class="cell">B</button>
+                        <button type="button" class="cell">C</button>
+                        <button type="button" class="cell">D</button>
+                      </lk-dock>
+                      <lk-select id="demo-select">
+                        <label for="demo-route">Route
+                          <select id="demo-route" name="route">
+                            <option>North</option>
+                            <option>South</option>
+                            <option>West</option>
+                          </select>
+                        </label>
+                      </lk-select>
+                    </lk-stack>
+                  </lk-box>
+                </div>
+              </lk-stack>
+            </lk-stack>
+          </section>
+
           <section id="gallery" aria-labelledby="gallery-heading">
             <lk-stack gap="md">
               <h2 id="gallery-heading">Gallery</h2>
@@ -457,7 +521,7 @@
           <section id="helpers" aria-labelledby="helpers-heading">
             <lk-stack gap="sm">
               <h2 id="helpers-heading">Frozen helpers</h2>
-              <p class="measure muted"><code>lk-card</code>, <code>lk-text</code>, and <code>lk-weight</code> stay small on purpose. New visual primitives are out of scope unless they directly support layout.</p>
+              <p class="measure muted"><code>lk-card</code>, <code>lk-text</code>, and <code>lk-weight</code> stay small on purpose. 2.1.0 adds opt-in <code>look="panel"</code>, <code>pattern</code>, <code>blend</code>, <code>bands</code>, and <code>lk-dock</code>. They do nothing until you set them.</p>
             </lk-stack>
           </section>
 
@@ -555,7 +619,8 @@
           <section id="browser-support" aria-labelledby="browser-heading">
             <lk-stack gap="sm">
               <h2 id="browser-heading">Browser support</h2>
-              <p class="measure muted">LayoutKit targets evergreen browsers with custom properties, flexbox, grid, cascade layers, logical properties, <code>aspect-ratio</code>, <code>svh</code>, <code>dvh</code>, <code>min()</code>, <code>object-fit</code>, and <code>color-mix()</code>. Older browsers keep the <code>100vh</code> and <code>#e5e7eb</code> fallbacks. Container queries, <code>:has()</code>, subgrid, scroll snap, sticky positioning, scroll and view timelines, and anchor positioning are each wrapped in <code>@supports</code>. Where a feature is missing, the previous layout stays visible.</p>
+              <p class="measure muted">Current Chrome, Firefox, and Safari cover flex, grid, cascade layers, logical properties, <code>aspect-ratio</code>, and <code>min()</code>. Viewport units step through <code>100dvh</code>, <code>100svh</code>, and <code>100vh</code>. Dividers use <code>color-mix()</code> and fall back to <code>#e5e7eb</code>. A card border uses <code>color-mix()</code> and does not have that second color.</p>
+              <p class="measure muted">Container queries, <code>:has()</code>, subgrid, scroll snap, and sticky positioning are in current major browsers and still inside <code>@supports</code>. Anchor positioning and scroll timelines are not universal. As of November 2026, <code>interpolate-size: allow-keywords</code> is Chromium only among stable engines, and <code>appearance: base-select</code> is Chromium and Safari 27, not Firefox stable. Where the test fails, a disclosure still opens and a select stays the operating-system control.</p>
             </lk-stack>
           </section>
 
@@ -583,7 +648,7 @@ tar -tzf layoutkit-css-*.tgz</code></pre>
   <footer class="site-footer">
     <lk-box width="3xl" padding="8">
       <lk-stack gap="md">
-        <p>LayoutKit 2.0.0. Pure-CSS layout primitives. MIT.</p>
+        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
         <lk-cluster gap="md">
           <a href="/install">Install</a>
           <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Playground — LayoutKit</title>
-  <meta name="description" content="Try LayoutKit 2.0 markup. The preview is the real stylesheet: container-query switcher, sidebar, grid, and snap scrolling.">
+  <meta name="description" content="Try LayoutKit 2.1.0 markup. The preview is the real stylesheet. The editor is the only script, and it does not compute the layout.">
   <link rel="canonical" href="https://layoutkit.dev/playground">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="Playground — LayoutKit">
-  <meta property="og:description" content="Edit lk-* markup and see it rendered by layoutkit.css 2.0.0.">
+  <meta property="og:description" content="Edit lk-* markup and see it rendered by layoutkit.css 2.1.0.">
   <meta property="og:url" content="https://layoutkit.dev/playground">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -20,11 +20,11 @@
   <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Playground — LayoutKit">
-  <meta name="twitter:description" content="Edit lk-* markup and see it rendered by layoutkit.css 2.0.0.">
+  <meta name="twitter:description" content="Edit lk-* markup and see it rendered by layoutkit.css 2.1.0.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115h">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -33,11 +33,11 @@
       <lk-box width="3xl" padding="4">
         <nav aria-label="Primary">
           <lk-row align="center" gap="sm" wrap>
-            <a class="brand-link" href="/" aria-label="LayoutKit home">
+            <a class="brand-link" href="/">
               <lk-row gap="2" align="center">
                 <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
                 <span class="brand">LayoutKit</span>
-                <span class="badge">2.0.0</span>
+                <span class="badge">2.1.0</span>
               </lk-row>
             </a>
             <lk-spacer></lk-spacer>
@@ -58,9 +58,9 @@
     <lk-box width="3xl" padding="4">
       <lk-stack gap="lg">
         <lk-stack gap="sm">
-          <p class="kicker">Playground · 2.0.0</p>
+          <p class="kicker">Playground · 2.1.0</p>
           <h1 class="title">Try the markup.</h1>
-          <p class="lede">The preview uses the same <code>/layoutkit.css</code> this site loads. Narrow the window and the switcher, sidebar, and grid respond on their own. The editor is the only script on the page.</p>
+          <p class="lede">The preview uses the same <code>/layoutkit.css</code> this site loads. Narrow the window and the switcher, sidebar, and grid respond on their own. The editor is the only script on the page. It copies the textarea into the preview. It does not compute the layout.</p>
         </lk-stack>
         <lk-cluster id="pg-presets" gap="2" aria-label="Examples"></lk-cluster>
         <lk-switcher at="xl" gap="md">
@@ -107,7 +107,7 @@
   <footer class="site-footer">
     <lk-box width="3xl" padding="8">
       <lk-stack gap="md">
-        <p>LayoutKit 2.0.0. Pure-CSS layout primitives. MIT.</p>
+        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
         <lk-cluster gap="md">
           <a href="/docs">Docs</a>
           <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>

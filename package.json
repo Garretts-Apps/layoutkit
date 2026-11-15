@@ -6,6 +6,11 @@
   "license": "MIT",
   "scripts": {
     "build": "node packages/layoutkit/gen.mjs",
-    "check": "node scripts/check-package.mjs"
+    "check": "node scripts/check-package.mjs",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.1"
   }
 }

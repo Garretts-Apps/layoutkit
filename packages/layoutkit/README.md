@@ -1,37 +1,47 @@
 # layoutkit-css
 
-LayoutKit is a tiny pure-CSS layout vocabulary for readable app structure.
+LayoutKit is one CSS file of layout tags for semantic HTML. 2.1.0 is 80,010
+bytes (12,795 bytes gzipped). There is no runtime JavaScript and no build step
+to use the file.
 
-It provides developer-readable layout primitives such as `lk-stack`, `lk-row`,
-`lk-grid`, and `lk-center`, so app structure is easier to scan without adopting
-a framework, runtime, or design system. These tags are intent-shaped layout
-markup styled by one CSS file. They are semantic to developers, but browsers and
-assistive technologies do not treat them like native HTML landmarks, headings,
-lists, forms, buttons, links, or tables.
+`lk-stack`, `lk-row`, `lk-grid`, and `lk-center` name the layout so you are not
+rewriting the same flex column, and so the markup does not turn into a utility
+class for every property. The tags are for developers. Browsers and assistive
+technologies do not treat them like native HTML landmarks, headings, lists,
+forms, buttons, links, or tables.
 
 Use LayoutKit inside native semantic HTML.
 
 ## What LayoutKit Is
 
-- One CSS file.
+- One CSS file. 80,010 bytes, 12,795 bytes gzipped, in 2.1.0.
 - No runtime JavaScript.
 - No npm dependencies.
-- No custom element registration.
-- Framework-agnostic.
-- A small set of layout wrappers for readable HTML structure.
-- A CSS layer named `layoutkit` with low-specificity selectors.
+- No custom element registration. The tags are unknown elements with a stylesheet.
+- Framework-agnostic. Link it, or import it once.
+- Layout wrappers for readable HTML structure.
+- A CSS layer named `layoutkit`. Unlayered author CSS wins, even a single class.
 
 ## What LayoutKit Is Not
 
 LayoutKit is not a component library, design system, substitute for semantic
-HTML, button kit, form kit, typography system, color theme, icon library,
-animation system, JavaScript behavior layer, stateful app shell, data table
-solution, or substitute for normal CSS.
+HTML, button kit, form kit, typography system, icon library, animation system,
+JavaScript behavior layer, stateful app shell, data table solution, or
+substitute for normal CSS.
 
-Named grid areas and component-specific behavior still belong in normal CSS.
-Switcher, sidebar, and grid measure themselves unless `container="off"`.
-Subgrid, row snap, sticky regions, and popovers stay opt-in. See
-`MIGRATION.md` for the 2.0.0 defaults.
+It is not Tailwind and it is not Bootstrap. Tailwind puts one property in each
+class. Bootstrap ships control skins and scripts. `lk-select` is the exception
+that proves the boundary: it styles a native `select` only inside
+`@supports (appearance: base-select)`.
+
+It is the same family of layouts as Every Layout: stack, switcher, sidebar,
+cluster, cover, and the centered overlay. Every Layout is the explanation and
+its own elements. This package is the CSS file, with container queries on by
+default since 2.0.0.
+
+`--lk-base` does not restyle the page. The OKLCH relatives exist for you to
+reference. Named grid areas still belong in normal CSS. See `MIGRATION.md`.
+2.1.0 adds tags. It does not change 2.0.0 defaults.
 
 ## Install
 
@@ -76,9 +86,10 @@ stylesheet link for CDN or direct browser usage. In frameworks, import it at the
 root or global CSS level.
 
 Avoid lazy-loading LayoutKit through JavaScript when it controls initial page
-layout. LayoutKit has no JavaScript fallback by design. If the CSS does not
-load, `lk-*` tags remain plain unknown elements without the intended layout
-styling.
+layout. If the CSS does not load, nothing in JavaScript rebuilds it. The tags
+remain unknown elements. That is separate from `@supports`: a missing CSS
+feature skips the enhancement and leaves the native control or the unanimated
+disclosure in place.
 
 ## Semantic HTML Guidance
 
@@ -126,19 +137,23 @@ LayoutKit currently includes:
 - `lk-box`: block wrapper with optional padding, width, and flow spacing.
 - `lk-card`: neutral padded block with optional radius, surface, and border.
 - `lk-spread`: row with space between children.
-- `lk-grid`: CSS grid columns, rows, gaps, responsive auto-fit, opt-in container queries, and opt-in subgrid.
+- `lk-grid`: CSS grid columns, rows, gaps, responsive auto-fit, container queries unless `container="off"`, and opt-in subgrid.
 - `lk-cluster`: wrapping inline group.
-- `lk-switcher`: intrinsic row-to-stack layout, with an opt-in container-query measure and a child-count `limit`.
-- `lk-sidebar`: wrapping sidebar/content layout, with opt-in container queries and a sticky side.
+- `lk-switcher`: row-to-stack layout. Container queries are on. The default limit is 4.
+- `lk-sidebar`: wrapping sidebar/content layout. Container queries are on. `sticky` is opt-in.
 - `lk-cover`: min-height region with a centered child.
+- `lk-frame`: full-width grid. The center track is the measure. The side tracks are the gutter.
+- `lk-bleed`: spans an `lk-frame`. Subgrid puts its children back in the column where subgrid exists.
 - `lk-spacer`: flexible or fixed spacer.
 - `lk-divider`: visual divider.
 - `lk-aspect-ratio`: aspect-ratio wrapper.
-- `lk-scroll-area`: constrained scroll container and opt-in scroll-snap carousel.
+- `lk-scroll-area`: constrained scroll container. Horizontal direction snaps unless `snap="off"`.
 - `lk-progress`: scroll progress bar, static where scroll timelines are unsupported.
 - `lk-popover`: top-layer panel for a native `popover`.
-- `lk-disclosure`: layout for native `details`/`summary`.
+- `lk-disclosure`: layout for native `details`/`summary`. `look="panel"` draws the border. The same `name` on each `details` is the exclusive group, and that behavior is HTML.
 - `lk-menu`: invoker plus `lk-popover`, with opt-in anchor positioning.
+- `lk-dock`: hover magnification. `:has(+ :hover)` grows the previous item where that selector matches.
+- `lk-select`: a native `select`. Custom picker styling requires `appearance: base-select`.
 - `lk-columns`: multi-column text flow.
 
 ## Attributes
@@ -178,18 +193,20 @@ unavailable. Replaced children inside `lk-aspect-ratio` (`img`, `video`,
 Put `center` on the child of `lk-cover` that should sit in the middle. It is not
 an attribute of `lk-cover` itself.
 
-`container` does nothing unless the browser supports container queries. It does
-not change a switcher, sidebar, or grid that omits the attribute. `subgrid`,
-`snap`, `sticky`, `adapt`, and `anchor` are the same kind of opt-in.
+Switcher, sidebar, and grid set `container-type: inline-size` unless the
+attribute is `off`. Omitting `container` does not restore the 1.4 layout.
+Without container-query support, the guarded rules are skipped. `subgrid`,
+`sticky`, and `anchor` are opt-in. `adapt` centering and horizontal
+`scroll-snap` are on unless set to `off`. `snap` on a row is still opt-in.
 `lk-popover` never sets `display`, because an author `display` would override
 the user agent's hidden state for a closed popover.
 
 ## Frozen Convenience Helpers
 
-`lk-card`, `lk-text`, and `lk-weight` are intentionally small convenience
-helpers. They are not the start of a component or typography system, and new
-visual styling primitives should be rejected unless they directly support
-layout.
+`lk-card`, `lk-text`, and `lk-weight` are small convenience helpers, not a
+component or typography system. 2.1.0 also adds opt-in paint: `look="panel"`,
+`pattern`, `blend`, `bands`, and `lk-dock`. They do nothing until you set them.
+They are not a theme.
 
 ## Examples
 
@@ -508,13 +525,19 @@ accept attributes the stylesheet implements.
 
 ## Browser Support
 
-LayoutKit targets modern evergreen browsers with support for custom properties,
-flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`,
-`dvh`, `min()`, `object-fit`, and `color-mix()`. Container queries, `:has()`,
-subgrid, scroll snap, `position: sticky`, `animation-timeline: scroll()`, and
-anchor positioning (`position-area`, with `inset-area` as the earlier name)
-are progressive enhancements. Markup that uses those opt-in attributes keeps
-the previous layout where a feature is missing.
+Current Chrome, Firefox, and Safari cover the flex, grid, cascade layer, logical
+property, `aspect-ratio`, and `min()` layout. Viewport units step through
+`100dvh`, `100svh`, and `100vh`. Dividers use `color-mix()` and fall back to
+`#e5e7eb`. A card border uses `color-mix()` without that fallback.
+
+Container queries, `:has()`, subgrid, scroll snap, and `position: sticky` are
+in current major browsers and still inside `@supports`. Anchor positioning
+(`position-area`, earlier name `inset-area`) and `animation-timeline` are not
+universal. `interpolate-size: allow-keywords` (disclosure height) is Chromium
+only among stable engines as of November 2026. `appearance: base-select` is
+Chromium and Safari 27, not Firefox stable. Where the test fails, the earlier
+behavior remains: a closed popover stays hidden, a disclosure still opens, a
+select stays the operating-system control.
 
 ## Security And Package Verification
 
@@ -529,15 +552,15 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@2.0.0
+npm install layoutkit-css@2.1.0
 ```
 
 Review third-party packages before use.
 
 ## Versioning And Stability
 
-The package follows semver. 2.0.0 changes several defaults. `MIGRATION.md` lists
-each change and the CSS that restores the 1.5.0 look.
+The package follows semver. 2.0.0 changes several defaults. 2.1.0 does not.
+`MIGRATION.md` lists the 2.0.0 changes and the CSS that restores the 1.5.0 look.
 
 ## Contributing
 

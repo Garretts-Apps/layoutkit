@@ -101,8 +101,19 @@ out.push(" * Free-form values use custom properties:");
 out.push(" *   --lk-ratio, --lk-divider-color, --lk-min-child-width, --lk-max-height, --lk-max-width,");
 out.push(" *   --lk-switch-at, --lk-sidebar-width, --lk-sidebar-content-min, --lk-sticky-top,");
 out.push(" *   --lk-snap-gap, --lk-pad, --lk-anchor, --lk-progress-color, --lk-popover-bg, --lk-popover-fg,");
-out.push(" *   --lk-space-fluid-*, --lk-overlay-inset, --lk-overlay-z.");
+out.push(" *   --lk-space-fluid-*, --lk-overlay-inset, --lk-overlay-z, --lk-frame-size, --lk-frame-gutter,");
+out.push(" *   --lk-base, --lk-hue, --lk-complement, --lk-tetrad, --lk-tetrad-2, --lk-tint, --lk-shade.");
 out.push(" */");
+
+// Registered outside the layer. A typed custom property is what lets an author
+// transition an angle; an untyped variable snaps. Nothing animates until the
+// author changes --lk-hue.
+out.push("@property --lk-hue {");
+out.push('  syntax: "<angle>";');
+out.push("  inherits: true;");
+out.push("  initial-value: 150deg;");
+out.push("}");
+out.push("");
 
 out.push("@layer layoutkit {");
 
@@ -127,7 +138,7 @@ rule(":root", [
 atSupports("(width: 1vi)", ":root", fluidDecls("vi"));
 
 section("Base — every primitive sets its own display + box model");
-rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-card,\n  lk-spread,\n  lk-grid,\n  lk-cluster,\n  lk-switcher,\n  lk-sidebar,\n  lk-cover,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area,\n  lk-progress,\n  lk-popover,\n  lk-disclosure,\n  lk-menu,\n  lk-columns", "box-sizing: border-box;");
+rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-card,\n  lk-spread,\n  lk-grid,\n  lk-cluster,\n  lk-switcher,\n  lk-sidebar,\n  lk-cover,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area,\n  lk-progress,\n  lk-popover,\n  lk-disclosure,\n  lk-menu,\n  lk-columns,\n  lk-frame,\n  lk-bleed,\n  lk-dock,\n  lk-select", "box-sizing: border-box;");
 rule("lk-stack", "display: flex; flex-direction: column; gap: var(--lk-space-md); align-items: stretch; justify-content: flex-start;");
 rule("lk-row", "display: flex; flex-direction: row; gap: var(--lk-space-md); align-items: center; justify-content: flex-start;");
 rule("lk-center", "display: flex; flex-direction: column; align-items: center; justify-content: center;");
@@ -647,6 +658,36 @@ rule('lk-disclosure[side="end"][panel="overlay"] > details > :not(summary)', "in
 atSupports("(max-inline-size: 1vi)", "lk-popover, lk-disclosure[panel=\"overlay\"] > details > :not(summary)", "max-inline-size: min(20rem, calc(100vi - 2rem));");
 atSupports("(max-block-size: 100dvh)", "lk-popover, lk-disclosure[panel=\"overlay\"] > details > :not(summary)", "max-block-size: min(70dvh, calc(100dvh - 2rem));");
 atSupports("(color: color-mix(in srgb, currentColor 20%, transparent))", "lk-popover, lk-disclosure[panel=\"overlay\"] > details > :not(summary)", "border-color: var(--lk-popover-border, color-mix(in srgb, currentColor 20%, transparent));");
+// look="panel" is the bordered accordion. Exclusive groups are the details
+// name attribute, which is HTML, not a second widget. Nesting keeps the open
+// and closed corners in one rule.
+lines(`
+lk-disclosure[look="panel"] > details {
+  border: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb));
+  border-radius: var(--lk-radius-md);
+  background: var(--lk-popover-bg, canvas);
+  color: var(--lk-popover-fg, canvastext);
+  margin-block-end: var(--lk-space-sm);
+  & > summary {
+    cursor: pointer;
+    padding-block: var(--lk-space-sm);
+    padding-inline: var(--lk-space-md);
+    border-start-start-radius: var(--lk-radius-md);
+    border-start-end-radius: var(--lk-radius-md);
+  }
+  &[open] > summary {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+  & > :not(summary) {
+    margin-block-start: 0;
+    padding: var(--lk-space-md);
+    border-block-start: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb));
+    & > :first-child { margin-block-start: 0; }
+  }
+}
+`);
+atSupports("(color: color-mix(in srgb, currentColor 20%, transparent))", "lk-disclosure[look=\"panel\"] > details,\n    lk-disclosure[look=\"panel\"] > details > :not(summary)", "border-color: var(--lk-popover-border, color-mix(in srgb, currentColor 20%, transparent));");
 // anchor-scope keeps one --lk-menu / --lk-disclosure name from colliding across
 // instances. position-area attaches the panel to the invoker; without it the
 // popover keeps the UA top-layer centering and the disclosure keeps the
@@ -836,9 +877,13 @@ lines(`
     transition: none;
     height: auto;
   }
+  lk-disclosure[look="panel"]:not([animate="off"]) > details > summary {
+    transition: border-end-start-radius 200ms ease, border-end-end-radius 200ms ease;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  lk-disclosure > details::details-content { transition: none; }
+  lk-disclosure > details::details-content,
+  lk-disclosure[look="panel"] > details > summary { transition: none; }
 }
 lk-box[layout="compact"],
 lk-stack[layout="compact"],
@@ -879,6 +924,142 @@ rule("lk-columns", "display: block; column-count: 2; column-gap: var(--lk-space-
 rule("lk-columns > *", "break-inside: avoid;");
 for (const n of [2, 3, 4]) rule(`lk-columns[cols="${n}"]`, `column-count: ${n};`);
 for (const [k, v] of Object.entries(SPACE)) rule(`lk-columns[gap="${k}"]`, `column-gap: ${v};`);
+
+section("Frame — fluid gutters around a measured column. lk-bleed is the full-width band");
+// The center track is min(available, measure). Side tracks are at least the
+// gutter and grow with leftover space. That is the padding-column idea: the
+// measure is not a max-width on the frame, so a child can span the frame.
+// Percent padding cannot be reused by a child (it would resolve against the
+// content box), so the tracks are the implementation.
+rule("lk-frame", "--lk-frame-size: var(--lk-measure, 65ch); --lk-frame-gutter: clamp(var(--lk-space-sm), 4vw, var(--lk-space-xl)); display: grid; align-content: start; grid-template-columns: [full-start] minmax(var(--lk-frame-gutter), 1fr) [content-start] min(100% - var(--lk-frame-gutter) * 2, var(--lk-frame-size)) [content-end] minmax(var(--lk-frame-gutter), 1fr) [full-end];");
+atSupports("(width: 1vi)", "lk-frame", "--lk-frame-gutter: clamp(var(--lk-space-sm), 4vi, var(--lk-space-xl));");
+for (const [k, v] of Object.entries(WIDTH)) {
+  rule(`lk-frame[width="${k}"]`, k === "full" ? "--lk-frame-size: 100%;" : `--lk-frame-size: ${v};`);
+}
+for (const [k, v] of Object.entries(SPACE)) rule(`lk-frame[padding="${k}"]`, `--lk-frame-gutter: ${v};`);
+rule("lk-frame > *", "grid-column: content; min-inline-size: 0;");
+rule("lk-frame > lk-bleed", "grid-column: full;");
+rule("lk-bleed", "display: block; min-inline-size: 0;");
+for (const [k, v] of Object.entries(SPACE)) rule(`lk-bleed[padding="${k}"]`, `padding-block: ${v};`);
+lines(`
+@supports (grid-template-columns: subgrid) {
+  lk-frame > lk-bleed {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+  lk-frame > lk-bleed > * {
+    grid-column: content;
+    min-inline-size: 0;
+  }
+}
+`);
+
+section("Dock — the hovered item grows, and :has() grows the previous sibling too");
+rule("lk-dock", "display: flex; flex-direction: row; align-items: end; justify-content: center; gap: var(--lk-space-sm);");
+for (const [k, v] of Object.entries(SPACE)) rule(`lk-dock[gap="${k}"]`, `gap: ${v};`);
+rule("lk-dock > *", "display: grid; place-items: center; inline-size: 3rem; block-size: 3rem; min-inline-size: 0; transition: inline-size 200ms ease, block-size 200ms ease;");
+rule("lk-dock > :hover", "inline-size: 4.5rem; block-size: 4.5rem;");
+rule("lk-dock > :hover + *", "inline-size: 3.75rem; block-size: 3.75rem;");
+atSupports("selector(:has(+ :hover))", "lk-dock > :has(+ :hover)", "inline-size: 3.75rem; block-size: 3.75rem;");
+lines(`
+@media (prefers-reduced-motion: reduce) {
+  lk-dock > * { transition: none; }
+}
+`);
+
+section("Select — base-select where the engine has it. Everywhere else the control stays native");
+rule("lk-select", "display: block; max-inline-size: 100%;");
+for (const [k, v] of Object.entries(WIDTH)) {
+  rule(`lk-select[width="${k}"]`, k === "full" ? "inline-size: 100%;" : `inline-size: ${v}; max-inline-size: 100%;`);
+}
+lines(`
+@supports (appearance: base-select) {
+  lk-select select,
+  lk-select select::picker(select) {
+    appearance: base-select;
+  }
+  lk-select select {
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    padding-block: var(--lk-space-sm);
+    padding-inline: var(--lk-space-md);
+    border: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb));
+    border-radius: var(--lk-radius-md);
+    background: var(--lk-popover-bg, canvas);
+    color: var(--lk-popover-fg, canvastext);
+  }
+  lk-select select::picker(select) {
+    border: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb));
+    border-radius: var(--lk-radius-md);
+    padding: var(--lk-space-xs);
+    background: var(--lk-popover-bg, canvas);
+    color: var(--lk-popover-fg, canvastext);
+    transition: opacity 200ms ease, display 200ms allow-discrete, overlay 200ms allow-discrete;
+  }
+  lk-select select option {
+    padding-block: var(--lk-space-xs);
+    padding-inline: var(--lk-space-sm);
+    border-radius: var(--lk-radius-sm);
+  }
+  lk-select select option::checkmark {
+    color: currentColor;
+  }
+  lk-select select::picker-icon {
+    transition: transform 200ms ease;
+  }
+  lk-select select:open::picker-icon {
+    transform: rotateX(180deg);
+  }
+  @starting-style {
+    lk-select select::picker(select) { opacity: 0; }
+  }
+}
+@supports (appearance: base-select) and (color: color-mix(in srgb, currentColor 20%, transparent)) {
+  lk-select select,
+  lk-select select::picker(select) {
+    border-color: var(--lk-popover-border, color-mix(in srgb, currentColor 20%, transparent));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  lk-select select::picker-icon,
+  lk-select select::picker(select) { transition: none; }
+}
+`);
+
+section("Patterns and blend — gradient textures and background-blend-mode. Opt-in, no images shipped");
+rule('lk-box[pattern="checker"]', "background-image: repeating-conic-gradient(#d4d4d8 0% 25%, transparent 0% 50%); background-size: 1rem 1rem;");
+rule('lk-box[pattern="dots"]', "background-image: radial-gradient(circle, #71717a 1px, transparent 1.5px); background-size: 1rem 1rem;");
+rule('lk-box[pattern="grid"]', "background-image: repeating-linear-gradient(to right, #71717a 0 1px, transparent 1px 1.5rem), repeating-linear-gradient(to bottom, #71717a 0 1px, transparent 1px 1.5rem);");
+atSupports("(color: color-mix(in srgb, currentColor 20%, transparent))", 'lk-box[pattern="checker"]', "background-image: repeating-conic-gradient(color-mix(in srgb, currentColor 16%, transparent) 0% 25%, transparent 0% 50%);");
+atSupports("(color: color-mix(in srgb, currentColor 20%, transparent))", 'lk-box[pattern="dots"]', "background-image: radial-gradient(circle, color-mix(in srgb, currentColor 45%, transparent) 1px, transparent 1.5px);");
+atSupports("(color: color-mix(in srgb, currentColor 20%, transparent))", 'lk-box[pattern="grid"]', "background-image: repeating-linear-gradient(to inline-end, color-mix(in srgb, currentColor 28%, transparent) 0 1px, transparent 1px 1.5rem), repeating-linear-gradient(to block-end, color-mix(in srgb, currentColor 28%, transparent) 0 1px, transparent 1px 1.5rem);");
+rule('lk-box[blend="color"]', "background-blend-mode: color;");
+rule('lk-box[blend="saturation"]', "background-blend-mode: saturation;");
+rule('lk-box[blend="multiply"]', "background-blend-mode: multiply;");
+
+section("Palette — one --lk-base, OKLCH relatives. bands paints children from sibling-index() where that exists");
+lines(`
+@supports (color: oklch(from mediumseagreen l c h)) {
+  :root {
+    --lk-complement: oklch(from var(--lk-base, mediumseagreen) l c calc(h + 180));
+    --lk-tetrad: oklch(from var(--lk-base, mediumseagreen) l c calc(h + 90));
+    --lk-tetrad-2: oklch(from var(--lk-base, mediumseagreen) l c calc(h + 270));
+    --lk-tint: oklch(from var(--lk-base, mediumseagreen) 0.95 0.03 h);
+    --lk-shade: oklch(from var(--lk-base, mediumseagreen) 0.32 0.04 h);
+  }
+}
+@supports (background-color: oklch(from mediumseagreen l c calc(h + sibling-index() * 1))) {
+  lk-stack[bands] > *,
+  lk-row[bands] > * {
+    background-color: oklch(from var(--lk-base, mediumseagreen) 0.94 0.035 calc(h + sibling-index() * 18));
+    color: oklch(from var(--lk-base, mediumseagreen) 0.28 0.04 h);
+  }
+}
+`);
 
 out.push("}");
 

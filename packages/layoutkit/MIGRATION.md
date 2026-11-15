@@ -1,3 +1,21 @@
+# Migrating to layoutkit-css 2.1.0
+
+2.1.0 adds tags and opt-in attributes. It does not change a 2.0.0 default.
+Existing tags, attribute names, and export paths still work. There is no
+restore snippet for 2.1.0, because nothing you already shipped moves.
+
+New, all opt-in by using the tag or attribute:
+
+- `lk-frame` and `lk-bleed` for a measured column with full-width bands.
+- `lk-dock` for hover magnification.
+- `lk-select` around a native `<select>`. Styling requires `appearance: base-select`.
+- `look="panel"` on `lk-disclosure`. Exclusive groups are the HTML `name` on `<details>`.
+- `pattern` and `blend` on `lk-box`.
+- `bands` on `lk-stack` or `lk-row`.
+- `--lk-base` and the OKLCH relatives derived from it. They do not paint on their own.
+
+The rest of this file is the 2.0.0 guide, from 1.5.0.
+
 # Migrating to layoutkit-css 2.0.0
 
 2.0.0 keeps every tag name, attribute name, and export path. It changes

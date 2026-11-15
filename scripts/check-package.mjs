@@ -12,9 +12,16 @@ const fail = (message) => errors.push(message);
 const rootPackage = readJson(join(root, "package.json"));
 const packageJson = readJson(join(pkgDir, "package.json"));
 
+const rootTestDeps = new Set(["@playwright/test", "@axe-core/playwright"]);
 for (const [label, pkg] of [["root package", rootPackage], ["layoutkit-css package", packageJson]]) {
   if (pkg.dependencies && Object.keys(pkg.dependencies).length) fail(`${label} must not declare dependencies`);
-  if (pkg.devDependencies && Object.keys(pkg.devDependencies).length) fail(`${label} must not declare devDependencies`);
+  const devDeps = Object.keys(pkg.devDependencies || {});
+  if (label === "layoutkit-css package" && devDeps.length) fail(`${label} must not declare devDependencies`);
+  if (label === "root package") {
+    for (const name of devDeps) {
+      if (!rootTestDeps.has(name)) fail(`unexpected root devDependency: ${name}`);
+    }
+  }
   for (const script of ["preinstall", "install", "postinstall"]) {
     if (pkg.scripts?.[script]) fail(`${label} must not define a ${script} lifecycle script`);
   }

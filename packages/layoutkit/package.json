@@ -1,7 +1,7 @@
 {
   "name": "layoutkit-css",
-  "version": "2.0.0",
-  "description": "A tiny pure-CSS layout vocabulary for readable app structure.",
+  "version": "2.1.0",
+  "description": "One CSS file of layout primitives for semantic HTML. No runtime JavaScript.",
   "license": "MIT",
   "homepage": "https://layoutkit.dev",
   "repository": {
