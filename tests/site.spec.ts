@@ -10,6 +10,8 @@ type Audit = {
   viewport: number;
   overlaps: string[];
   clips: string[];
+  stuck: string[];
+  clipped: string[];
   taps: string[];
   anchors: { hash: string; text: string }[];
   images: { src: string; ok: boolean }[];
@@ -125,6 +127,81 @@ const audit = () => {
     if (overlaps.length > 12) break;
   }
 
+  // Pre-#27 the tutorial Steps nav stayed sticky and covered Step 8 at 390px.
+  // That bar can be opaque, so the check above (transparent layers only) missed it.
+  // At a phone width, any sticky or fixed layer over body text fails, except the site header.
+  const stuck: string[] = [];
+  if (innerWidth <= 400) {
+    for (const layer of positioned) {
+      const pos = getComputedStyle(layer).position;
+      if (pos !== "sticky" && pos !== "fixed") continue;
+      if (layer.classList.contains("nav") && layer.closest("body > header")) continue;
+      const layerBox = box(layer);
+      if (!onScreen(layerBox)) continue;
+      for (const text of texts) {
+        if (layer.contains(text) || text.contains(layer)) continue;
+        const textBox = visibleBox(text);
+        if (!textBox || !onScreen(textBox) || !hits(layerBox, textBox)) continue;
+        stuck.push(`${label(layer)} covers ${label(text)}`);
+        if (stuck.length > 8) break;
+      }
+      if (stuck.length > 8) break;
+    }
+  }
+
+  const hasScrollCue = (el: Element) => {
+    if (el.getAttribute("slide") === "peek") return true;
+    const painted = (style: CSSStyleDeclaration) => {
+      const mask = `${style.getPropertyValue("mask-image")} ${style.getPropertyValue("-webkit-mask-image")}`;
+      return mask.includes("gradient");
+    };
+    if (painted(getComputedStyle(el))) return true;
+    for (const pseudo of ["::before", "::after"]) {
+      if (painted(getComputedStyle(el, pseudo))) return true;
+    }
+    const nearby = `${el.getAttribute("aria-label") || ""} ${el.previousElementSibling?.textContent || ""} ${(el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80)}`;
+    return /\bscroll\b/i.test(nearby);
+  };
+  const clipped: string[] = [];
+  for (const el of document.querySelectorAll("body *")) {
+    if (el.clientWidth < 2 || el.clientHeight < 2) continue;
+    const tag = el.tagName;
+    if (tag === "TEXTAREA" || tag === "INPUT" || tag === "SELECT") continue;
+    const s = getComputedStyle(el);
+    const clipsX = ["hidden", "clip", "auto", "scroll"].includes(s.overflowX) && el.scrollWidth > el.clientWidth + 2;
+    const clipsY = ["hidden", "clip", "auto", "scroll"].includes(s.overflowY) && el.scrollHeight > el.clientHeight + 2;
+    if ((clipsX || clipsY) && !hasScrollCue(el)) clipped.push(`${label(el)} clips content with no scroll cue`);
+  }
+  for (const link of document.querySelectorAll("nav a")) {
+    if (!visible(link)) continue;
+    const linkRect = link.getBoundingClientRect();
+    let node = link.parentElement;
+    while (node && node !== document.body) {
+      const s = getComputedStyle(node);
+      const canClip = ["hidden", "clip", "auto", "scroll"].includes(s.overflowX) || ["hidden", "clip", "auto", "scroll"].includes(s.overflowY);
+      if (canClip && !hasScrollCue(node)) {
+        const host = node.getBoundingClientRect();
+        const cut = linkRect.right > host.right + 1 || linkRect.left < host.left - 1 || linkRect.bottom > host.bottom + 1 || linkRect.top < host.top - 1;
+        if (cut) clipped.push(`${label(link)} is clipped inside ${label(node)} with no scroll cue`);
+      }
+      node = node.parentElement;
+    }
+  }
+  for (const table of document.querySelectorAll("table")) {
+    let node = table.parentElement;
+    while (node && node !== document.body) {
+      const s = getComputedStyle(node);
+      const canClip = ["hidden", "clip", "auto", "scroll"].includes(s.overflowX) || ["hidden", "clip", "auto", "scroll"].includes(s.overflowY);
+      if (canClip && !hasScrollCue(node)) {
+        const host = node.getBoundingClientRect();
+        const rect = table.getBoundingClientRect();
+        const cut = table.scrollWidth > node.clientWidth + 2 || rect.right > host.right + 1 || rect.left < host.left - 1;
+        if (cut) clipped.push(`${label(table)} is clipped inside ${label(node)} with no scroll cue`);
+      }
+      node = node.parentElement;
+    }
+  }
+
   const clips: string[] = [];
   for (const el of document.querySelectorAll("h1,h2,h3,p,a,pre,code,button,li")) {
     if (!visible(el)) continue;
@@ -158,6 +235,8 @@ const audit = () => {
     viewport: innerWidth,
     overlaps,
     clips: [...new Set(clips)].slice(0, 12),
+    stuck: [...new Set(stuck)].slice(0, 8),
+    clipped: [...new Set(clipped)].slice(0, 12),
     taps: taps.slice(0, 12),
     anchors,
     images: [...document.querySelectorAll("img")].map((img) => ({
@@ -176,7 +255,7 @@ async function scrollAudit(page: Page) {
     await page.evaluate((top) => window.scrollTo(0, top), y);
     const report = await page.evaluate(audit);
     if (report.overflow > report.viewport + 1) problems.push(`horizontal overflow ${report.overflow}px in a ${report.viewport}px viewport`);
-    problems.push(...report.overlaps, ...report.clips);
+    problems.push(...report.overlaps, ...report.clips, ...report.stuck, ...report.clipped);
     if (problems.length > 20) break;
   }
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -288,5 +367,130 @@ test.describe("site walk", () => {
 
     expect(errors, "console errors").toEqual([]);
     await writeFile(path.join(dir, "pages.json"), JSON.stringify(pages, null, 2));
+  });
+
+  test("demo controls and hrefs never land on an error page", async ({ page, request }) => {
+    const navigations: { url: string; status: number }[] = [];
+    page.on("response", (response) => {
+      if (response.request().isNavigationRequest() && response.frame() === page.mainFrame()) {
+        navigations.push({ url: response.url(), status: response.status() });
+      }
+    });
+
+    const demo = ".demo, .specimen, #pg-preview";
+    const open = async (pathname: string) => {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          await page.goto(pathname, { waitUntil: "domcontentloaded" });
+          break;
+        } catch (error) {
+          if (attempt === 1 || !String(error).includes("interrupted")) throw error;
+        }
+      }
+      await page.waitForLoadState("networkidle");
+    };
+    const live = async (label: string) => {
+      const text = (await page.locator("body").innerText()).trim().toLowerCase();
+      expect(text, label).not.toBe("not found");
+    };
+    const exercise = async (restore: () => Promise<void>) => {
+      await restore();
+      const submits = await page.locator(demo).locator("form button").evaluateAll((els) =>
+        els
+          .filter((el) => (el.getAttribute("type") || "submit").toLowerCase() === "submit")
+          .map((el) => (el.textContent || "").replace(/\s+/g, " ").trim()),
+      );
+      expect(submits, "form buttons must not submit").toEqual([]);
+      const count = await page.locator(demo).locator("a[href], button").count();
+      let dirty = false;
+      for (let i = 0; i < count; i++) {
+        if (dirty) await restore();
+        dirty = false;
+        const el = page.locator(demo).locator("a[href], button").nth(i);
+        const meta = await el.evaluate((node) => ({
+          text: (node.textContent || "").replace(/\s+/g, " ").trim().slice(0, 48),
+          href: node instanceof HTMLAnchorElement ? node.href : "",
+          target: node.getAttribute("target") || "",
+        }));
+        if (meta.target === "_blank") continue;
+        if (meta.href && new URL(meta.href).origin !== new URL(page.url()).origin) continue;
+        const mark = navigations.length;
+        const pathBefore = new URL(page.url()).pathname;
+        const label = `${meta.text} ${meta.href}`;
+        if (!(await el.isVisible())) {
+          await el.evaluate((node) => {
+            const popover = node.closest("[popover]");
+            if (popover instanceof HTMLElement && !popover.matches(":popover-open")) popover.showPopover();
+            const details = node.closest("details");
+            if (details && !details.open) details.open = true;
+          });
+        }
+        await el.evaluate((node) => (node as HTMLElement).scrollIntoView({ block: "center", inline: "center" }));
+        await el.click();
+        await live(label);
+        for (const item of navigations.slice(mark)) expect(item.status, `${label} -> ${item.url}`).toBeLessThan(400);
+        if (new URL(page.url()).pathname !== pathBefore) dirty = true;
+      }
+    };
+
+    await open(START);
+    const queue = ["/"];
+    const seen = new Set<string>();
+    const hrefs = new Set<string>();
+    while (queue.length) {
+      const next = queue.shift()!;
+      if (seen.has(next)) continue;
+      seen.add(next);
+      const response = await page.goto(next);
+      expect(response?.status(), next).toBeLessThan(400);
+      const found = await page.locator("a[href]").evaluateAll((els) => els.map((el) => (el as HTMLAnchorElement).getAttribute("href") || ""));
+      for (const href of found) {
+        if (!href || href.startsWith("mailto:") || href.startsWith("javascript:")) continue;
+        const url = new URL(href, page.url());
+        hrefs.add(url.href);
+        if (url.origin !== new URL(page.url()).origin) continue;
+        const local = url.pathname || "/";
+        const asset = /\.(css|js|mjs|png|svg|jpe?g|gif|webp|json|txt|map|ico)$/i.test(local);
+        if (!asset && !seen.has(local)) queue.push(local);
+      }
+    }
+
+    const pages = [...seen].sort();
+    expect(pages.length).toBeGreaterThan(3);
+    for (const pathname of pages) {
+      if (pathname === "/playground") {
+        await open(pathname);
+        const presets = page.locator("#pg-presets button");
+        const presetCount = await presets.count();
+        expect(presetCount).toBeGreaterThan(8);
+        for (let i = 0; i < presetCount; i++) {
+          const restore = async () => {
+            await open(pathname);
+            await page.locator("#pg-presets button").nth(i).click();
+          };
+          await restore();
+          const found = await page.locator("#pg-preview a[href]").evaluateAll((els) => els.map((el) => (el as HTMLAnchorElement).href));
+          for (const href of found) hrefs.add(href);
+          await exercise(restore);
+        }
+        continue;
+      }
+      const restore = () => open(pathname);
+      await restore();
+      const found = await page.locator("a[href]").evaluateAll((els) => els.map((el) => (el as HTMLAnchorElement).href));
+      for (const href of found) hrefs.add(href);
+      await exercise(restore);
+    }
+
+    for (const href of hrefs) {
+      const response = await request.get(href, {
+        failOnStatusCode: false,
+        timeout: 20_000,
+        headers: { "user-agent": "Mozilla/5.0" },
+      });
+      const status = response.status();
+      const npmBotWall = status === 403 && href.startsWith("https://www.npmjs.com/");
+      expect(npmBotWall ? 200 : status, href).toBeLessThan(400);
+    }
   });
 });
