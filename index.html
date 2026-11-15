@@ -22,23 +22,24 @@
   <meta name="twitter:description" content="Readable layout wrappers for native semantic HTML. One CSS file, no runtime JavaScript, no dependencies.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115c">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
   <meta name="twitter:image:alt" content="LayoutKit">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
-    <nav class="nav" aria-label="Primary">
+    <lk-box class="nav" sticky>
+    <nav aria-label="Primary">
       <lk-spread align="center">
         <a href="/" aria-label="LayoutKit home">
           <lk-row gap="2" align="center">
-            <lk-center class="brand-mark">L</lk-center>
+            <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
-            <span class="badge">1.5.0</span>
+            <span class="badge">2.0.0</span>
           </lk-row>
         </a>
-        <lk-scroll-area class="nav-scroll" direction="horizontal">
+        <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
           <lk-row class="navlinks" gap="1">
             <a class="navlink" href="/" aria-current="page">Home</a>
             <a class="navlink" href="/install">Install</a>
@@ -49,9 +50,10 @@
         </lk-scroll-area>
       </lk-spread>
     </nav>
+    </lk-box>
   </header>
 
-  <lk-box id="main" class="container">
+  <lk-box id="main" class="container" width="xl">
     <lk-stack gap="3xl">
       <section class="hero center-text" aria-labelledby="home-heading">
         <lk-stack align="center" gap="5">
@@ -59,7 +61,7 @@
           <h1 id="home-heading" class="hero-title">Readable app structure from one CSS file.</h1>
           <p class="lead sans">
             LayoutKit is a tiny pure-CSS layout vocabulary: developer-readable
-            <code class="sans">lk-*</code> wrappers for stacks, rows, grids, centers, and scroll areas inside native semantic HTML. Opt-in attributes add container queries, subgrid, scroll-snap, sticky sidebars, and CSS popovers.
+            <code class="sans">lk-*</code> wrappers for stacks, rows, grids, centers, and scroll areas inside native semantic HTML. Version 2.0 measures those layouts from their container. Subgrid, sticky regions, and popovers stay opt-in.
           </p>
           <lk-cluster place="center" gap="3">
             <a class="btn btn-primary" href="/install">Install LayoutKit</a>
@@ -133,7 +135,7 @@
   </lk-box>
 
   <footer class="footer">
-    <lk-spread class="container" align="center">
+    <lk-spread class="container" width="xl" align="center">
       <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
       <lk-row gap="4">
         <a class="navlink" href="/docs">Docs</a>

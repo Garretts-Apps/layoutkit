@@ -19,11 +19,8 @@
  */
 @layer layoutkit {
 
-  /* Design tokens — remap via your --space-* / --text-* / --radius-* tokens, or override --lk-* directly */
-  :root { --lk-space-xs: var(--space-xs, 0.25rem); --lk-space-sm: var(--space-sm, 0.5rem); --lk-space-md: var(--space-md, 1rem); --lk-space-lg: var(--space-lg, 1.5rem); --lk-space-xl: var(--space-xl, 2rem); --lk-space-2xl: var(--space-2xl, 3rem); --lk-space-3xl: var(--space-3xl, 4rem); --lk-text-xs: var(--text-xs, 0.75rem); --lk-text-sm: var(--text-sm, 0.875rem); --lk-text-md: var(--text-md, 1rem); --lk-text-lg: var(--text-lg, 1.125rem); --lk-text-xl: var(--text-xl, 1.25rem); --lk-text-2xl: var(--text-2xl, 1.5rem); --lk-text-3xl: var(--text-3xl, 2rem); --lk-text-4xl: var(--text-4xl, 3rem); --lk-radius-sm: var(--radius-sm, 0.375rem); --lk-radius-md: var(--radius-md, 0.75rem); --lk-radius-lg: var(--radius-lg, 1rem); }
-
-  /* Fluid space — opt-in tokens. Assign one to --space-* or --lk-space-* to opt in; the static scale is unchanged */
-  :root { --lk-space-fluid-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem); --lk-space-fluid-sm: clamp(0.5rem, 0.35rem + 0.5vw, 0.75rem); --lk-space-fluid-md: clamp(0.75rem, 0.55rem + 0.8vw, 1.25rem); --lk-space-fluid-lg: clamp(1rem, 0.7rem + 1.2vw, 1.75rem); --lk-space-fluid-xl: clamp(1.5rem, 1rem + 2vw, 2.5rem); --lk-space-fluid-2xl: clamp(2rem, 1.25rem + 3vw, 4rem); --lk-space-fluid-3xl: clamp(3rem, 1.5rem + 4.5vw, 6rem); }
+  /* Design tokens — host --space-* still wins; otherwise the scale is fluid */
+  :root { --lk-space-static-xs: 0.25rem; --lk-space-static-sm: 0.5rem; --lk-space-static-md: 1rem; --lk-space-static-lg: 1.5rem; --lk-space-static-xl: 2rem; --lk-space-static-2xl: 3rem; --lk-space-static-3xl: 4rem; --lk-space-fluid-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem); --lk-space-fluid-sm: clamp(0.5rem, 0.35rem + 0.5vw, 0.75rem); --lk-space-fluid-md: clamp(0.75rem, 0.55rem + 0.8vw, 1.25rem); --lk-space-fluid-lg: clamp(1rem, 0.7rem + 1.2vw, 1.75rem); --lk-space-fluid-xl: clamp(1.5rem, 1rem + 2vw, 2.5rem); --lk-space-fluid-2xl: clamp(2rem, 1.25rem + 3vw, 4rem); --lk-space-fluid-3xl: clamp(3rem, 1.5rem + 4.5vw, 6rem); --lk-space-xs: var(--space-xs, var(--lk-space-fluid-xs)); --lk-space-sm: var(--space-sm, var(--lk-space-fluid-sm)); --lk-space-md: var(--space-md, var(--lk-space-fluid-md)); --lk-space-lg: var(--space-lg, var(--lk-space-fluid-lg)); --lk-space-xl: var(--space-xl, var(--lk-space-fluid-xl)); --lk-space-2xl: var(--space-2xl, var(--lk-space-fluid-2xl)); --lk-space-3xl: var(--space-3xl, var(--lk-space-fluid-3xl)); --lk-text-xs: var(--text-xs, 0.75rem); --lk-text-sm: var(--text-sm, 0.875rem); --lk-text-md: var(--text-md, 1rem); --lk-text-lg: var(--text-lg, 1.125rem); --lk-text-xl: var(--text-xl, 1.25rem); --lk-text-2xl: var(--text-2xl, 1.5rem); --lk-text-3xl: var(--text-3xl, 2rem); --lk-text-4xl: var(--text-4xl, 3rem); --lk-radius-sm: var(--radius-sm, 0.375rem); --lk-radius-md: var(--radius-md, 0.75rem); --lk-radius-lg: var(--radius-lg, 1rem); }
   @supports (width: 1vi) {
     :root { --lk-space-fluid-xs: clamp(0.25rem, 0.2rem + 0.25vi, 0.5rem); --lk-space-fluid-sm: clamp(0.5rem, 0.35rem + 0.5vi, 0.75rem); --lk-space-fluid-md: clamp(0.75rem, 0.55rem + 0.8vi, 1.25rem); --lk-space-fluid-lg: clamp(1rem, 0.7rem + 1.2vi, 1.75rem); --lk-space-fluid-xl: clamp(1.5rem, 1rem + 2vi, 2.5rem); --lk-space-fluid-2xl: clamp(2rem, 1.25rem + 3vi, 4rem); --lk-space-fluid-3xl: clamp(3rem, 1.5rem + 4.5vi, 6rem); }
   }
@@ -58,13 +55,14 @@
   lk-spacer { display: block; flex: 1 1 0%; }
   lk-divider { display: block; inline-size: 100%; border-block-start: 1px solid var(--lk-divider-color, #e5e7eb); }
   lk-aspect-ratio { display: block; aspect-ratio: var(--lk-ratio, 1); }
-  lk-scroll-area { display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none); }
+  lk-scroll-area { display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none); min-inline-size: 0; }
   lk-card { display: block; padding: var(--lk-space-lg); --lk-pad: var(--lk-space-lg); border-radius: var(--lk-radius-md); border: 1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent)); }
 
   /* Responsive intent primitives — respond to available space, no media queries */
   lk-cluster { display: flex; flex-wrap: wrap; gap: var(--lk-space-sm); align-items: center; }
   lk-switcher { display: flex; flex-wrap: wrap; gap: var(--lk-space-md); }
-  lk-switcher > * { flex-grow: 1; flex-basis: calc((var(--lk-switch-at, 30rem) - 100%) * 999); }
+  lk-switcher > * { flex-grow: 1; flex-basis: auto; min-inline-size: 0; }
+  lk-switcher[at="flex"] > * { flex-basis: calc((var(--lk-switch-at, 30rem) - 100%) * 999); }
   lk-sidebar { display: flex; flex-wrap: wrap; gap: var(--lk-space-md); }
   lk-sidebar > :first-child { flex-grow: 1; flex-basis: var(--lk-sidebar-width, 18rem); }
   lk-sidebar > :last-child { flex-grow: 999; flex-basis: 0; min-inline-size: var(--lk-sidebar-content-min, 50%); }
@@ -99,37 +97,56 @@
   lk-card[width="xs"],
   lk-stack[width="xs"],
   lk-center[width="xs"],
-  lk-row[width="xs"] { max-inline-size: 20rem; margin-inline: auto; }
+  lk-row[width="xs"],
+  lk-spread[width="xs"] { max-inline-size: 20rem; margin-inline: auto; }
   lk-box[width="sm"],
   lk-card[width="sm"],
   lk-stack[width="sm"],
   lk-center[width="sm"],
-  lk-row[width="sm"] { max-inline-size: 30rem; margin-inline: auto; }
+  lk-row[width="sm"],
+  lk-spread[width="sm"] { max-inline-size: 30rem; margin-inline: auto; }
   lk-box[width="md"],
   lk-card[width="md"],
   lk-stack[width="md"],
   lk-center[width="md"],
-  lk-row[width="md"] { max-inline-size: 40rem; margin-inline: auto; }
+  lk-row[width="md"],
+  lk-spread[width="md"] { max-inline-size: 40rem; margin-inline: auto; }
   lk-box[width="lg"],
   lk-card[width="lg"],
   lk-stack[width="lg"],
   lk-center[width="lg"],
-  lk-row[width="lg"] { max-inline-size: 50rem; margin-inline: auto; }
+  lk-row[width="lg"],
+  lk-spread[width="lg"] { max-inline-size: 50rem; margin-inline: auto; }
   lk-box[width="xl"],
   lk-card[width="xl"],
   lk-stack[width="xl"],
   lk-center[width="xl"],
-  lk-row[width="xl"] { max-inline-size: 64rem; margin-inline: auto; }
+  lk-row[width="xl"],
+  lk-spread[width="xl"] { max-inline-size: 56rem; margin-inline: auto; }
+  lk-box[width="2xl"],
+  lk-card[width="2xl"],
+  lk-stack[width="2xl"],
+  lk-center[width="2xl"],
+  lk-row[width="2xl"],
+  lk-spread[width="2xl"] { max-inline-size: 64rem; margin-inline: auto; }
+  lk-box[width="3xl"],
+  lk-card[width="3xl"],
+  lk-stack[width="3xl"],
+  lk-center[width="3xl"],
+  lk-row[width="3xl"],
+  lk-spread[width="3xl"] { max-inline-size: 80rem; margin-inline: auto; }
   lk-box[width="prose"],
   lk-card[width="prose"],
   lk-stack[width="prose"],
   lk-center[width="prose"],
-  lk-row[width="prose"] { max-inline-size: var(--lk-measure, 65ch); margin-inline: auto; }
+  lk-row[width="prose"],
+  lk-spread[width="prose"] { max-inline-size: var(--lk-measure, 65ch); margin-inline: auto; }
   lk-box[width="full"],
   lk-card[width="full"],
   lk-stack[width="full"],
   lk-center[width="full"],
-  lk-row[width="full"] { max-inline-size: 100%; }
+  lk-row[width="full"],
+  lk-spread[width="full"] { max-inline-size: 100%; }
 
   /* Flow — vertical rhythm between flowing children (the owl) */
   lk-box[flow] > * + *,
@@ -839,79 +856,107 @@
   lk-aspect-ratio > canvas,
   lk-aspect-ratio > svg { display: block; width: 100%; height: 100%; inline-size: 100%; block-size: 100%; object-fit: cover; }
 
-  /* Container queries — opt-in. Without [container], switcher, sidebar, and grid keep their intrinsic layout */
+  /* Containers are on unless container=off. Fixed cols stack from the element's own inline size */
   @supports (container-type: inline-size) and (width: 1cqi) {
-    lk-switcher[container] {
+    lk-switcher:not([container="off"]) {
       container-type: inline-size;
       container-name: lk-switcher;
     }
-    lk-sidebar[container] {
+    lk-sidebar:not([container="off"]) {
       container-type: inline-size;
       container-name: lk-sidebar;
     }
-    lk-grid[container] {
+    lk-grid:not([container="off"]) {
       container-type: inline-size;
       container-name: lk-grid;
     }
-    lk-switcher[container] > * {
+    lk-switcher[at="flex"]:not([container="off"]) > * {
       flex-basis: calc((var(--lk-switch-at, 30rem) - 100cqi) * 999);
     }
-    lk-sidebar[container]:not([side="end"]) > :last-child,
-    lk-sidebar[container][side="end"] > :first-child {
+    lk-sidebar:not([container="off"]):not([side="end"]) > :last-child,
+    lk-sidebar:not([container="off"])[side="end"] > :first-child {
       min-inline-size: var(--lk-sidebar-content-min, 50cqi);
     }
-    lk-grid[container] > * {
+    lk-grid:not([container="off"]) > * {
       min-inline-size: 0;
       max-inline-size: 100cqi;
     }
-    lk-grid[container] > * :is(img, video, svg, canvas) {
+    lk-grid:not([container="off"]) > * :is(img, video, svg, canvas) {
       max-width: 100%;
       height: auto;
       max-inline-size: 100%;
       block-size: auto;
     }
+    @container lk-switcher (inline-size < 20rem) {
+      lk-switcher[at="xs"]:not([container="off"]) > * { flex-basis: 100%; }
+    }
+    @container lk-switcher (inline-size < 24rem) {
+      lk-switcher[at="sm"]:not([container="off"]) > * { flex-basis: 100%; }
+    }
+    @container lk-switcher (inline-size < 30rem) {
+      lk-switcher:not([at="flex"]):not([at="xs"]):not([at="sm"]):not([at="lg"]):not([at="xl"]):not([at="2xl"]):not([container="off"]) > * { flex-basis: 100%; }
+    }
+    @container lk-switcher (inline-size < 40rem) {
+      lk-switcher[at="lg"]:not([container="off"]) > * { flex-basis: 100%; }
+    }
+    @container lk-switcher (inline-size < 48rem) {
+      lk-switcher[at="xl"]:not([container="off"]) > * { flex-basis: 100%; }
+    }
+    @container lk-switcher (inline-size < 64rem) {
+      lk-switcher[at="2xl"]:not([container="off"]) > * { flex-basis: 100%; }
+    }
     @container lk-grid (inline-size < 24rem) {
-      lk-grid[container="sm"][cols]:not([responsive]):not([min]) > * {
-        grid-column: 1 / -1;
-      }
+      lk-grid[container="sm"][cols]:not([responsive]):not([min]) > * { grid-column: 1 / -1; }
     }
     @container lk-grid (inline-size < 32rem) {
+      lk-grid[cols]:not([container="off"]):not([container="sm"]):not([container="lg"]):not([container="xl"]):not([responsive]):not([min]) > *,
       lk-grid[container=""][cols]:not([responsive]):not([min]) > *,
-      lk-grid[container="md"][cols]:not([responsive]):not([min]) > * {
-        grid-column: 1 / -1;
-      }
+      lk-grid[container="md"][cols]:not([responsive]):not([min]) > * { grid-column: 1 / -1; }
     }
     @container lk-grid (inline-size < 48rem) {
-      lk-grid[container="lg"][cols]:not([responsive]):not([min]) > * {
-        grid-column: 1 / -1;
-      }
+      lk-grid[container="lg"][cols]:not([responsive]):not([min]) > * { grid-column: 1 / -1; }
     }
     @container lk-grid (inline-size < 64rem) {
-      lk-grid[container="xl"][cols]:not([responsive]):not([min]) > * {
-        grid-column: 1 / -1;
-      }
+      lk-grid[container="xl"][cols]:not([responsive]):not([min]) > * { grid-column: 1 / -1; }
     }
   }
 
-  /* Switcher limit — opt-in quantity threshold. More than N children each take a full row */
+  /* Switcher limit — default 4. limit=off keeps every child in the threshold layout */
+  lk-switcher:not([limit="off"]):not([limit="2"]):not([limit="3"]):not([limit="5"]):not([limit="6"]) { --lk-limit: 4; }
+  lk-switcher[limit="2"] { --lk-limit: 2; }
   lk-switcher[limit="2"] > :nth-last-child(n + 3),
   lk-switcher[limit="2"] > :nth-last-child(n + 3) ~ * { flex-basis: 100%; }
+  lk-switcher[limit="3"] { --lk-limit: 3; }
   lk-switcher[limit="3"] > :nth-last-child(n + 4),
   lk-switcher[limit="3"] > :nth-last-child(n + 4) ~ * { flex-basis: 100%; }
+  lk-switcher[limit="4"] { --lk-limit: 4; }
   lk-switcher[limit="4"] > :nth-last-child(n + 5),
   lk-switcher[limit="4"] > :nth-last-child(n + 5) ~ * { flex-basis: 100%; }
+  lk-switcher[limit="5"] { --lk-limit: 5; }
   lk-switcher[limit="5"] > :nth-last-child(n + 6),
   lk-switcher[limit="5"] > :nth-last-child(n + 6) ~ * { flex-basis: 100%; }
+  lk-switcher[limit="6"] { --lk-limit: 6; }
   lk-switcher[limit="6"] > :nth-last-child(n + 7),
   lk-switcher[limit="6"] > :nth-last-child(n + 7) ~ * { flex-basis: 100%; }
+  lk-switcher:not([limit="off"]):not([limit="2"]):not([limit="3"]):not([limit="5"]):not([limit="6"]) > :nth-last-child(n + 5),
+  lk-switcher:not([limit="off"]):not([limit="2"]):not([limit="3"]):not([limit="5"]):not([limit="6"]) > :nth-last-child(n + 5) ~ * { flex-basis: 100%; }
+  lk-switcher[limit="off"] { --lk-limit: 999; }
+  @supports (flex-basis: calc(sibling-count() * 1%)) {
+    lk-switcher:not([limit="off"]) > * {
+      flex-basis: calc(max(0, sibling-count() - var(--lk-limit, 4)) * 100%);
+    }
+  }
 
-  /* Center overlay — opt-in imposter. The parent supplies the containing block */
-  lk-center[overlay] { position: absolute; inset: var(--lk-overlay-inset, 0); z-index: var(--lk-overlay-z, 1); }
+  /* Center overlay — on unless overlay=off. The parent supplies the containing block */
+  lk-center:not([overlay="off"]) { position: absolute; inset: var(--lk-overlay-inset, 0); z-index: var(--lk-overlay-z, 1); }
+  lk-center[overlay="off"] { position: static; inset: auto; z-index: auto; }
 
   /* :has() adaptation — opt-in. Explicit place/justify still wins on a solo row or stack */
   @supports selector(:has(> :only-child)) {
     lk-row[adapt="solo"]:not([justify]):not([place]):has(> :only-child),
-    lk-stack[adapt="solo"]:not([justify]):not([place]):has(> :only-child) {
+    lk-stack[adapt="solo"]:not([justify]):not([place]):has(> :only-child),
+    lk-row:not([adapt="off"]):not([adapt="scroll"]):not([adapt="figure"]):not([justify]):not([place]):has(> :only-child),
+    lk-stack:not([adapt="off"]):not([adapt="scroll"]):not([adapt="figure"]):not([justify]):not([place]):has(> :only-child) {
       justify-content: center;
     }
   }
@@ -972,7 +1017,7 @@
   /* Scroll snap — opt-in carousels. Direct children are the slides. snap overrides wrap */
   @supports (scroll-snap-type: x mandatory) {
     lk-row[snap],
-    lk-scroll-area[snap] {
+    lk-scroll-area[snap]:not([snap="off"]) {
       display: flex;
       flex-flow: row nowrap;
       --lk-snap-gap: var(--lk-space-md);
@@ -984,11 +1029,11 @@
     lk-row[snap]:not([align]):not([place]) {
       align-items: stretch;
     }
-    lk-scroll-area[snap]:not([gap]) {
+    lk-scroll-area[snap]:not([snap="off"]):not([gap]) {
       gap: var(--lk-space-md);
     }
     lk-row[snap] > *,
-    lk-scroll-area[snap] > * {
+    lk-scroll-area[snap]:not([snap="off"]) > * {
       scroll-snap-align: start;
       flex: 0 0 auto;
       min-inline-size: 0;
@@ -1022,13 +1067,13 @@
       flex: 0 0 80%;
     }
     lk-row[snap] :is(img, video, svg, canvas),
-    lk-scroll-area[snap] :is(img, video, svg, canvas) {
+    lk-scroll-area[snap]:not([snap="off"]) :is(img, video, svg, canvas) {
       max-width: 100%;
       height: auto;
       max-inline-size: 100%;
       block-size: auto;
     }
-    lk-scroll-area[snap][direction="vertical"] {
+    lk-scroll-area[snap]:not([snap="off"])[direction="vertical"] {
       flex-direction: column;
       overflow-x: hidden;
       overflow-y: auto;
@@ -1040,63 +1085,63 @@
       scroll-snap-type: y proximity;
     }
     lk-row[snap][gap="1"],
-    lk-scroll-area[snap][gap="1"] { --lk-snap-gap: 0.25rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="1"] { --lk-snap-gap: 0.25rem; }
     lk-row[snap][gap="2"],
-    lk-scroll-area[snap][gap="2"] { --lk-snap-gap: 0.5rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="2"] { --lk-snap-gap: 0.5rem; }
     lk-row[snap][gap="3"],
-    lk-scroll-area[snap][gap="3"] { --lk-snap-gap: 0.75rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="3"] { --lk-snap-gap: 0.75rem; }
     lk-row[snap][gap="4"],
-    lk-scroll-area[snap][gap="4"] { --lk-snap-gap: 1rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="4"] { --lk-snap-gap: 1rem; }
     lk-row[snap][gap="5"],
-    lk-scroll-area[snap][gap="5"] { --lk-snap-gap: 1.25rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="5"] { --lk-snap-gap: 1.25rem; }
     lk-row[snap][gap="6"],
-    lk-scroll-area[snap][gap="6"] { --lk-snap-gap: 1.5rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="6"] { --lk-snap-gap: 1.5rem; }
     lk-row[snap][gap="7"],
-    lk-scroll-area[snap][gap="7"] { --lk-snap-gap: 1.75rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="7"] { --lk-snap-gap: 1.75rem; }
     lk-row[snap][gap="8"],
-    lk-scroll-area[snap][gap="8"] { --lk-snap-gap: 2rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="8"] { --lk-snap-gap: 2rem; }
     lk-row[snap][gap="9"],
-    lk-scroll-area[snap][gap="9"] { --lk-snap-gap: 2.25rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="9"] { --lk-snap-gap: 2.25rem; }
     lk-row[snap][gap="10"],
-    lk-scroll-area[snap][gap="10"] { --lk-snap-gap: 2.5rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="10"] { --lk-snap-gap: 2.5rem; }
     lk-row[snap][gap="11"],
-    lk-scroll-area[snap][gap="11"] { --lk-snap-gap: 2.75rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="11"] { --lk-snap-gap: 2.75rem; }
     lk-row[snap][gap="12"],
-    lk-scroll-area[snap][gap="12"] { --lk-snap-gap: 3rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="12"] { --lk-snap-gap: 3rem; }
     lk-row[snap][gap="14"],
-    lk-scroll-area[snap][gap="14"] { --lk-snap-gap: 3.5rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="14"] { --lk-snap-gap: 3.5rem; }
     lk-row[snap][gap="16"],
-    lk-scroll-area[snap][gap="16"] { --lk-snap-gap: 4rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="16"] { --lk-snap-gap: 4rem; }
     lk-row[snap][gap="none"],
-    lk-scroll-area[snap][gap="none"] { --lk-snap-gap: 0; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="none"] { --lk-snap-gap: 0; }
     lk-row[snap][gap="px"],
-    lk-scroll-area[snap][gap="px"] { --lk-snap-gap: 1px; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="px"] { --lk-snap-gap: 1px; }
     lk-row[snap][gap="xs"],
-    lk-scroll-area[snap][gap="xs"] { --lk-snap-gap: var(--lk-space-xs); }
+    lk-scroll-area[snap]:not([snap="off"])[gap="xs"] { --lk-snap-gap: var(--lk-space-xs); }
     lk-row[snap][gap="sm"],
-    lk-scroll-area[snap][gap="sm"] { --lk-snap-gap: var(--lk-space-sm); }
+    lk-scroll-area[snap]:not([snap="off"])[gap="sm"] { --lk-snap-gap: var(--lk-space-sm); }
     lk-row[snap][gap="md"],
-    lk-scroll-area[snap][gap="md"] { --lk-snap-gap: var(--lk-space-md); }
+    lk-scroll-area[snap]:not([snap="off"])[gap="md"] { --lk-snap-gap: var(--lk-space-md); }
     lk-row[snap][gap="lg"],
-    lk-scroll-area[snap][gap="lg"] { --lk-snap-gap: var(--lk-space-lg); }
+    lk-scroll-area[snap]:not([snap="off"])[gap="lg"] { --lk-snap-gap: var(--lk-space-lg); }
     lk-row[snap][gap="xl"],
-    lk-scroll-area[snap][gap="xl"] { --lk-snap-gap: var(--lk-space-xl); }
+    lk-scroll-area[snap]:not([snap="off"])[gap="xl"] { --lk-snap-gap: var(--lk-space-xl); }
     lk-row[snap][gap="2xl"],
-    lk-scroll-area[snap][gap="2xl"] { --lk-snap-gap: var(--lk-space-2xl); }
+    lk-scroll-area[snap]:not([snap="off"])[gap="2xl"] { --lk-snap-gap: var(--lk-space-2xl); }
     lk-row[snap][gap="3xl"],
-    lk-scroll-area[snap][gap="3xl"] { --lk-snap-gap: var(--lk-space-3xl); }
+    lk-scroll-area[snap]:not([snap="off"])[gap="3xl"] { --lk-snap-gap: var(--lk-space-3xl); }
     lk-row[snap][gap="0.5"],
-    lk-scroll-area[snap][gap="0.5"] { --lk-snap-gap: 0.125rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="0.5"] { --lk-snap-gap: 0.125rem; }
     lk-row[snap][gap="1.5"],
-    lk-scroll-area[snap][gap="1.5"] { --lk-snap-gap: 0.375rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="1.5"] { --lk-snap-gap: 0.375rem; }
     lk-row[snap][gap="2.5"],
-    lk-scroll-area[snap][gap="2.5"] { --lk-snap-gap: 0.625rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="2.5"] { --lk-snap-gap: 0.625rem; }
     lk-row[snap][gap="3.5"],
-    lk-scroll-area[snap][gap="3.5"] { --lk-snap-gap: 0.875rem; }
+    lk-scroll-area[snap]:not([snap="off"])[gap="3.5"] { --lk-snap-gap: 0.875rem; }
   }
   @supports (scroll-snap-type: inline mandatory) {
     lk-row[snap],
-    lk-scroll-area[snap],
+    lk-scroll-area[snap]:not([snap="off"]),
     lk-row[snap="mandatory"],
     lk-scroll-area[snap="mandatory"],
     lk-row[snap="center"] {
@@ -1106,7 +1151,7 @@
     lk-scroll-area[snap="proximity"] {
       scroll-snap-type: inline proximity;
     }
-    lk-scroll-area[snap][direction="vertical"],
+    lk-scroll-area[snap]:not([snap="off"])[direction="vertical"],
     lk-scroll-area[snap="mandatory"][direction="vertical"] {
       scroll-snap-type: block mandatory;
     }
@@ -1303,6 +1348,152 @@
       position-area: block-end span-inline-start;
       justify-self: end;
     }
+  }
+
+  /* Opt-outs and 2.0 extras — square, sticky, container height, scrolling rows, reveal */
+  lk-switcher[container="off"],
+  lk-sidebar[container="off"],
+  lk-grid[container="off"] { container-type: normal; container-name: none; }
+  lk-row[adapt="off"],
+  lk-stack[adapt="off"] { justify-content: flex-start; }
+  lk-scroll-area[snap="off"] { scroll-snap-type: none; }
+  lk-box[sticky],
+  lk-stack[sticky],
+  lk-row[sticky] { position: sticky; inset-block-start: var(--lk-sticky-top, 0px); z-index: var(--lk-sticky-z, 1); }
+  lk-center[square="xs"],
+  lk-box[square="xs"] { inline-size: 1.25rem; block-size: 1.25rem; flex: 0 0 auto; }
+  lk-center[square="sm"],
+  lk-box[square="sm"] { inline-size: 1.75rem; block-size: 1.75rem; flex: 0 0 auto; }
+  lk-center[square="md"],
+  lk-box[square="md"] { inline-size: 2.5rem; block-size: 2.5rem; flex: 0 0 auto; }
+  lk-center[square="lg"],
+  lk-box[square="lg"] { inline-size: 4rem; block-size: 4rem; flex: 0 0 auto; }
+  lk-center[square="xl"],
+  lk-box[square="xl"] { inline-size: 6rem; block-size: 6rem; flex: 0 0 auto; }
+  lk-center[full-height="container"],
+  lk-stack[full-height="container"],
+  lk-row[full-height="container"],
+  lk-cover[size="container"] { min-block-size: 100%; }
+  @supports (min-block-size: 100cqb) {
+    lk-center[full-height="container"],
+  lk-stack[full-height="container"],
+  lk-row[full-height="container"],
+  lk-cover[size="container"] { min-block-size: 100cqb; }
+  }
+  @supports (container-type: inline-size) {
+    lk-row[adapt="scroll"] {
+      container-type: inline-size;
+      container-name: lk-row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+    }
+    lk-row[adapt="scroll"] > * {
+      scroll-snap-align: start;
+      flex: 0 0 auto;
+      min-inline-size: 0;
+    }
+    @container lk-row (inline-size < 32rem) {
+      lk-row[adapt="scroll"] {
+        flex-direction: column;
+        overflow: visible;
+        scroll-snap-type: none;
+      }
+    }
+  }
+  @supports (animation-timeline: view()) {
+    lk-box[reveal],
+    lk-card[reveal],
+    lk-stack[reveal] {
+      animation-name: lk-reveal;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    lk-box[reveal],
+    lk-card[reveal],
+    lk-stack[reveal] {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @supports (selector(::scroll-button(inline-start))) {
+    lk-row[snap],
+    lk-scroll-area[snap]:not([snap="off"]),
+    lk-scroll-area[direction="horizontal"]:not([snap="off"]) {
+      scroll-marker-group: after;
+    }
+    lk-row[snap]::scroll-button(inline-start),
+    lk-scroll-area[snap]:not([snap="off"])::scroll-button(inline-start),
+    lk-scroll-area[direction="horizontal"]:not([snap="off"])::scroll-button(inline-start) {
+      content: "‹" / "Previous";
+    }
+    lk-row[snap]::scroll-button(inline-end),
+    lk-scroll-area[snap]:not([snap="off"])::scroll-button(inline-end),
+    lk-scroll-area[direction="horizontal"]:not([snap="off"])::scroll-button(inline-end) {
+      content: "›" / "Next";
+    }
+    lk-row[snap]::scroll-marker,
+    lk-scroll-area[snap]:not([snap="off"])::scroll-marker,
+    lk-scroll-area[direction="horizontal"]:not([snap="off"])::scroll-marker {
+      content: "";
+    }
+  }
+  @supports (interpolate-size: allow-keywords) {
+    lk-disclosure:not([animate="off"]) {
+      interpolate-size: allow-keywords;
+    }
+    lk-disclosure:not([animate="off"]) > details::details-content {
+      transition: height 200ms ease, content-visibility 200ms ease allow-discrete;
+      height: 0;
+      overflow: clip;
+    }
+    lk-disclosure:not([animate="off"]) > details[open]::details-content {
+      height: auto;
+    }
+    lk-disclosure[animate="off"] > details::details-content {
+      transition: none;
+      height: auto;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    lk-disclosure > details::details-content { transition: none; }
+  }
+  lk-box[layout="compact"],
+  lk-stack[layout="compact"],
+  lk-sidebar[layout="compact"] {
+    --lk-layout: compact;
+    container-type: inline-size;
+  }
+  @container style(--lk-layout: compact) {
+    lk-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+  @supports (scroll-snap-type: x mandatory) {
+    lk-scroll-area[direction="horizontal"]:not([snap="off"]) {
+      display: flex;
+      flex-flow: row nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+    }
+    lk-scroll-area[direction="horizontal"]:not([snap="off"]) > * {
+      scroll-snap-align: start;
+      flex: 0 0 auto;
+      min-inline-size: 0;
+    }
+  }
+  @keyframes lk-reveal {
+    from { opacity: 0; transform: translateY(1rem); }
+    to { opacity: 1; transform: none; }
   }
 
   /* Columns — multi-column text flow. Children avoid splitting across columns */

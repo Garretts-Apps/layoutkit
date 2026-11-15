@@ -13,7 +13,7 @@
   };
   const ALIGN = { start: "flex-start", center: "center", end: "flex-end", stretch: "stretch", baseline: "baseline" };
   const JUSTIFY = { start: "flex-start", center: "center", end: "flex-end", between: "space-between", around: "space-around", evenly: "space-evenly" };
-  const WIDTH = { xs: "20rem", sm: "30rem", md: "40rem", lg: "50rem", xl: "64rem", prose: "var(--lk-measure, 65ch)", full: "100%" };
+  const WIDTH = { xs: "20rem", sm: "30rem", md: "40rem", lg: "50rem", xl: "56rem", "2xl": "64rem", "3xl": "80rem", prose: "var(--lk-measure, 65ch)", full: "100%" };
   const MINW = { "2xs": "8rem", xs: "10rem", sm: "12rem", md: "16rem", lg: "20rem", xl: "24rem" };
   const MAXH = { sm: "16rem", md: "24rem", lg: "32rem", screen: "100svh" };
   const PLACE = {
@@ -74,8 +74,9 @@
         ["align-items", both || has(p, "horizontal") ? "center" : "stretch"],
         ["justify-content", both || has(p, "vertical") ? "center" : "flex-start"]];
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
-      if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
-      if (has(p, "overlay")) d.push(["position", "absolute"], ["inset", "var(--lk-overlay-inset, 0)"]);
+      if (p["full-height"] === "container") d.push(["min-block-size", "100cqb"]);
+      else if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
+      if (p.overlay !== "off") d.push(["position", "absolute"], ["inset", "var(--lk-overlay-inset, 0)"]);
       d.push(...widthDecls(p), ...placeDecls(p, true));
       return d;
     },
@@ -119,7 +120,7 @@
       else if (place === "between" || place === "around" || place === "evenly") d.push(["justify-content", JUSTIFY[place]], ["align-content", JUSTIFY[place]]);
       if (has(p, "subgrid") && p.subgrid !== "rows") d.push(["grid-template-columns", "subgrid"], ["grid-column", "1 / -1"]);
       if (p.subgrid === "rows" || p.subgrid === "both") d.push(["grid-template-rows", "subgrid"], ["grid-row", "1 / -1"]);
-      if (has(p, "container")) d.push(["container-type", "inline-size"], ["container-name", "lk-grid"]);
+      if (p.container !== "off") d.push(["container-type", "inline-size"], ["container-name", "lk-grid"]);
       return d;
     },
     "lk-cluster"(p) {
@@ -127,7 +128,7 @@
     },
     "lk-switcher"(p) {
       const d = [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
-      if (has(p, "container")) d.push(["container-type", "inline-size"], ["container-name", "lk-switcher"]);
+      if (p.container !== "off") d.push(["container-type", "inline-size"], ["container-name", "lk-switcher"]);
       return d;
     },
     "lk-columns"(p) {
@@ -137,7 +138,7 @@
     },
     "lk-sidebar"(p) {
       const d = [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
-      if (has(p, "container")) d.push(["container-type", "inline-size"], ["container-name", "lk-sidebar"]);
+      if (p.container !== "off") d.push(["container-type", "inline-size"], ["container-name", "lk-sidebar"]);
       return d;
     },
     "lk-cover"(p) {
@@ -164,9 +165,9 @@
       if (p.direction === "horizontal") d.push(["overflow-x", "auto"], ["overflow-y", "hidden"]);
       else if (p.direction === "both") d.push(["overflow", "auto"]);
       else { d.push(["overflow-y", "auto"]); if (p.direction === "vertical") d.push(["overflow-x", "hidden"]); }
-      d.push(["max-block-size", MAXH[p["max-h"]] || "var(--lk-max-height, none)"], ["max-inline-size", "var(--lk-max-width, none)"]);
+      d.push(["max-block-size", MAXH[p["max-h"]] || "var(--lk-max-height, none)"], ["max-inline-size", "var(--lk-max-width, none)"], ["min-inline-size", "0"]);
       if (p.gap) d.push(["gap", sp(p.gap)]);
-      if (has(p, "snap")) {
+      if ((has(p, "snap") && p.snap !== "off") || (p.direction === "horizontal" && p.snap !== "off")) {
         const vertical = p.direction === "vertical";
         d.push(
           ["display", "flex"],
@@ -201,9 +202,11 @@
       rules.push([" > * + *", [["margin-block-start", sp(key)]]]);
     }
     if (tag === "lk-switcher") {
-      const basis = has(attrs, "container") ? "calc((var(--lk-switch-at, 30rem) - 100cqi) * 999)" : "calc((var(--lk-switch-at, 30rem) - 100%) * 999)";
-      rules.push([" > *", [["flex-grow", "1"], ["flex-basis", basis]]]);
-      const limit = Number(attrs.limit);
+      const basis = attrs.at === "flex"
+        ? (attrs.container === "off" ? "calc((var(--lk-switch-at, 30rem) - 100%) * 999)" : "calc((var(--lk-switch-at, 30rem) - 100cqi) * 999)")
+        : "auto";
+      rules.push([" > *", [["flex-grow", "1"], ["flex-basis", basis], ["min-inline-size", "0"]]]);
+      const limit = attrs.limit === "off" ? 0 : (Number(attrs.limit) || 4);
       if (limit >= 2 && limit <= 6) {
         const from = limit + 1;
         rules.push([` > :nth-last-child(n + ${from})`, [["flex-basis", "100%"]]]);
@@ -215,7 +218,7 @@
     }
     if (tag === "lk-sidebar") {
       const end = attrs.side === "end";
-      const contentMin = has(attrs, "container") ? "var(--lk-sidebar-content-min, 50cqi)" : "var(--lk-sidebar-content-min, 50%)";
+      const contentMin = attrs.container === "off" ? "var(--lk-sidebar-content-min, 50%)" : "var(--lk-sidebar-content-min, 50cqi)";
       rules.push(
         [" > :first-child", end
           ? [["flex-grow", "999"], ["flex-basis", "0"], ["min-inline-size", contentMin]]
@@ -232,10 +235,10 @@
     if (tag === "lk-cover") {
       rules.push([" > :is([center], :only-child)", [["margin-block", "auto"]]]);
     }
-    if ((tag === "lk-row" || tag === "lk-stack") && attrs.adapt === "solo" && !attrs.justify && !attrs.place) {
+    if ((tag === "lk-row" || tag === "lk-stack") && attrs.adapt !== "off" && attrs.adapt !== "scroll" && attrs.adapt !== "figure" && !attrs.justify && !attrs.place) {
       rules.push([":has(> :only-child)", [["justify-content", "center"]]]);
     }
-    if ((tag === "lk-row" || tag === "lk-scroll-area") && has(attrs, "snap")) {
+    if ((tag === "lk-row" && has(attrs, "snap") && attrs.snap !== "off") || (tag === "lk-scroll-area" && attrs.snap !== "off" && (has(attrs, "snap") || attrs.direction === "horizontal"))) {
       const slide = attrs.slide === "full" ? "100%"
         : attrs.slide === "half" ? "calc((100% - var(--lk-snap-gap, var(--lk-space-md))) / 2)"
         : attrs.slide === "third" ? "calc((100% - 2 * var(--lk-snap-gap, var(--lk-space-md))) / 3)"
@@ -371,9 +374,9 @@
   }
 
   const PRESETS = [
-    { label: "Empty state", code: '<section aria-labelledby="empty-heading">\n  <lk-center full-height>\n    <lk-stack gap="sm" align="center">\n      <h2 id="empty-heading">No results</h2>\n      <p>Try changing the filters.</p>\n      <button type="button">Reset filters</button>\n    </lk-stack>\n  </lk-center>\n</section>' },
+    { label: "Empty state", code: '<section aria-labelledby="empty-heading">\n  <lk-center full-height overlay="off">\n    <lk-stack gap="sm" align="center">\n      <h2 id="empty-heading">No results</h2>\n      <p>Try changing the filters.</p>\n      <button type="button">Reset filters</button>\n    </lk-stack>\n  </lk-center>\n</section>' },
     { label: "Form", code: '<form action="/settings" method="post">\n  <lk-stack gap="md">\n    <label>\n      Display name\n      <input name="name" autocomplete="name">\n    </label>\n    <lk-row gap="sm" wrap>\n      <button type="submit">Save</button>\n      <a href="/settings">Cancel</a>\n    </lk-row>\n  </lk-stack>\n</form>' },
-    { label: "Page", code: '<lk-stack style="min-block-size: 16rem;">\n  <header>\n    <lk-spread padding="md" align="center">\n      <a href="/">Acme</a>\n      <nav aria-label="Primary"><lk-row gap="sm"><a href="/docs">Docs</a><a href="/pricing">Pricing</a></lk-row></nav>\n    </lk-spread>\n  </header>\n  <lk-box fill padding="lg">\n    <main><lk-center><h1>Dashboard</h1></lk-center></main>\n  </lk-box>\n</lk-stack>' },
+    { label: "Page", code: '<lk-stack style="min-block-size: 16rem;">\n  <header>\n    <lk-spread padding="md" align="center">\n      <a href="/">Acme</a>\n      <nav aria-label="Primary"><lk-row gap="sm"><a href="/docs">Docs</a><a href="/pricing">Pricing</a></lk-row></nav>\n    </lk-spread>\n  </header>\n  <lk-box fill padding="lg">\n    <main><lk-center overlay="off"><h1>Dashboard</h1></lk-center></main>\n  </lk-box>\n</lk-stack>' },
     { label: "Grid", code: '<section aria-labelledby="projects-heading">\n  <lk-stack gap="md">\n    <h2 id="projects-heading">Projects</h2>\n    <lk-grid cols="3" gap="lg" responsive>\n      <article><h3>Website</h3><p>Updated today</p></article>\n      <article><h3>Docs</h3><p>Ready for review</p></article>\n      <article><h3>API</h3><p>Stable</p></article>\n    </lk-grid>\n  </lk-stack>\n</section>' },
     { label: "Snap", code: '<section aria-labelledby="slides-heading">\n  <lk-stack gap="sm">\n    <h2 id="slides-heading">Highlights</h2>\n    <lk-row snap slide="peek" tabindex="0" aria-label="Highlights">\n      <article><h3>One</h3><p>First slide</p></article>\n      <article><h3>Two</h3><p>Second slide</p></article>\n      <article><h3>Three</h3><p>Third slide</p></article>\n    </lk-row>\n  </lk-stack>\n</section>' },
     { label: "Menu", code: '<lk-menu anchor>\n  <button type="button" popovertarget="demo-menu">Menu</button>\n  <lk-popover id="demo-menu" popover>\n    <nav aria-label="Demo">\n      <lk-stack gap="xs">\n        <a href="/docs">Docs</a>\n        <a href="/install">Install</a>\n      </lk-stack>\n    </nav>\n  </lk-popover>\n</lk-menu>' },
