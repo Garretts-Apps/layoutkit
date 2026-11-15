@@ -78,6 +78,7 @@ declare global {
         place?: LayoutKitPlace;
         center?: boolean | "";
         fill?: boolean | "";
+        /** Viewport minimum: 100dvh, then 100svh, then 100vh. */
         "full-height"?: boolean | "";
         wrap?: boolean | "";
         width?: LayoutKitWidth;
@@ -90,6 +91,7 @@ declare global {
         place?: LayoutKitPlace;
         center?: boolean | "";
         fill?: boolean | "";
+        /** Viewport minimum: 100dvh, then 100svh, then 100vh. */
         "full-height"?: boolean | "";
         wrap?: boolean | "";
         width?: LayoutKitWidth;
@@ -98,6 +100,7 @@ declare global {
       "lk-center": LayoutKitGlobalAttributes & {
         place?: LayoutKitPlace;
         fill?: boolean | "";
+        /** Viewport minimum: 100dvh, then 100svh, then 100vh. */
         "full-height"?: boolean | "";
         inline?: boolean | "";
         horizontal?: boolean | "";
@@ -127,6 +130,7 @@ declare global {
         cols?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
         rows?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
         responsive?: boolean | "";
+        /** Auto-fit minimum track. Empty tracks collapse. Overrides responsive. */
         min?: "2xs" | "xs" | "sm" | "md" | "lg" | "xl";
         gap?: LayoutKitSpace;
         "col-gap"?: LayoutKitSpace;
@@ -152,11 +156,13 @@ declare global {
       "lk-spacer": LayoutKitGlobalAttributes & {
         size?: LayoutKitSpace | "auto";
       };
+      /** Default rule color follows currentColor, with a #e5e7eb fallback. */
       "lk-divider": LayoutKitGlobalAttributes & {
         orientation?: "vertical";
         thickness?: "medium" | "thick";
       };
       "lk-aspect-ratio": LayoutKitGlobalAttributes & {
+        /** Replaced children fill this frame with object-fit: cover. */
         ratio?: "1/1" | "16/9" | "4/3" | "3/2" | "2/1" | "3/1" | "9/16" | "4/5";
       };
       "lk-scroll-area": LayoutKitGlobalAttributes & {

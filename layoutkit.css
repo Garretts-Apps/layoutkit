@@ -56,7 +56,13 @@
   lk-sidebar > :last-child { flex-grow: 999; flex-basis: 0; min-inline-size: var(--lk-sidebar-content-min, 50%); }
   lk-sidebar[side="end"] > :first-child { flex-grow: 999; flex-basis: 0; min-inline-size: var(--lk-sidebar-content-min, 50%); }
   lk-sidebar[side="end"] > :last-child { flex-grow: 1; flex-basis: var(--lk-sidebar-width, 18rem); min-inline-size: 0; }
-  lk-cover { display: flex; flex-direction: column; min-block-size: var(--lk-cover-min, 100svh); gap: var(--lk-space-md); padding: var(--lk-space-md); }
+  lk-cover { display: flex; flex-direction: column; min-block-size: var(--lk-cover-min, 100vh); gap: var(--lk-space-md); padding: var(--lk-space-md); }
+  @supports (min-block-size: 100svh) {
+    lk-cover { min-block-size: var(--lk-cover-min, 100svh); }
+  }
+  @supports (min-block-size: 100dvh) {
+    lk-cover { min-block-size: var(--lk-cover-min, 100dvh); }
+  }
   lk-cover > [center],
   lk-cover > :only-child { margin-block: auto; }
 
@@ -618,9 +624,13 @@
   lk-stack[fill],
   lk-row[fill],
   lk-box[fill] { flex: 1 1 0%; }
-  lk-center[full-height],
-  lk-stack[full-height],
-  lk-row[full-height] { min-block-size: 100vh; }
+  lk-center[full-height], lk-stack[full-height], lk-row[full-height] { min-block-size: 100vh; }
+  @supports (min-block-size: 100svh) {
+    lk-center[full-height], lk-stack[full-height], lk-row[full-height] { min-block-size: 100svh; }
+  }
+  @supports (min-block-size: 100dvh) {
+    lk-center[full-height], lk-stack[full-height], lk-row[full-height] { min-block-size: 100dvh; }
+  }
   lk-stack[wrap],
   lk-row[wrap] { flex-wrap: wrap; }
   lk-row[reverse] { flex-direction: row-reverse; }
@@ -656,12 +666,12 @@
   lk-grid[rows="11"] { grid-template-rows: repeat(11, minmax(0, 1fr)); }
   lk-grid[rows="12"] { grid-template-rows: repeat(12, minmax(0, 1fr)); }
   lk-grid[responsive] { grid-template-columns: repeat(auto-fit, minmax(min(var(--lk-min-child-width, 250px), 100%), 1fr)); }
-  lk-grid[min="2xs"] { grid-template-columns: repeat(auto-fill, minmax(min(8rem, 100%), 1fr)); }
-  lk-grid[min="xs"] { grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr)); }
-  lk-grid[min="sm"] { grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr)); }
-  lk-grid[min="md"] { grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr)); }
-  lk-grid[min="lg"] { grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr)); }
-  lk-grid[min="xl"] { grid-template-columns: repeat(auto-fill, minmax(min(24rem, 100%), 1fr)); }
+  lk-grid[min="2xs"] { grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr)); }
+  lk-grid[min="xs"] { grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr)); }
+  lk-grid[min="sm"] { grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr)); }
+  lk-grid[min="md"] { grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); }
+  lk-grid[min="lg"] { grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
+  lk-grid[min="xl"] { grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr)); }
   lk-grid[col-gap="1"] { column-gap: 0.25rem; }
   lk-grid[col-gap="2"] { column-gap: 0.5rem; }
   lk-grid[col-gap="3"] { column-gap: 0.75rem; }
@@ -760,6 +770,9 @@
   lk-divider[orientation="vertical"] { inline-size: auto; block-size: 100%; align-self: stretch; border-block-start: 0; border-inline-start: 1px solid var(--lk-divider-color, #e5e7eb); }
   lk-divider[orientation="vertical"][thickness="medium"] { border-inline-start-width: 2px; }
   lk-divider[orientation="vertical"][thickness="thick"] { border-inline-start-width: 4px; }
+  @supports (color: color-mix(in srgb, currentColor 20%, transparent)) {
+    lk-divider { border-block-start-color: var(--lk-divider-color, color-mix(in srgb, currentColor 20%, transparent)); border-inline-start-color: var(--lk-divider-color, color-mix(in srgb, currentColor 20%, transparent)); }
+  }
 
   /* Scroll-area — direction + enumerated max height */
   lk-scroll-area[direction="vertical"] { overflow-x: hidden; overflow-y: auto; }
@@ -779,4 +792,9 @@
   lk-aspect-ratio[ratio="3/1"] { aspect-ratio: 3/1; }
   lk-aspect-ratio[ratio="9/16"] { aspect-ratio: 9/16; }
   lk-aspect-ratio[ratio="4/5"] { aspect-ratio: 4/5; }
+  lk-aspect-ratio > img,
+  lk-aspect-ratio > video,
+  lk-aspect-ratio > iframe,
+  lk-aspect-ratio > canvas,
+  lk-aspect-ratio > svg { display: block; width: 100%; height: 100%; inline-size: 100%; block-size: 100%; object-fit: cover; }
 }
