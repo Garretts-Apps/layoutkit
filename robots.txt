@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /notes/
 Sitemap: https://layoutkit.dev/sitemap.xml
