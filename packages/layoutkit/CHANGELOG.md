@@ -3,6 +3,65 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 1.4.0
+
+Approved visual updates. Tags, attributes, classes, custom properties, and
+export paths are unchanged. Modern browsers use the new rendering. Older
+browsers keep the previous fallback. Unlayered author CSS still overrides
+`@layer layoutkit`.
+
+### Changed (visual behavior)
+
+- **`full-height` and `lk-cover` fill the dynamic viewport.** The minimum is
+  `100dvh` where supported, then `100svh`, then `100vh`. Each step is wrapped
+  in `@supports` so an unsupported unit does not wipe the previous fallback.
+  `lk-cover` still honors `--lk-cover-min` inside every step.
+  - Restore the previous `full-height` size:
+
+    ```css
+    lk-stack[full-height],
+    lk-row[full-height],
+    lk-center[full-height] { min-block-size: 100vh; }
+    ```
+
+  - Restore the previous cover default with `--lk-cover-min: 100svh`.
+- **The default divider follows the text color.** Supporting browsers use
+  `color-mix(in srgb, currentColor 20%, transparent)`. Browsers without
+  `color-mix()` keep `#e5e7eb`. `--lk-divider-color` still wins when it is set.
+  - Restore the old gray line with `--lk-divider-color: #e5e7eb`.
+- **Replaced children of `lk-aspect-ratio` fill the frame.** `img`, `video`,
+  `iframe`, `canvas`, and `svg` are block boxes sized to the frame, with
+  `width`/`height` before `inline-size`/`block-size`, and `object-fit: cover`.
+  Other children are unchanged.
+  - Restore intrinsic media size:
+
+    ```css
+    lk-aspect-ratio > img,
+    lk-aspect-ratio > video,
+    lk-aspect-ratio > iframe,
+    lk-aspect-ratio > canvas,
+    lk-aspect-ratio > svg {
+      width: auto;
+      height: auto;
+      inline-size: auto;
+      block-size: auto;
+      object-fit: fill;
+    }
+    ```
+
+- **`lk-grid[min]` uses `auto-fit` instead of `auto-fill`.** Empty tracks
+  collapse and items grow to fill the row, matching `responsive`. `min` still
+  overrides `responsive` and still clamps each track with `min(<size>, 100%)`.
+  The enumerated sizes are `2xs` 8rem, `xs` 10rem, `sm` 12rem, `md` 16rem,
+  `lg` 20rem, and `xl` 24rem.
+  - Restore empty tracks for one size, for example:
+
+    ```css
+    lk-grid[min="md"] {
+      grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+    }
+    ```
+
 ## 1.3.3
 
 Layout bug fixes and a tighter public contract. Existing markup keeps its

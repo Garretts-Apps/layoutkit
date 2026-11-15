@@ -59,6 +59,17 @@ const MAXH = { sm: "16rem", md: "24rem", lg: "32rem", screen: "100svh" };
 const out = [];
 const section = (title) => out.push(`\n  /* ${title} */`);
 const rule = (sel, decls) => out.push(`  ${sel} { ${decls} }`);
+// @supports keeps an unsupported unit or function from invalidating the
+// previous declaration. A var() fallback that the browser cannot parse would
+// unset the property instead of leaving the earlier fallback in place.
+const atSupports = (condition, sel, decls) => {
+  out.push(`  @supports ${condition} {`);
+  out.push(`    ${sel} { ${decls} }`);
+  out.push("  }");
+};
+const DIVIDER_FALLBACK = "var(--lk-divider-color, #e5e7eb)";
+const DIVIDER_MIX = "var(--lk-divider-color, color-mix(in srgb, currentColor 20%, transparent))";
+const FULL_HEIGHT = "lk-center[full-height], lk-stack[full-height], lk-row[full-height]";
 // One grouped rule per attribute value across the given tags.
 const variants = (tags, attr, map, render) => {
   for (const [k, v] of Object.entries(map)) {
@@ -101,7 +112,7 @@ rule("lk-box", "display: block;");
 rule("lk-spread", "display: flex; flex-direction: row; justify-content: space-between; align-items: center;");
 rule("lk-grid", "display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: var(--lk-space-md);");
 rule("lk-spacer", "display: block; flex: 1 1 0%;");
-rule("lk-divider", "display: block; inline-size: 100%; border-block-start: 1px solid var(--lk-divider-color, #e5e7eb);");
+rule("lk-divider", `display: block; inline-size: 100%; border-block-start: 1px solid ${DIVIDER_FALLBACK};`);
 rule("lk-aspect-ratio", "display: block; aspect-ratio: var(--lk-ratio, 1);");
 rule("lk-scroll-area", "display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none);");
 rule("lk-card", "display: block; padding: var(--lk-space-lg); border-radius: var(--lk-radius-md); border: 1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent));");
@@ -122,7 +133,9 @@ rule('lk-sidebar[side="end"] > :first-child', "flex-grow: 999; flex-basis: 0; mi
 rule('lk-sidebar[side="end"] > :last-child', "flex-grow: 1; flex-basis: var(--lk-sidebar-width, 18rem); min-inline-size: 0;");
 // Cover: a min-height region; the [center] child (or a lone child) is vertically
 // centered while header/footer children sit at the edges.
-rule("lk-cover", "display: flex; flex-direction: column; min-block-size: var(--lk-cover-min, 100svh); gap: var(--lk-space-md); padding: var(--lk-space-md);");
+rule("lk-cover", "display: flex; flex-direction: column; min-block-size: var(--lk-cover-min, 100vh); gap: var(--lk-space-md); padding: var(--lk-space-md);");
+atSupports("(min-block-size: 100svh)", "lk-cover", "min-block-size: var(--lk-cover-min, 100svh);");
+atSupports("(min-block-size: 100dvh)", "lk-cover", "min-block-size: var(--lk-cover-min, 100dvh);");
 rule("lk-cover > [center],\n  lk-cover > :only-child", "margin-block: auto;");
 
 section("Type scale — lk-text / lk-weight (namespaced; work on any element)");
@@ -187,7 +200,9 @@ for (const [val, jc] of Object.entries(DIST)) {
 section("Boolean modifiers");
 rule("lk-stack[center],\n  lk-row[center]", "align-items: center; justify-content: center;");
 rule("lk-center[fill],\n  lk-stack[fill],\n  lk-row[fill],\n  lk-box[fill]", "flex: 1 1 0%;");
-rule("lk-center[full-height],\n  lk-stack[full-height],\n  lk-row[full-height]", "min-block-size: 100vh;");
+rule(FULL_HEIGHT, "min-block-size: 100vh;");
+atSupports("(min-block-size: 100svh)", FULL_HEIGHT, "min-block-size: 100svh;");
+atSupports("(min-block-size: 100dvh)", FULL_HEIGHT, "min-block-size: 100dvh;");
 rule("lk-stack[wrap],\n  lk-row[wrap]", "flex-wrap: wrap;");
 rule("lk-row[reverse]", "flex-direction: row-reverse;");
 
@@ -203,10 +218,10 @@ for (let n = 1; n <= 12; n++) rule(`lk-grid[rows="${n}"]`, `grid-template-rows: 
 // preferred track does not force horizontal overflow. At wider sizes min()
 // resolves to the same preferred length as before.
 rule("lk-grid[responsive]", "grid-template-columns: repeat(auto-fit, minmax(min(var(--lk-min-child-width, 250px), 100%), 1fr));");
-// `min` = responsive auto-fill with an enumerated min child width (CSP-clean
-// alternative to inline --lk-min-child-width). It replaces `responsive` when
-// both are set, and empty tracks keep their share of the row.
-for (const [k, v] of Object.entries(MINW)) rule(`lk-grid[min="${k}"]`, `grid-template-columns: repeat(auto-fill, minmax(min(${v}, 100%), 1fr));`);
+// `min` is the enumerated auto-fit track size. It replaces `responsive` when
+// both are set. Empty tracks collapse, same as `responsive`, and min() still
+// stops a narrow container from overflowing.
+for (const [k, v] of Object.entries(MINW)) rule(`lk-grid[min="${k}"]`, `grid-template-columns: repeat(auto-fit, minmax(min(${v}, 100%), 1fr));`);
 variants(["lk-grid"], "col-gap", SPACE, (v) => `column-gap: ${v};`);
 variants(["lk-grid"], "row-gap", SPACE, (v) => `row-gap: ${v};`);
 rule('lk-grid[flow="row"]', "grid-auto-flow: row;");
@@ -224,9 +239,12 @@ variants(["lk-spacer"], "size", SPACE, (v) => `flex: 0 0 ${v}; block-size: ${v};
 section("Divider — thickness + vertical orientation");
 rule('lk-divider[thickness="medium"]', "border-block-start-width: 2px;");
 rule('lk-divider[thickness="thick"]', "border-block-start-width: 4px;");
-rule('lk-divider[orientation="vertical"]', "inline-size: auto; block-size: 100%; align-self: stretch; border-block-start: 0; border-inline-start: 1px solid var(--lk-divider-color, #e5e7eb);");
+rule('lk-divider[orientation="vertical"]', `inline-size: auto; block-size: 100%; align-self: stretch; border-block-start: 0; border-inline-start: 1px solid ${DIVIDER_FALLBACK};`);
 rule('lk-divider[orientation="vertical"][thickness="medium"]', "border-inline-start-width: 2px;");
 rule('lk-divider[orientation="vertical"][thickness="thick"]', "border-inline-start-width: 4px;");
+// Color only, so thickness set above is preserved. currentColor follows the
+// page foreground on light and dark backgrounds.
+atSupports("(color: color-mix(in srgb, currentColor 20%, transparent))", "lk-divider", `border-block-start-color: ${DIVIDER_MIX}; border-inline-start-color: ${DIVIDER_MIX};`);
 
 section("Scroll-area — direction + enumerated max height");
 rule('lk-scroll-area[direction="vertical"]', "overflow-x: hidden; overflow-y: auto;");
@@ -236,6 +254,9 @@ for (const [k, v] of Object.entries(MAXH)) rule(`lk-scroll-area[max-h="${k}"]`, 
 
 section("Aspect-ratio — common ratios (enumerated, CSP-clean)");
 for (const r of RATIO) rule(`lk-aspect-ratio[ratio="${r}"]`, `aspect-ratio: ${r};`);
+// Physical size first, then logical size, so older browsers still fill the
+// frame and writing-mode-aware browsers use the logical axes.
+rule(["img", "video", "iframe", "canvas", "svg"].map((tag) => `lk-aspect-ratio > ${tag}`).join(",\n  "), "display: block; width: 100%; height: 100%; inline-size: 100%; block-size: 100%; object-fit: cover;");
 
 out.push("}");
 

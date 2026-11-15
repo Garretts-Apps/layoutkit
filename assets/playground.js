@@ -100,7 +100,7 @@
     },
     "lk-grid"(p) {
       const d = [["display", "grid"]];
-      if (MINW[p.min]) d.push(["grid-template-columns", `repeat(auto-fill, minmax(min(${MINW[p.min]}, 100%), 1fr))`]);
+      if (MINW[p.min]) d.push(["grid-template-columns", `repeat(auto-fit, minmax(min(${MINW[p.min]}, 100%), 1fr))`]);
       else if (has(p, "responsive")) d.push(["grid-template-columns", "repeat(auto-fit, minmax(min(var(--lk-min-child-width, 250px), 100%), 1fr))"]);
       else d.push(["grid-template-columns", `repeat(${str(p, "cols", "1")}, minmax(0, 1fr))`]);
       if (p.rows) d.push(["grid-template-rows", `repeat(${str(p, "rows", "1")}, minmax(0, 1fr))`]);
@@ -126,7 +126,7 @@
       return [["display", "flex"], ["flex-wrap", "wrap"], ["gap", sp(str(p, "gap", "md"))]];
     },
     "lk-cover"(p) {
-      return [["display", "flex"], ["flex-direction", "column"], ["min-block-size", "var(--lk-cover-min, 100svh)"], ["gap", sp(str(p, "gap", "md"))], ["padding", sp("md")]];
+      return [["display", "flex"], ["flex-direction", "column"], ["min-block-size", "var(--lk-cover-min, 100vh)"], ["gap", sp(str(p, "gap", "md"))], ["padding", sp("md")]];
     },
     "lk-spacer"(p) {
       const size = str(p, "size", "auto");
@@ -177,7 +177,38 @@
     if (tag === "lk-cover") {
       rules.push([" > :is([center], :only-child)", [["margin-block", "auto"]]]);
     }
+    if (tag === "lk-aspect-ratio") {
+      rules.push([" > :is(img, video, iframe, canvas, svg)", [
+        ["display", "block"],
+        ["width", "100%"],
+        ["height", "100%"],
+        ["inline-size", "100%"],
+        ["block-size", "100%"],
+        ["object-fit", "cover"],
+      ]]);
+    }
     return rules;
+  }
+
+  const VIEWPORT_SUPPORTS = [
+    { condition: "(min-block-size: 100svh)", value: "100svh" },
+    { condition: "(min-block-size: 100dvh)", value: "100dvh" },
+  ];
+  function supportBlocks(tag, attrs) {
+    if ((tag === "lk-stack" || tag === "lk-row" || tag === "lk-center") && has(attrs, "full-height")) {
+      return VIEWPORT_SUPPORTS.map((step) => ({ condition: step.condition, decls: [["min-block-size", step.value]] }));
+    }
+    if (tag === "lk-cover") {
+      return VIEWPORT_SUPPORTS.map((step) => ({ condition: step.condition, decls: [["min-block-size", "var(--lk-cover-min, " + step.value + ")"]] }));
+    }
+    if (tag === "lk-divider") {
+      const mix = "var(--lk-divider-color, color-mix(in srgb, currentColor 20%, transparent))";
+      return [{
+        condition: "(color: color-mix(in srgb, currentColor 20%, transparent))",
+        decls: [["border-top-color", mix], ["border-left-color", mix]],
+      }];
+    }
+    return [];
   }
 
   function parse(input) {
@@ -189,7 +220,7 @@
       for (const a of m[2].matchAll(/(?:^|\s)([a-z][\w-]*)(?!\s*=)\b/g)) attrs[a[1]] = true;
       for (const a of m[2].matchAll(/([a-z][\w-]*)="([^"]*)"/g)) attrs[a[1]] = a[2];
       const decls = BUILDERS[tag](attrs).filter(([, v]) => v != null && v !== "");
-      results.push({ tag, raw: m[0].replace(/\s+/g, " ").trim(), decls, children: childRules(tag, attrs) });
+      results.push({ tag, raw: m[0].replace(/\s+/g, " ").trim(), decls, children: childRules(tag, attrs), supports: supportBlocks(tag, attrs) });
     }
     return results;
   }
@@ -205,7 +236,8 @@
     for (const r of results) {
       const base = r.tag.replace(/^lk-/, "");
       const childKey = (r.children || []).map(([sel, decls]) => sel + decls.map(([k, v]) => k + ":" + v).join(";")).join("|");
-      const key = base + "|" + r.decls.map(([k, v]) => k + ":" + v).join(";") + "|" + childKey;
+      const supportKey = (r.supports || []).map((block) => block.condition + block.decls.map(([k, v]) => k + ":" + v).join(";")).join("|");
+      const key = base + "|" + r.decls.map(([k, v]) => k + ":" + v).join(";") + "|" + childKey + "|" + supportKey;
       if (byKey.has(key)) { r.cls = byKey.get(key); continue; }
       const n = (count.get(base) || 0) + 1;
       count.set(base, n);
@@ -245,12 +277,15 @@
       const body = r.decls
         .map(([k, v]) => '  <span class="tok-attr">' + esc(k) + '</span>: <span class="tok-str">' + esc(v) + "</span>;")
         .join("\n");
+      const declBlock = (decls) => decls
+        .map(([k, v]) => '  <span class="tok-attr">' + esc(k) + '</span>: <span class="tok-str">' + esc(v) + "</span>;")
+        .join("\n");
       blocks.push('<span class="tok-com">/* ' + esc(r.raw) + ' */</span>\n<span class="tok-tag">.' + esc(r.cls) + " {</span>\n" + body + '\n<span class="tok-tag">}</span>');
+      for (const block of r.supports || []) {
+        blocks.push('<span class="tok-tag">@supports ' + esc(block.condition) + " {</span>\n<span class=\"tok-tag\">  ." + esc(r.cls) + " {</span>\n" + declBlock(block.decls) + '\n<span class="tok-tag">  }</span>\n<span class="tok-tag">}</span>');
+      }
       for (const [sel, decls] of r.children || []) {
-        const childBody = decls
-          .map(([k, v]) => '  <span class="tok-attr">' + esc(k) + '</span>: <span class="tok-str">' + esc(v) + "</span>;")
-          .join("\n");
-        blocks.push('<span class="tok-tag">.' + esc(r.cls) + esc(sel) + " {</span>\n" + childBody + '\n<span class="tok-tag">}</span>');
+        blocks.push('<span class="tok-tag">.' + esc(r.cls) + esc(sel) + " {</span>\n" + declBlock(decls) + '\n<span class="tok-tag">}</span>');
       }
     }
     return blocks.join("\n\n");

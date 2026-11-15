@@ -104,6 +104,15 @@ if (!/lk-spacer\[size="md"\] \{ flex: 0 0 /.test(css)) fail("sized lk-spacer mus
 if (!css.includes('lk-box[flow="5"]')) fail("flow must honor the numeric spacing scale");
 if (!css.includes("minmax(min(var(--lk-min-child-width, 250px), 100%), 1fr)")) fail("responsive grids must clamp their minimum track to the container");
 if (!css.includes('lk-grid[place="between"]')) fail("lk-grid must implement place distribution");
+if (!css.includes("min-block-size: 100vh")) fail("viewport minimums must keep a 100vh fallback");
+if (!css.includes("@supports (min-block-size: 100svh)")) fail("viewport minimums must use 100svh where supported");
+if (!css.includes("@supports (min-block-size: 100dvh)")) fail("viewport minimums must use 100dvh where supported");
+if (!css.includes("color-mix(in srgb, currentColor 20%, transparent)")) fail("dividers must default to a currentColor mix");
+if (!css.includes("var(--lk-divider-color, #e5e7eb)")) fail("dividers must keep the #e5e7eb fallback");
+if (!css.includes("object-fit: cover")) fail("lk-aspect-ratio replaced children must use object-fit: cover");
+if (css.includes("auto-fill")) fail("lk-grid[min] must use auto-fit, not auto-fill");
+if (!css.includes("repeat(auto-fit, minmax(min(16rem, 100%), 1fr))")) fail("lk-grid[min] must auto-fit its enumerated tracks");
+if (!packageChangelog.includes("### Changed (visual behavior)")) fail("changelog must label visual behavior changes");
 
 const cssAttrs = new Map();
 for (const match of css.matchAll(/(lk-[a-z0-9-]+)\[([a-z][\w-]*)/g)) {

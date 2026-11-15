@@ -151,16 +151,18 @@ custom properties such as `--lk-ratio`, `--lk-divider-color`,
 `--lk-min-child-width`, `--lk-max-height`, `--lk-max-width`, `--lk-measure`,
 `--lk-switch-at`, and `--lk-sidebar-width`.
 
-`min` on `lk-grid` sets an auto-fill track size and overrides `responsive` when
-both are present. Empty tracks keep their space. Use `responsive` alone when
-items should grow to fill the row. Both clamp a track that would otherwise be
-wider than the container.
+`min` on `lk-grid` sets an auto-fit track size and overrides `responsive` when
+both are present. Empty tracks collapse, so items grow to fill the row. Both
+clamp a track that would otherwise be wider than the container.
 
 `flow` on `lk-box` and `lk-card` uses the same spacing scale as `gap`. On
 `lk-grid`, `flow` is `row`, `col`, or `dense`.
 
-`full-height` is `min-block-size: 100vh`. `lk-cover` defaults to `100svh`. Those
-are different heights when mobile browser chrome is visible.
+`full-height` and the `lk-cover` minimum use `100dvh` where supported, then
+`100svh`, then `100vh`. `--lk-cover-min` still replaces that default. The
+divider defaults to a `currentColor` mix, with `#e5e7eb` where `color-mix()` is
+unavailable. Replaced children inside `lk-aspect-ratio` (`img`, `video`,
+`iframe`, `canvas`, `svg`) fill the frame with `object-fit: cover`.
 
 Put `center` on the child of `lk-cover` that should sit in the middle. It is not
 an attribute of `lk-cover` itself.
@@ -382,7 +384,7 @@ accept attributes the stylesheet implements.
 
 LayoutKit targets modern evergreen browsers with support for custom properties,
 flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`,
-`min()`, and `color-mix()`.
+`dvh`, `min()`, `object-fit`, and `color-mix()`.
 
 ## Security And Package Verification
 
@@ -397,7 +399,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.3.3
+npm install layoutkit-css@1.4.0
 ```
 
 Review third-party packages before use.

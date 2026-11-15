@@ -145,7 +145,7 @@
                 <tr><td><code>lk-cover</code></td><td>Min-height cover region</td><td>gap. Put <code>center</code> on the child that should sit in the middle.</td></tr>
                 <tr><td><code>lk-spacer</code></td><td>Flexible or fixed space</td><td>size</td></tr>
                 <tr><td><code>lk-divider</code></td><td>Visual divider</td><td>orientation, thickness</td></tr>
-                <tr><td><code>lk-aspect-ratio</code></td><td>Aspect-ratio wrapper</td><td>ratio</td></tr>
+                <tr><td><code>lk-aspect-ratio</code></td><td>Aspect-ratio wrapper. <code>img</code>, <code>video</code>, <code>iframe</code>, <code>canvas</code>, and <code>svg</code> fill the frame.</td><td>ratio</td></tr>
                 <tr><td><code>lk-scroll-area</code></td><td>Constrained scroll container</td><td>direction, max-h</td></tr>
               </tbody>
             </table>
@@ -160,8 +160,9 @@
           <lk-grid responsive gap="4">
             <article class="card"><h3>Spacing</h3><p class="sans muted"><code>gap</code>, <code>padding</code>, <code>col-gap</code>, <code>row-gap</code>: <code>none</code>, <code>px</code>, <code>xs</code> through <code>3xl</code>, and the finite numeric scale.</p></article>
             <article class="card"><h3>Alignment</h3><p class="sans muted"><code>align</code>, <code>justify</code>, <code>place</code>, <code>place-items</code>, and <code>center</code> cover common flex and grid alignment.</p></article>
-            <article class="card"><h3>Sizing</h3><p class="sans muted"><code>fill</code>, <code>full-height</code> (<code>100vh</code>), <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. <code>lk-cover</code> defaults to <code>100svh</code>, which is shorter than <code>100vh</code> while mobile browser chrome is visible.</p></article>
-            <article class="card"><h3>Grid tracks</h3><p class="sans muted"><code>responsive</code> is auto-fit, so items grow to fill the row. <code>min</code> is auto-fill and overrides <code>responsive</code>; empty tracks keep their space. Both clamp a track that would be wider than the container. <code>flow</code> on a grid is <code>row</code>, <code>col</code>, or <code>dense</code>. On <code>lk-box</code> and <code>lk-card</code>, <code>flow</code> is the spacing scale.</p></article>
+            <article class="card"><h3>Sizing</h3><p class="sans muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. <code>full-height</code> and <code>lk-cover</code> use <code>100dvh</code> where supported, then <code>100svh</code>, then <code>100vh</code>. <code>--lk-cover-min</code> still overrides the cover.</p></article>
+            <article class="card"><h3>Grid tracks</h3><p class="sans muted"><code>responsive</code> and <code>min</code> are both auto-fit, so items grow to fill the row and empty tracks collapse. <code>min</code> sets an enumerated minimum and overrides <code>responsive</code>. Both clamp a track that would be wider than the container. <code>flow</code> on a grid is <code>row</code>, <code>col</code>, or <code>dense</code>. On <code>lk-box</code> and <code>lk-card</code>, <code>flow</code> is the spacing scale.</p></article>
+            <article class="card"><h3>Divider and frames</h3><p class="sans muted">The default divider is a <code>currentColor</code> mix, so it stays visible on dark pages. Browsers without <code>color-mix()</code> keep <code>#e5e7eb</code>. Set <code>--lk-divider-color</code> to choose a color. Replaced children of <code>lk-aspect-ratio</code> fill the frame with <code>object-fit: cover</code>.</p></article>
           </lk-grid>
         </lk-stack>
       </section>
@@ -251,7 +252,7 @@
       <section id="browser-support" aria-labelledby="browser-heading">
         <lk-stack gap="4">
           <h2 id="browser-heading" class="h2">Browser support</h2>
-          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, <code class="sans">min()</code>, and <code class="sans">color-mix()</code>.</p>
+          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, <code class="sans">dvh</code>, <code class="sans">min()</code>, <code class="sans">object-fit</code>, and <code class="sans">color-mix()</code>. Older browsers keep the <code>100vh</code> and <code>#e5e7eb</code> fallbacks.</p>
         </lk-stack>
       </section>
 

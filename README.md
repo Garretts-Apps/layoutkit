@@ -112,11 +112,12 @@ Common attributes include `gap`, `padding`, `align`, `justify`, `place`,
 `orientation`, `thickness`, `direction`, `max-h`, `ratio`, `radius`, `surface`,
 `border`, `side`, `lk-text`, and `lk-weight`.
 
-`min` on `lk-grid` is auto-fill and overrides `responsive`. Empty tracks keep
-their space, so use `responsive` alone when items should fill the row. `flow`
-on `lk-box` and `lk-card` uses the spacing scale; on `lk-grid` it is `row`,
-`col`, or `dense`. `full-height` is `100vh`, while `lk-cover` defaults to
-`100svh`. Put `center` on the `lk-cover` child that should sit in the middle.
+`min` on `lk-grid` is auto-fit and overrides `responsive`. Empty tracks
+collapse, so items fill the row. `flow` on `lk-box` and `lk-card` uses the
+spacing scale; on `lk-grid` it is `row`, `col`, or `dense`. `full-height` and
+`lk-cover` use `100dvh`, then `100svh`, then `100vh`. Put `center` on the
+`lk-cover` child that should sit in the middle. The default divider follows
+`currentColor`. Replaced children of `lk-aspect-ratio` fill the frame.
 
 ## Frozen Convenience Helpers
 
@@ -262,7 +263,7 @@ comes from the consuming app. LayoutKit does not depend on React.
 
 LayoutKit targets modern evergreen browsers with support for custom properties,
 flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`,
-`min()`, and `color-mix()`.
+`dvh`, `min()`, `object-fit`, and `color-mix()`.
 
 ## Security And Package Verification
 
@@ -277,7 +278,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.3.3
+npm install layoutkit-css@1.4.0
 ```
 
 ## Repository
