@@ -67,6 +67,12 @@ const atSupports = (condition, sel, decls) => {
   out.push(`    ${sel} { ${decls} }`);
   out.push("  }");
 };
+// Multi-rule blocks (container queries, :has, anchor). The string is indented
+// one level; this adds the @layer indent. A blank line stays blank.
+const lines = (block) => {
+  const text = block.replace(/^\n/, "").replace(/\n\s*$/, "");
+  for (const line of text.split("\n")) out.push(line.trim() === "" ? "" : `  ${line}`);
+};
 const DIVIDER_FALLBACK = "var(--lk-divider-color, #e5e7eb)";
 const DIVIDER_MIX = "var(--lk-divider-color, color-mix(in srgb, currentColor 20%, transparent))";
 const FULL_HEIGHT = "lk-center[full-height], lk-stack[full-height], lk-row[full-height]";
@@ -91,7 +97,10 @@ out.push(" *");
 out.push(" * Tokens: remap the scale onto your design tokens by defining --space-*");
 out.push(" * (or override --lk-space-* directly). All rules are in @layer layoutkit.");
 out.push(" * Free-form values use custom properties:");
-out.push(" *   --lk-ratio, --lk-divider-color, --lk-min-child-width, --lk-max-height, --lk-max-width.");
+out.push(" *   --lk-ratio, --lk-divider-color, --lk-min-child-width, --lk-max-height, --lk-max-width,");
+out.push(" *   --lk-switch-at, --lk-sidebar-width, --lk-sidebar-content-min, --lk-sticky-top,");
+out.push(" *   --lk-snap-gap, --lk-pad, --lk-anchor, --lk-progress-color, --lk-popover-bg, --lk-popover-fg,");
+out.push(" *   --lk-space-fluid-*, --lk-overlay-inset, --lk-overlay-z.");
 out.push(" */");
 
 out.push("@layer layoutkit {");
@@ -103,8 +112,22 @@ rule(":root", [
   ...Object.entries(RADIUS).filter(([k]) => k !== "none" && k !== "full").map(([k, v]) => `--lk-radius-${k}: var(--radius-${k}, ${v});`),
 ].join(" "));
 
+section("Fluid space — opt-in tokens. Assign one to --space-* or --lk-space-* to opt in; the static scale is unchanged");
+const FLUID = {
+  xs: ["0.25rem", "0.2rem + 0.25", "0.5rem"],
+  sm: ["0.5rem", "0.35rem + 0.5", "0.75rem"],
+  md: ["0.75rem", "0.55rem + 0.8", "1.25rem"],
+  lg: ["1rem", "0.7rem + 1.2", "1.75rem"],
+  xl: ["1.5rem", "1rem + 2", "2.5rem"],
+  "2xl": ["2rem", "1.25rem + 3", "4rem"],
+  "3xl": ["3rem", "1.5rem + 4.5", "6rem"],
+};
+const fluidDecls = (unit) => Object.entries(FLUID).map(([k, [min, pref, max]]) => `--lk-space-fluid-${k}: clamp(${min}, ${pref}${unit}, ${max});`).join(" ");
+rule(":root", fluidDecls("vw"));
+atSupports("(width: 1vi)", ":root", fluidDecls("vi"));
+
 section("Base — every primitive sets its own display + box model");
-rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-card,\n  lk-spread,\n  lk-grid,\n  lk-cluster,\n  lk-switcher,\n  lk-sidebar,\n  lk-cover,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area", "box-sizing: border-box;");
+rule("lk-stack,\n  lk-row,\n  lk-center,\n  lk-box,\n  lk-card,\n  lk-spread,\n  lk-grid,\n  lk-cluster,\n  lk-switcher,\n  lk-sidebar,\n  lk-cover,\n  lk-spacer,\n  lk-divider,\n  lk-aspect-ratio,\n  lk-scroll-area,\n  lk-progress,\n  lk-popover,\n  lk-disclosure,\n  lk-menu,\n  lk-columns", "box-sizing: border-box;");
 rule("lk-stack", "display: flex; flex-direction: column; gap: var(--lk-space-md); align-items: stretch; justify-content: flex-start;");
 rule("lk-row", "display: flex; flex-direction: row; gap: var(--lk-space-md); align-items: center; justify-content: flex-start;");
 rule("lk-center", "display: flex; flex-direction: column; align-items: center; justify-content: center;");
@@ -115,7 +138,7 @@ rule("lk-spacer", "display: block; flex: 1 1 0%;");
 rule("lk-divider", `display: block; inline-size: 100%; border-block-start: 1px solid ${DIVIDER_FALLBACK};`);
 rule("lk-aspect-ratio", "display: block; aspect-ratio: var(--lk-ratio, 1);");
 rule("lk-scroll-area", "display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none);");
-rule("lk-card", "display: block; padding: var(--lk-space-lg); border-radius: var(--lk-radius-md); border: 1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent));");
+rule("lk-card", "display: block; padding: var(--lk-space-lg); --lk-pad: var(--lk-space-lg); border-radius: var(--lk-radius-md); border: 1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent));");
 
 section("Responsive intent primitives — respond to available space, no media queries");
 // Cluster: a wrapping group (chips, tags, buttons). align via `place`, gap via `gap`.
@@ -156,13 +179,13 @@ rule("lk-box[flow] > * + *,\n  lk-card[flow] > * + *", "margin-block-start: var(
 for (const [k, v] of Object.entries(SPACE)) rule(`lk-box[flow="${k}"] > * + *,\n  lk-card[flow="${k}"] > * + *`, `margin-block-start: ${v};`);
 
 section("Card — padding, radius, surface, border");
-variants(["lk-card"], "padding", SPACE, (v) => `padding: ${v};`);
+variants(["lk-card"], "padding", SPACE, (v) => `padding: ${v}; --lk-pad: ${v};`);
 for (const k of Object.keys(RADIUS)) rule(`lk-card[radius="${k}"]`, `border-radius: ${k === "none" ? "0" : k === "full" ? "9999px" : `var(--lk-radius-${k})`};`);
 rule("lk-card[surface]", "background: var(--lk-surface, color-mix(in srgb, currentColor 6%, transparent));");
 rule('lk-card[border="none"]', "border: 0;");
 
-section("Gap (lk-stack, lk-row, lk-grid, lk-cluster, lk-switcher, lk-sidebar, lk-cover)");
-variants(["lk-stack", "lk-row", "lk-grid", "lk-cluster", "lk-switcher", "lk-sidebar", "lk-cover"], "gap", SPACE, (v) => `gap: ${v};`);
+section("Gap (lk-stack, lk-row, lk-grid, lk-cluster, lk-switcher, lk-sidebar, lk-cover, lk-scroll-area)");
+variants(["lk-stack", "lk-row", "lk-grid", "lk-cluster", "lk-switcher", "lk-sidebar", "lk-cover", "lk-scroll-area"], "gap", SPACE, (v) => `gap: ${v};`);
 
 section("Padding (lk-stack, lk-row, lk-box, lk-spread)");
 variants(["lk-stack", "lk-row", "lk-box", "lk-spread"], "padding", SPACE, (v) => `padding: ${v};`);
@@ -257,6 +280,454 @@ for (const r of RATIO) rule(`lk-aspect-ratio[ratio="${r}"]`, `aspect-ratio: ${r}
 // Physical size first, then logical size, so older browsers still fill the
 // frame and writing-mode-aware browsers use the logical axes.
 rule(["img", "video", "iframe", "canvas", "svg"].map((tag) => `lk-aspect-ratio > ${tag}`).join(",\n  "), "display: block; width: 100%; height: 100%; inline-size: 100%; block-size: 100%; object-fit: cover;");
+
+section("Container queries — opt-in. Without [container], switcher, sidebar, and grid keep their intrinsic layout");
+// cqi is read on the children, so it resolves against this element once it is
+// the query container. Percentage flex-basis stays in place when cqi or
+// container-type is unsupported. A fixed cols grid stacks its children when
+// the grid itself is under 32rem; container queries cannot read a custom
+// property as the threshold, so 32rem is the enumerated cutoff.
+lines(`
+@supports (container-type: inline-size) and (width: 1cqi) {
+  lk-switcher[container] {
+    container-type: inline-size;
+    container-name: lk-switcher;
+  }
+  lk-sidebar[container] {
+    container-type: inline-size;
+    container-name: lk-sidebar;
+  }
+  lk-grid[container] {
+    container-type: inline-size;
+    container-name: lk-grid;
+  }
+  lk-switcher[container] > * {
+    flex-basis: calc((var(--lk-switch-at, 30rem) - 100cqi) * 999);
+  }
+  lk-sidebar[container]:not([side="end"]) > :last-child,
+  lk-sidebar[container][side="end"] > :first-child {
+    min-inline-size: var(--lk-sidebar-content-min, 50cqi);
+  }
+  lk-grid[container] > * {
+    min-inline-size: 0;
+    max-inline-size: 100cqi;
+  }
+  lk-grid[container] > * :is(img, video, svg, canvas) {
+    max-width: 100%;
+    height: auto;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+  @container lk-grid (inline-size < 24rem) {
+    lk-grid[container="sm"][cols]:not([responsive]):not([min]) > * {
+      grid-column: 1 / -1;
+    }
+  }
+  @container lk-grid (inline-size < 32rem) {
+    lk-grid[container=""][cols]:not([responsive]):not([min]) > *,
+    lk-grid[container="md"][cols]:not([responsive]):not([min]) > * {
+      grid-column: 1 / -1;
+    }
+  }
+  @container lk-grid (inline-size < 48rem) {
+    lk-grid[container="lg"][cols]:not([responsive]):not([min]) > * {
+      grid-column: 1 / -1;
+    }
+  }
+  @container lk-grid (inline-size < 64rem) {
+    lk-grid[container="xl"][cols]:not([responsive]):not([min]) > * {
+      grid-column: 1 / -1;
+    }
+  }
+}
+`);
+
+section("Switcher limit — opt-in quantity threshold. More than N children each take a full row");
+for (const limit of [2, 3, 4, 5, 6]) {
+  const from = limit + 1;
+  rule(
+    `lk-switcher[limit="${limit}"] > :nth-last-child(n + ${from}),\n  lk-switcher[limit="${limit}"] > :nth-last-child(n + ${from}) ~ *`,
+    "flex-basis: 100%;",
+  );
+}
+
+section("Center overlay — opt-in imposter. The parent supplies the containing block");
+rule("lk-center[overlay]", "position: absolute; inset: var(--lk-overlay-inset, 0); z-index: var(--lk-overlay-z, 1);");
+
+section(":has() adaptation — opt-in. Explicit place/justify still wins on a solo row or stack");
+lines(`
+@supports selector(:has(> :only-child)) {
+  lk-row[adapt="solo"]:not([justify]):not([place]):has(> :only-child),
+  lk-stack[adapt="solo"]:not([justify]):not([place]):has(> :only-child) {
+    justify-content: center;
+  }
+}
+@supports selector(:has(> figure)) {
+  lk-card[adapt="figure"]:has(> figure) {
+    padding: 0;
+    overflow: hidden;
+  }
+  lk-card[adapt="figure"]:has(> figure) > figure {
+    margin: 0;
+  }
+  lk-card[adapt="figure"]:has(> figure) > figure > :is(img, video) {
+    display: block;
+    width: 100%;
+    height: auto;
+    inline-size: 100%;
+    block-size: auto;
+  }
+  lk-card[adapt="figure"]:has(> figure) > :not(figure) {
+    margin-inline: var(--lk-pad, var(--lk-space-lg));
+  }
+  lk-card[adapt="figure"]:has(> figure) > :not(figure):first-child {
+    margin-block-start: var(--lk-pad, var(--lk-space-lg));
+  }
+  lk-card[adapt="figure"]:has(> figure) > figure + :not(figure) {
+    margin-block-start: var(--lk-space-md);
+  }
+  lk-card[adapt="figure"]:has(> figure) > :not(figure):last-child {
+    margin-block-end: var(--lk-pad, var(--lk-space-lg));
+  }
+}
+@supports selector(:has(> figure)) and (overflow: clip) {
+  lk-card[adapt="figure"]:has(> figure) {
+    overflow: clip;
+  }
+}
+`);
+
+section("Subgrid — opt-in. The nested grid spans the parent and shares its tracks; cols/rows remain the fallback");
+lines(`
+@supports (grid-template-columns: subgrid) {
+  lk-grid[subgrid]:not([subgrid="rows"]) {
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+  }
+  lk-grid[subgrid="columns"] {
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+  }
+  lk-grid[subgrid="rows"],
+  lk-grid[subgrid="both"] {
+    grid-template-rows: subgrid;
+    grid-row: 1 / -1;
+  }
+  lk-grid[subgrid]:not([gap]):not([col-gap]):not([row-gap]) {
+    gap: inherit;
+  }
+}
+`);
+
+section("Scroll snap — opt-in carousels. Direct children are the slides. snap overrides wrap");
+const snapGap = Object.entries(SPACE).map(([k, v]) => `  lk-row[snap][gap="${k}"],\n  lk-scroll-area[snap][gap="${k}"] { --lk-snap-gap: ${v}; }`).join("\n");
+lines(`
+@supports (scroll-snap-type: x mandatory) {
+  lk-row[snap],
+  lk-scroll-area[snap] {
+    display: flex;
+    flex-flow: row nowrap;
+    --lk-snap-gap: var(--lk-space-md);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
+  }
+  lk-row[snap]:not([align]):not([place]) {
+    align-items: stretch;
+  }
+  lk-scroll-area[snap]:not([gap]) {
+    gap: var(--lk-space-md);
+  }
+  lk-row[snap] > *,
+  lk-scroll-area[snap] > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    min-inline-size: 0;
+  }
+  lk-row[snap="proximity"],
+  lk-scroll-area[snap="proximity"] {
+    scroll-snap-type: x proximity;
+  }
+  lk-row[snap="mandatory"],
+  lk-scroll-area[snap="mandatory"] {
+    scroll-snap-type: x mandatory;
+  }
+  lk-row[snap="center"] > *,
+  lk-scroll-area[snap="center"] > * {
+    scroll-snap-align: center;
+  }
+  lk-row[slide="full"][snap] > *,
+  lk-scroll-area[slide="full"][snap] > * {
+    flex: 0 0 100%;
+  }
+  lk-row[slide="half"][snap] > *,
+  lk-scroll-area[slide="half"][snap] > * {
+    flex: 0 0 calc((100% - var(--lk-snap-gap, var(--lk-space-md))) / 2);
+  }
+  lk-row[slide="third"][snap] > *,
+  lk-scroll-area[slide="third"][snap] > * {
+    flex: 0 0 calc((100% - 2 * var(--lk-snap-gap, var(--lk-space-md))) / 3);
+  }
+  lk-row[slide="peek"][snap] > *,
+  lk-scroll-area[slide="peek"][snap] > * {
+    flex: 0 0 80%;
+  }
+  lk-row[snap] :is(img, video, svg, canvas),
+  lk-scroll-area[snap] :is(img, video, svg, canvas) {
+    max-width: 100%;
+    height: auto;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+  lk-scroll-area[snap][direction="vertical"] {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-inline: auto;
+    overscroll-behavior-block: contain;
+  }
+  lk-scroll-area[snap="proximity"][direction="vertical"] {
+    scroll-snap-type: y proximity;
+  }
+${snapGap}
+}
+@supports (scroll-snap-type: inline mandatory) {
+  lk-row[snap],
+  lk-scroll-area[snap],
+  lk-row[snap="mandatory"],
+  lk-scroll-area[snap="mandatory"],
+  lk-row[snap="center"] {
+    scroll-snap-type: inline mandatory;
+  }
+  lk-row[snap="proximity"],
+  lk-scroll-area[snap="proximity"] {
+    scroll-snap-type: inline proximity;
+  }
+  lk-scroll-area[snap][direction="vertical"],
+  lk-scroll-area[snap="mandatory"][direction="vertical"] {
+    scroll-snap-type: block mandatory;
+  }
+  lk-scroll-area[snap="proximity"][direction="vertical"] {
+    scroll-snap-type: block proximity;
+  }
+}
+`);
+
+section("Sticky sidebar — opt-in. The side panel sticks; without sticky support the sidebar layout is unchanged");
+lines(`
+@supports (position: sticky) {
+  lk-sidebar[sticky]:not([side="end"]) > :first-child,
+  lk-sidebar[sticky][side="end"] > :last-child {
+    position: sticky;
+    inset-block-start: var(--lk-sticky-top, 0px);
+    align-self: start;
+    z-index: 1;
+    max-block-size: 100vh;
+    overflow-y: auto;
+    overscroll-behavior-block: contain;
+  }
+}
+@supports (position: sticky) and (max-block-size: 100svh) {
+  lk-sidebar[sticky]:not([side="end"]) > :first-child,
+  lk-sidebar[sticky][side="end"] > :last-child {
+    max-block-size: 100svh;
+  }
+}
+@supports (position: sticky) and (max-block-size: 100dvh) {
+  lk-sidebar[sticky]:not([side="end"]) > :first-child,
+  lk-sidebar[sticky][side="end"] > :last-child {
+    max-block-size: 100dvh;
+  }
+}
+`);
+
+section("Scroll progress — static bar unless animation-timeline: scroll() is supported");
+lines(`
+@keyframes lk-scroll-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+lk-progress {
+  display: block;
+  block-size: 0.25rem;
+  inline-size: 100%;
+  margin: 0;
+  transform-origin: inline-start;
+  background: var(--lk-progress-color, var(--lk-divider-color, #e5e7eb));
+}
+@supports (animation-timeline: scroll(root)) {
+  lk-progress,
+  lk-progress[scope="root"] {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: var(--lk-progress-z, 2);
+    inline-size: 100%;
+    pointer-events: none;
+    animation-name: lk-scroll-progress;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(root);
+  }
+  lk-progress[scope="nearest"] {
+    position: sticky;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: var(--lk-progress-z, 2);
+    pointer-events: none;
+    animation-name: lk-scroll-progress;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(nearest);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  lk-progress,
+  lk-progress[scope="root"],
+  lk-progress[scope="nearest"] {
+    animation: none;
+    position: static;
+    transform: none;
+    pointer-events: none;
+  }
+}
+`);
+atSupports("(color: color-mix(in srgb, currentColor 55%, transparent))", "lk-progress", "background: var(--lk-progress-color, color-mix(in srgb, currentColor 55%, transparent));");
+
+section("Popover and disclosure — native open/close. Anchor positioning is opt-in and scoped per control");
+const panelChrome = [
+  "box-sizing: border-box",
+  "padding: var(--lk-space-md)",
+  "border-radius: var(--lk-radius-md)",
+  "border: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb))",
+  "background: var(--lk-popover-bg, canvas)",
+  "color: var(--lk-popover-fg, canvastext)",
+  "width: max-content",
+  "inline-size: max-content",
+  "max-width: min(20rem, calc(100vw - 2rem))",
+  "max-inline-size: min(20rem, calc(100vw - 2rem))",
+  "max-height: min(70vh, calc(100vh - 2rem))",
+  "max-block-size: min(70vh, calc(100vh - 2rem))",
+  "overflow: auto",
+  "overscroll-behavior: contain",
+].join("; ");
+rule("lk-menu", "display: inline-block; position: relative; max-inline-size: 100%;");
+rule("lk-popover", panelChrome);
+rule("lk-disclosure", "display: block;");
+rule("lk-disclosure > details > :not(summary)", "margin-block-start: var(--lk-space-sm);");
+rule('lk-disclosure[panel="overlay"] > details', "position: relative;");
+rule('lk-disclosure[panel="overlay"] > details[open]', "z-index: 1;");
+rule('lk-disclosure[panel="overlay"] > details > :not(summary)', `${panelChrome}; position: absolute; z-index: 1; inset-block-start: calc(100% + var(--lk-space-xs)); inset-inline-start: 0; margin-block-start: 0;`);
+rule('lk-disclosure[side="end"][panel="overlay"] > details > :not(summary)', "inset-inline-start: auto; inset-inline-end: 0;");
+atSupports("(max-inline-size: 1vi)", "lk-popover, lk-disclosure[panel=\"overlay\"] > details > :not(summary)", "max-inline-size: min(20rem, calc(100vi - 2rem));");
+atSupports("(max-block-size: 100dvh)", "lk-popover, lk-disclosure[panel=\"overlay\"] > details > :not(summary)", "max-block-size: min(70dvh, calc(100dvh - 2rem));");
+atSupports("(color: color-mix(in srgb, currentColor 20%, transparent))", "lk-popover, lk-disclosure[panel=\"overlay\"] > details > :not(summary)", "border-color: var(--lk-popover-border, color-mix(in srgb, currentColor 20%, transparent));");
+// anchor-scope keeps one --lk-menu / --lk-disclosure name from colliding across
+// instances. position-area attaches the panel to the invoker; without it the
+// popover keeps the UA top-layer centering and the disclosure keeps the
+// absolute overlay above. inset-area is the earlier name of position-area.
+lines(`
+@supports (anchor-scope: --lk-menu) {
+  lk-menu[anchor] {
+    anchor-scope: --lk-menu;
+  }
+  lk-menu[anchor] > button:first-child,
+  lk-menu[anchor] > a:first-child,
+  lk-menu[anchor] > summary:first-child {
+    anchor-name: --lk-menu;
+  }
+  lk-disclosure[anchor] {
+    anchor-scope: --lk-disclosure;
+  }
+  lk-disclosure[anchor] > details > summary {
+    anchor-name: --lk-disclosure;
+  }
+  lk-menu[anchor] > lk-popover {
+    position-anchor: --lk-menu;
+  }
+  lk-popover[anchor] {
+    position-anchor: var(--lk-anchor, --lk-menu);
+  }
+}
+@supports (anchor-scope: --lk-menu) and (inset-area: block-end) {
+  lk-menu[anchor] > lk-popover {
+    position-anchor: --lk-menu;
+    margin: 0;
+    inset: unset;
+    inset-area: block-end span-inline-end;
+    justify-self: start;
+    position-try-options: flip-block;
+  }
+  lk-popover[anchor] {
+    margin: 0;
+    inset: unset;
+    inset-area: block-end span-inline-end;
+    justify-self: start;
+    position-try-options: flip-block;
+  }
+  lk-menu[side="end"][anchor] > lk-popover {
+    inset-area: block-end span-inline-start;
+    justify-self: end;
+  }
+  lk-disclosure[anchor][panel="overlay"] > details > :not(summary) {
+    position: fixed;
+    margin: 0;
+    inset: unset;
+    position-anchor: --lk-disclosure;
+    inset-area: block-end span-inline-end;
+    justify-self: start;
+    position-try-options: flip-block;
+  }
+  lk-disclosure[side="end"][anchor][panel="overlay"] > details > :not(summary) {
+    inset-area: block-end span-inline-start;
+    justify-self: end;
+  }
+}
+@supports (anchor-scope: --lk-menu) and (position-area: block-end) {
+  lk-menu[anchor] > lk-popover {
+    position-anchor: --lk-menu;
+    margin: 0;
+    inset: unset;
+    position-area: block-end span-inline-end;
+    justify-self: start;
+    position-try-fallbacks: flip-block;
+  }
+  lk-popover[anchor] {
+    margin: 0;
+    inset: unset;
+    position-area: block-end span-inline-end;
+    justify-self: start;
+    position-try-fallbacks: flip-block;
+  }
+  lk-menu[side="end"][anchor] > lk-popover {
+    position-area: block-end span-inline-start;
+    justify-self: end;
+  }
+  lk-disclosure[anchor][panel="overlay"] > details > :not(summary) {
+    position: fixed;
+    margin: 0;
+    inset: unset;
+    position-anchor: --lk-disclosure;
+    position-area: block-end span-inline-end;
+    justify-self: start;
+    position-try-fallbacks: flip-block;
+  }
+  lk-disclosure[side="end"][anchor][panel="overlay"] > details > :not(summary) {
+    position-area: block-end span-inline-start;
+    justify-self: end;
+  }
+}
+`);
+
+section("Columns — multi-column text flow. Children avoid splitting across columns");
+rule("lk-columns", "display: block; column-count: 2; column-gap: var(--lk-space-md);");
+rule("lk-columns > *", "break-inside: avoid;");
+for (const n of [2, 3, 4]) rule(`lk-columns[cols="${n}"]`, `column-count: ${n};`);
+for (const [k, v] of Object.entries(SPACE)) rule(`lk-columns[gap="${k}"]`, `column-gap: ${v};`);
 
 out.push("}");
 

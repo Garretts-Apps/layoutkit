@@ -3,6 +3,81 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 1.5.0
+
+Opt-in layouts that replace common layout JavaScript. Existing tags,
+attributes, custom properties, export paths, and default rendering are
+unchanged. New behavior is a new attribute or a new tag. Where a feature is
+missing, `@supports` leaves the previous layout in place.
+
+### Added
+- **Container queries.** `container` on `lk-switcher`, `lk-sidebar`, and
+  `lk-grid` sets `container-type: inline-size` and a `container-name` (`lk-switcher`,
+  `lk-sidebar`, or `lk-grid`). Switcher children measure the threshold with
+  `100cqi` instead of `100%`, and `--lk-switch-at` still sets that threshold.
+  The sidebar's flexible region uses `50cqi` instead of `50%`
+  (`--lk-sidebar-content-min` still overrides it). A `container` grid with
+  `cols` stacks direct children when the grid itself is narrower than 32rem.
+  `responsive` and `min` keep auto-fit. Children are capped at `100cqi`.
+  Without container-query support the attribute does nothing.
+- **`:has()` adaptation.** `adapt="solo"` on `lk-row` and `lk-stack` centers
+  the layout when there is exactly one element child. `place` and `justify`
+  still win. `adapt="figure"` on `lk-card` lets a direct child `figure` bleed
+  to the card edges. Other children stay inset by the card padding, recorded
+  as `--lk-pad`. `overflow: clip` is used where supported, otherwise
+  `overflow: hidden`.
+- **Subgrid.** `subgrid` on `lk-grid` shares the parent columns and spans the
+  parent (`grid-column: 1 / -1`). `subgrid="rows"` shares rows. `subgrid="both"`
+  shares both. Gap is inherited unless `gap`, `col-gap`, or `row-gap` is set.
+  `cols` and `rows` remain the fallback where subgrid is unsupported.
+- **Scroll-snap carousels.** `snap` on `lk-row` and `lk-scroll-area` turns
+  direct children into slides (`mandatory` by default, or `proximity` or
+  `center`). `slide` sets `full`, `half`, `third`, or `peek`.
+  `direction="vertical"` on `lk-scroll-area` snaps on the block axis. `gap` is
+  now an attribute of `lk-scroll-area` and sizes the carousel gap; `--lk-snap-gap`
+  follows it so half and third slides fit the visible area. Physical `x`/`y`
+  snap types are the fallback. Logical `inline`/`block` override them where
+  supported. `snap` forces `nowrap`.
+- **Sticky sidebars.** `sticky` on `lk-sidebar` sticks the side panel to
+  `--lk-sticky-top` (default `0px`). `side="end"` sticks the last child instead
+  of the first. The panel's max block size is `100dvh`, then `100svh`, then
+  `100vh`, and it scrolls if the contents are taller.
+- **Scroll progress.** `lk-progress` is an in-flow bar. Where
+  `animation-timeline: scroll()` is supported, a bare element or `scope="root"`
+  tracks the document, and `scope="nearest"` sticks to the nearest scroll
+  container. `prefers-reduced-motion: reduce` keeps the static bar.
+  `--lk-progress-color` and `--lk-progress-z` override the color and stacking.
+- **Popover and disclosure.** `lk-popover` paints a top-layer panel and does
+  not set `display`, so the browser can still hide a closed `popover`.
+  `lk-menu` lines up an invoker with that panel. The invoker is the menu's
+  first child and must be a `button`, `a`, or `summary`. `anchor` gives each
+  menu its own `anchor-scope` of `--lk-menu`. Where `position-area` or the
+  earlier `inset-area` is supported, the panel anchors under the invoker and
+  flips when it would overflow. Otherwise the popover keeps the user agent's
+  centered top layer. `side="end"` anchors to the inline end. A standalone
+  `lk-popover[anchor]` uses `--lk-anchor` as the anchor name you also set on
+  the invoker. `lk-disclosure` lays out native `details`/`summary`.
+  `panel="overlay"` takes the open panel out of flow and stacks it.
+  `anchor` tethers that overlay the same way, with the absolute panel as the
+  fallback. `--lk-popover-bg`, `--lk-popover-fg`, and `--lk-popover-border`
+  theme both panels.
+- **Switcher limit.** `limit` on `lk-switcher` (`2` through `6`) gives every child
+  `flex-basis: 100%` when there are more children than that number. Fewer
+  children keep the threshold. This is the Every Layout quantity guard, with
+  no script.
+- **Container size steps.** On `lk-grid`, `container="sm|md|lg|xl"` stacks fixed
+  `cols` below 24rem, 32rem, 48rem, or 64rem. A bare `container` stays at 32rem.
+  `responsive` and `min` are still auto-fit.
+- **Center overlay.** `overlay` on `lk-center` absolutely covers its containing
+  block (`--lk-overlay-inset`, default 0). The parent has to be positioned.
+  Without the attribute, `lk-center` stays in flow.
+- **Fluid space tokens.** `--lk-space-fluid-xs` through `--lk-space-fluid-3xl`
+  are `clamp()` lengths (`vw`, then `vi`). They do not replace `--lk-space-*`.
+  Point a `--space-*` or `--lk-space-*` token at one to opt that step in.
+- **Columns.** `lk-columns` flows children across 2 columns by default, or
+  `cols="2|3|4"`. `gap` sets `column-gap`. Direct children use
+  `break-inside: avoid`.
+
 ## 1.4.0
 
 Approved visual updates. Tags, attributes, classes, custom properties, and

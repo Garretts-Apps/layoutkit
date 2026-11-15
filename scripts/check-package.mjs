@@ -113,6 +113,26 @@ if (!css.includes("object-fit: cover")) fail("lk-aspect-ratio replaced children 
 if (css.includes("auto-fill")) fail("lk-grid[min] must use auto-fit, not auto-fill");
 if (!css.includes("repeat(auto-fit, minmax(min(16rem, 100%), 1fr))")) fail("lk-grid[min] must auto-fit its enumerated tracks");
 if (!packageChangelog.includes("### Changed (visual behavior)")) fail("changelog must label visual behavior changes");
+if (!css.includes("flex-basis: calc((var(--lk-switch-at, 30rem) - 100%) * 999)")) fail("switcher must keep the percentage flex-basis");
+if (!css.includes("100cqi")) fail("container opt-in must use cqi");
+if (!css.includes("container-type: inline-size")) fail("container opt-in must set container-type");
+if (!css.includes("@container lk-grid (inline-size < 32rem)")) fail("container grids must stack fixed columns from the grid's own size");
+if (!css.includes('lk-grid[container=""]')) fail("a boolean container grid must keep the 32rem threshold");
+if (!css.includes('lk-switcher[limit="4"]')) fail("switcher limit must stack once the child count passes the threshold");
+if (!css.includes("lk-center[overlay]")) fail("center overlay must be opt-in");
+if (!css.includes("--lk-space-fluid-md")) fail("fluid space tokens must be available without replacing the static scale");
+if (!css.includes("lk-columns[cols=\"3\"]")) fail("lk-columns must set an enumerated column count");
+if (/--lk-space-md:\s*clamp\(/.test(css)) fail("the default space scale must stay static");
+if (!css.includes("grid-template-columns: subgrid")) fail("subgrid opt-in must share parent columns");
+if (!css.includes("scroll-snap-type: x mandatory")) fail("snap carousels must declare a physical scroll-snap fallback");
+if (!css.includes("scroll-snap-type: inline mandatory")) fail("snap carousels must use logical scroll-snap where supported");
+if (!css.includes("animation-timeline: scroll(root)")) fail("progress must use a root scroll timeline");
+if (!css.includes("position: sticky")) fail("sticky sidebars must use position: sticky");
+if (!css.includes(":has(> :only-child)")) fail("solo adaptation must use :has()");
+if (!css.includes("anchor-scope: --lk-menu")) fail("menus must scope their anchor name");
+if (!css.includes("position-area: block-end span-inline-end")) fail("anchored panels must declare position-area");
+if (!css.includes("justify-self: start")) fail("anchored panels must align to the invoker's start edge");
+if (css.includes("lk-popover {") && /lk-popover \{\s*[^}]*\bdisplay\s*:/.test(css)) fail("lk-popover must not set display; that would override the UA popover hide");
 
 const cssAttrs = new Map();
 for (const match of css.matchAll(/(lk-[a-z0-9-]+)\[([a-z][\w-]*)/g)) {

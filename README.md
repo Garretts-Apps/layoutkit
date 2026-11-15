@@ -34,8 +34,9 @@ HTML, button kit, form kit, typography system, color theme, icon library,
 animation system, JavaScript behavior layer, stateful app shell, data table
 solution, or substitute for normal CSS.
 
-When a layout needs named grid areas, complex container-query logic, dense
-responsive rules, or component-specific behavior, use normal CSS.
+Named grid areas, one-off container queries, and component-specific behavior
+still belong in normal CSS. Opt-in attributes cover the common container,
+subgrid, scroll-snap, sticky, progress, and popover cases.
 
 ## Install
 
@@ -104,13 +105,15 @@ forms, landmarks, links, buttons, or controls.
 
 `lk-stack`, `lk-row`, `lk-center`, `lk-box`, `lk-card`, `lk-spread`, `lk-grid`,
 `lk-cluster`, `lk-switcher`, `lk-sidebar`, `lk-cover`, `lk-spacer`,
-`lk-divider`, `lk-aspect-ratio`, and `lk-scroll-area`.
+`lk-divider`, `lk-aspect-ratio`, `lk-scroll-area`, `lk-progress`, `lk-popover`,
+`lk-disclosure`, `lk-menu`, and `lk-columns`.
 
 Common attributes include `gap`, `padding`, `align`, `justify`, `place`,
 `center`, `fill`, `full-height`, `wrap`, `reverse`, `width`, `cols`, `rows`,
 `responsive`, `min`, `col-gap`, `row-gap`, `flow`, `place-items`, `size`,
 `orientation`, `thickness`, `direction`, `max-h`, `ratio`, `radius`, `surface`,
-`border`, `side`, `lk-text`, and `lk-weight`.
+`border`, `side`, `container`, `subgrid`, `adapt`, `snap`, `slide`, `sticky`,
+`anchor`, `panel`, `scope`, `limit`, `overlay`, `lk-text`, and `lk-weight`.
 
 `min` on `lk-grid` is auto-fit and overrides `responsive`. Empty tracks
 collapse, so items fill the row. `flow` on `lk-box` and `lk-card` uses the
@@ -118,6 +121,12 @@ spacing scale; on `lk-grid` it is `row`, `col`, or `dense`. `full-height` and
 `lk-cover` use `100dvh`, then `100svh`, then `100vh`. Put `center` on the
 `lk-cover` child that should sit in the middle. The default divider follows
 `currentColor`. Replaced children of `lk-aspect-ratio` fill the frame.
+
+`container`, `subgrid`, `adapt`, `snap`, `sticky`, `anchor`, `lk-progress`,
+`lk-popover`, `lk-disclosure`, and `lk-menu` are opt-in. Omitting them keeps
+the 1.4 layout. Container queries, `:has()`, subgrid, scroll snap, sticky
+positioning, scroll timelines, and anchor positioning are each wrapped in
+`@supports`.
 
 ## Frozen Convenience Helpers
 
@@ -263,7 +272,8 @@ comes from the consuming app. LayoutKit does not depend on React.
 
 LayoutKit targets modern evergreen browsers with support for custom properties,
 flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`,
-`dvh`, `min()`, `object-fit`, and `color-mix()`.
+`dvh`, `min()`, `object-fit`, and `color-mix()`. Newer layout features are
+opt-in and degrade inside `@supports`.
 
 ## Security And Package Verification
 
@@ -278,7 +288,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.4.0
+npm install layoutkit-css@1.5.0
 ```
 
 ## Repository

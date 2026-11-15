@@ -28,8 +28,11 @@ HTML, button kit, form kit, typography system, color theme, icon library,
 animation system, JavaScript behavior layer, stateful app shell, data table
 solution, or substitute for normal CSS.
 
-When a layout needs named grid areas, complex container-query logic, dense
-responsive rules, or component-specific behavior, use normal CSS.
+Named grid areas, one-off container queries, and component-specific behavior
+still belong in normal CSS. Opt-in attributes cover the common cases:
+container-relative switcher, sidebar, and grid; `:has()` adaptation; subgrid;
+scroll snap; sticky sidebars; scroll progress; and popover or details
+disclosure.
 
 ## Install
 
@@ -120,19 +123,24 @@ LayoutKit currently includes:
 
 - `lk-stack`: vertical flow with `gap`.
 - `lk-row`: horizontal flow with `gap`.
-- `lk-center`: center children.
+- `lk-center`: center children. `overlay` covers a positioned parent.
 - `lk-box`: block wrapper with optional padding, width, and flow spacing.
 - `lk-card`: neutral padded block with optional radius, surface, and border.
 - `lk-spread`: row with space between children.
-- `lk-grid`: CSS grid columns, rows, gaps, and responsive auto-fit.
+- `lk-grid`: CSS grid columns, rows, gaps, responsive auto-fit, opt-in container queries, and opt-in subgrid.
 - `lk-cluster`: wrapping inline group.
-- `lk-switcher`: intrinsic row-to-stack layout.
-- `lk-sidebar`: wrapping sidebar/content layout.
+- `lk-switcher`: intrinsic row-to-stack layout, with an opt-in container-query measure and a child-count `limit`.
+- `lk-sidebar`: wrapping sidebar/content layout, with opt-in container queries and a sticky side.
 - `lk-cover`: min-height region with a centered child.
 - `lk-spacer`: flexible or fixed spacer.
 - `lk-divider`: visual divider.
 - `lk-aspect-ratio`: aspect-ratio wrapper.
-- `lk-scroll-area`: constrained scroll container.
+- `lk-scroll-area`: constrained scroll container and opt-in scroll-snap carousel.
+- `lk-progress`: scroll progress bar, static where scroll timelines are unsupported.
+- `lk-popover`: top-layer panel for a native `popover`.
+- `lk-disclosure`: layout for native `details`/`summary`.
+- `lk-menu`: invoker plus `lk-popover`, with opt-in anchor positioning.
+- `lk-columns`: multi-column text flow.
 
 ## Attributes
 
@@ -141,15 +149,19 @@ Common attributes include:
 - Spacing: `gap`, `padding`, `col-gap`, `row-gap`.
 - Alignment: `align`, `justify`, `place`, `place-items`, `center`.
 - Sizing: `fill`, `full-height`, `width`, `size`, `max-h`, `min`.
-- Grid: `cols`, `rows`, `responsive`, `flow`.
+- Grid: `cols`, `rows`, `responsive`, `flow`, `container`, `subgrid`.
 - Direction and variants: `wrap`, `reverse`, `side`, `orientation`,
-  `thickness`, `ratio`, `radius`, `surface`, `border`.
+  `thickness`, `ratio`, `radius`, `surface`, `border`, `container`, `sticky`,
+  `adapt`, `snap`, `slide`, `anchor`, `panel`, `scope`.
 - Namespaced text helpers: `lk-text`, `lk-weight`.
 
 Most finite scales are enumerated so markup stays readable. Free-form values use
 custom properties such as `--lk-ratio`, `--lk-divider-color`,
 `--lk-min-child-width`, `--lk-max-height`, `--lk-max-width`, `--lk-measure`,
-`--lk-switch-at`, and `--lk-sidebar-width`.
+`--lk-switch-at`, `--lk-sidebar-width`, `--lk-sidebar-content-min`,
+`--lk-sticky-top`, `--lk-snap-gap`, `--lk-pad`, `--lk-anchor`,
+`--lk-progress-color`, `--lk-popover-bg`, `--lk-popover-fg`,
+`--lk-popover-border`, `--lk-space-fluid-*`, and `--lk-overlay-inset`.
 
 `min` on `lk-grid` sets an auto-fit track size and overrides `responsive` when
 both are present. Empty tracks collapse, so items grow to fill the row. Both
@@ -166,6 +178,12 @@ unavailable. Replaced children inside `lk-aspect-ratio` (`img`, `video`,
 
 Put `center` on the child of `lk-cover` that should sit in the middle. It is not
 an attribute of `lk-cover` itself.
+
+`container` does nothing unless the browser supports container queries. It does
+not change a switcher, sidebar, or grid that omits the attribute. `subgrid`,
+`snap`, `sticky`, `adapt`, and `anchor` are the same kind of opt-in.
+`lk-popover` never sets `display`, because an author `display` would override
+the user agent's hidden state for a closed popover.
 
 ## Frozen Convenience Helpers
 
@@ -284,6 +302,111 @@ Scroll area:
 </section>
 ```
 
+Container-query grid. Fixed `cols` stack when this grid is under 32rem. Omit
+`container` and the three columns stay three columns:
+
+```html
+<section aria-labelledby="regions-heading">
+  <lk-stack gap="sm">
+    <h2 id="regions-heading">Regions</h2>
+    <lk-grid container cols="3" gap="md">
+      <article><h3>North</h3></article>
+      <article><h3>South</h3></article>
+      <article><h3>West</h3></article>
+    </lk-grid>
+  </lk-stack>
+</section>
+```
+
+One child centers. A `place` or `justify` value still wins. A card with a
+direct `figure` bleeds that figure:
+
+```html
+<lk-row adapt="solo">
+  <button type="button">Only action</button>
+</lk-row>
+<lk-card adapt="figure">
+  <figure>
+    <img src="/photos/shore.jpg" alt="Rocky shore">
+  </figure>
+  <h3>Shore</h3>
+  <p>The text stays inset.</p>
+</lk-card>
+```
+
+Nested grid shares the parent tracks. Keep `cols` so browsers without subgrid
+still have columns:
+
+```html
+<lk-grid cols="3" gap="md">
+  <strong>Name</strong>
+  <strong>Status</strong>
+  <strong>Updated</strong>
+  <lk-grid cols="3" subgrid>
+    <span>Website</span>
+    <span>Ready</span>
+    <span>Today</span>
+  </lk-grid>
+</lk-grid>
+```
+
+Scroll-snap carousel. Each direct child is a slide. The region does not create
+a tab stop; set `tabindex="0"` and a name when keyboard users must scroll it:
+
+```html
+<section aria-labelledby="slides-heading">
+  <h2 id="slides-heading">Highlights</h2>
+  <lk-row snap slide="peek" tabindex="0" aria-label="Highlights">
+    <article><h3>One</h3></article>
+    <article><h3>Two</h3></article>
+    <article><h3>Three</h3></article>
+  </lk-row>
+</section>
+```
+
+Sticky sidebar and a progress bar tied to a scroller. The progress element is
+static when scroll-driven animations are unavailable:
+
+```html
+<lk-sidebar sticky>
+  <nav aria-label="Sections">
+    <lk-stack gap="xs">
+      <a href="#overview">Overview</a>
+      <a href="#details">Details</a>
+    </lk-stack>
+  </nav>
+  <lk-scroll-area max-h="md" tabindex="0" aria-label="Notes">
+    <lk-progress scope="nearest"></lk-progress>
+    <p>Notes</p>
+  </lk-scroll-area>
+</lk-sidebar>
+```
+
+Menu and disclosure. The button opens a native popover. `anchor` tethers it
+where anchor positioning exists. The disclosure uses `details`:
+
+```html
+<lk-menu anchor>
+  <button type="button" popovertarget="account-menu">Account</button>
+  <lk-popover id="account-menu" popover>
+    <nav aria-label="Account">
+      <lk-stack gap="xs">
+        <a href="/settings">Settings</a>
+        <a href="/sign-out">Sign out</a>
+      </lk-stack>
+    </nav>
+  </lk-popover>
+</lk-menu>
+<lk-disclosure panel="overlay" anchor>
+  <details>
+    <summary>Filters</summary>
+    <lk-stack gap="xs">
+      <label><input type="checkbox"> Open</label>
+    </lk-stack>
+  </details>
+</lk-disclosure>
+```
+
 ## Design Tokens
 
 LayoutKit variables default to app-level variables when present:
@@ -343,7 +466,11 @@ normally. If your app uses cascade layers, place `layoutkit` where you want it:
   inside it still needs usable native markup. It does not create a tab stop. If
   the region itself must be scrolled from the keyboard, set `tabindex="0"` and
   a name on it. Without `direction`, both axes scroll; `direction="vertical"`
-  clips inline overflow.
+  clips inline overflow. A `snap` carousel follows the same keyboard rule.
+  Direct children are the slides.
+- `lk-menu` and `lk-disclosure` do not invent buttons. Use a real `button`,
+  `summary`, or link. The menu invoker is the first child.
+- `lk-progress` is decorative. It does not replace a status message.
 - LayoutKit provides layout behavior only. Accessibility still depends on the
   underlying HTML and application code.
 
@@ -384,7 +511,11 @@ accept attributes the stylesheet implements.
 
 LayoutKit targets modern evergreen browsers with support for custom properties,
 flexbox, grid, cascade layers, logical properties, `aspect-ratio`, `svh`,
-`dvh`, `min()`, `object-fit`, and `color-mix()`.
+`dvh`, `min()`, `object-fit`, and `color-mix()`. Container queries, `:has()`,
+subgrid, scroll snap, `position: sticky`, `animation-timeline: scroll()`, and
+anchor positioning (`position-area`, with `inset-area` as the earlier name)
+are progressive enhancements. Markup that uses those opt-in attributes keeps
+the previous layout where a feature is missing.
 
 ## Security And Package Verification
 
@@ -399,7 +530,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.4.0
+npm install layoutkit-css@1.5.0
 ```
 
 Review third-party packages before use.
