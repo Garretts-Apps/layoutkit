@@ -415,8 +415,8 @@
     { label: "Switcher", code: '<lk-switcher gap="md">\n  <article>\n    <h2>Switcher</h2>\n    <p>Row above 30rem.</p>\n  </article>\n  <article>\n    <h2>Container</h2>\n    <p>Stacked below 30rem.</p>\n  </article>\n</lk-switcher>' },
     { label: "Sidebar", code: '<lk-sidebar gap="md">\n  <nav aria-label="Sections">\n    <lk-stack gap="xs">\n      <a href="/docs">Docs</a>\n      <a href="/install">Install</a>\n    </lk-stack>\n  </nav>\n  <article>\n    <h2>Sidebar</h2>\n    <p>The side wraps when the content needs the width.</p>\n  </article>\n</lk-sidebar>' },
     { label: "Empty state", code: '<section aria-labelledby="empty-heading">\n  <lk-center full-height overlay="off">\n    <lk-stack gap="sm" align="center">\n      <h2 id="empty-heading">No results</h2>\n      <p>Try changing the filters.</p>\n      <button type="button">Reset filters</button>\n    </lk-stack>\n  </lk-center>\n</section>' },
-    { label: "Form", code: '<form action="/settings" method="post">\n  <lk-stack gap="md">\n    <label>\n      Display name\n      <input name="name" autocomplete="name">\n    </label>\n    <lk-row gap="sm" wrap>\n      <button type="submit">Save</button>\n      <a href="/settings">Cancel</a>\n    </lk-row>\n  </lk-stack>\n</form>' },
-    { label: "Page", code: '<lk-stack style="min-block-size: 16rem;">\n  <header>\n    <lk-spread padding="md" align="center">\n      <a href="/">Acme</a>\n      <nav aria-label="Primary"><lk-row gap="sm"><a href="/docs">Docs</a><a href="/pricing">Pricing</a></lk-row></nav>\n    </lk-spread>\n  </header>\n  <lk-box fill padding="lg">\n    <main><lk-center overlay="off"><h1>Dashboard</h1></lk-center></main>\n  </lk-box>\n</lk-stack>' },
+    { label: "Form", code: '<form action="#pg-preview">\n  <lk-stack gap="md">\n    <label>\n      Display name\n      <input name="name" autocomplete="name">\n    </label>\n    <lk-row gap="sm" wrap>\n      <button type="button">Save</button>\n      <a href="#pg-preview">Cancel</a>\n    </lk-row>\n  </lk-stack>\n</form>' },
+    { label: "Page", code: '<lk-stack style="min-block-size: 16rem;">\n  <header>\n    <lk-spread padding="md" align="center">\n      <a href="/">Acme</a>\n      <nav aria-label="Primary"><lk-row gap="sm"><a href="/docs">Docs</a><a href="#pg-preview">Pricing</a></lk-row></nav>\n    </lk-spread>\n  </header>\n  <lk-box fill padding="lg">\n    <main><lk-center overlay="off"><h1>Dashboard</h1></lk-center></main>\n  </lk-box>\n</lk-stack>' },
     { label: "Grid", code: '<section aria-labelledby="projects-heading">\n  <lk-stack gap="md">\n    <h2 id="projects-heading">Projects</h2>\n    <lk-grid cols="3" gap="lg" responsive>\n      <article><h3>Website</h3><p>Updated today</p></article>\n      <article><h3>Docs</h3><p>Ready for review</p></article>\n      <article><h3>API</h3><p>Stable</p></article>\n    </lk-grid>\n  </lk-stack>\n</section>' },
     { label: "Snap", code: '<section aria-labelledby="slides-heading">\n  <lk-stack gap="sm">\n    <h2 id="slides-heading">Highlights</h2>\n    <lk-row snap slide="peek" tabindex="0" aria-label="Highlights">\n      <article><h3>One</h3><p>First slide</p></article>\n      <article><h3>Two</h3><p>Second slide</p></article>\n      <article><h3>Three</h3><p>Third slide</p></article>\n    </lk-row>\n  </lk-stack>\n</section>' },
     { label: "Menu", code: '<lk-menu anchor>\n  <button type="button" popovertarget="demo-menu">Menu</button>\n  <lk-popover id="demo-menu" popover>\n    <nav aria-label="Demo">\n      <lk-stack gap="xs">\n        <a href="/docs">Docs</a>\n        <a href="/install">Install</a>\n      </lk-stack>\n    </nav>\n  </lk-popover>\n</lk-menu>' },
@@ -436,6 +436,10 @@
     preview.innerHTML = sanitize(input.value);
     cssOut.innerHTML = toByHand(input.value, parse(input.value));
   }
+
+  preview.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
 
   const buttons = [];
   const setActive = (idx) => buttons.forEach((b, i) => b.setAttribute("aria-pressed", String(i === idx)));
