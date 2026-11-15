@@ -1,5 +1,7 @@
 # Competitor analysis
 
+This note lives in `notes/` so it is not served as `/docs`, which is `docs.html`.
+
 Research for layoutkit-css 1.5.0. LayoutKit is a tiny pure-CSS vocabulary:
 custom tags, enumerated attributes, one cascade layer, no runtime. The
 comparison is about layout that replaces JavaScript, and about the developer

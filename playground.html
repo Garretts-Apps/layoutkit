@@ -22,7 +22,8 @@
   <meta name="twitter:description" content="Try LayoutKit markup as pure-CSS layout wrappers around native semantic HTML.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20260705a">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115c">
+  <meta name="twitter:image:alt" content="LayoutKit">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -34,27 +35,33 @@
             <lk-center class="brand-mark">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
+            <span class="badge">1.5.0</span>
           </lk-row>
         </a>
-        <lk-row class="navlinks" gap="1">
-          <a class="navlink" href="/">Home</a>
-          <a class="navlink" href="/install">Install</a>
-          <a class="navlink" href="/docs">Docs</a>
-          <a class="navlink" href="/playground" aria-current="page">Playground</a>
-          <a class="navlink" href="/tutorial">Tutorial</a>
-        </lk-row>
+        <lk-scroll-area class="nav-scroll" direction="horizontal">
+          <lk-row class="navlinks" gap="1">
+            <a class="navlink" href="/">Home</a>
+            <a class="navlink" href="/install">Install</a>
+            <a class="navlink" href="/docs">Docs</a>
+            <a class="navlink" href="/playground" aria-current="page">Playground</a>
+            <a class="navlink" href="/tutorial">Tutorial</a>
+          </lk-row>
+        </lk-scroll-area>
       </lk-spread>
     </nav>
   </header>
 
-  <main id="main" class="container" style="padding-block: 40px;">
-    <lk-stack gap="2" style="margin-bottom: 20px;">
+  <lk-box id="main" class="container page">
+    <lk-stack gap="4">
+    <lk-stack gap="2">
       <h1 class="h2">Playground</h1>
-      <p class="sans muted">Try <code class="sans">lk-*</code> layout wrappers around native semantic HTML. The preview uses the same CSS file shipped by the package.</p>
-      <lk-row id="pg-presets" class="navlinks" gap="2" style="margin-top: 4px;"></lk-row>
+      <p class="sans muted">Try <code class="sans">lk-*</code> layout wrappers around native semantic HTML. The preview uses the same CSS file shipped by the package, version 1.5.0.</p>
+      <lk-scroll-area class="nav-scroll" direction="horizontal">
+        <lk-row id="pg-presets" class="navlinks" gap="2"></lk-row>
+      </lk-scroll-area>
     </lk-stack>
 
-    <div class="split">
+    <lk-switcher class="panes" gap="4">
       <!-- Input -->
       <div class="editor">
         <div class="panel-label">LayoutKit markup</div>
@@ -77,10 +84,10 @@
           <noscript><p class="sans muted">The live editor needs JavaScript, but this preview is rendered by pure CSS — no JS required.</p></noscript>
         </div>
       </div>
-    </div>
+    </lk-switcher>
 
     <!-- The same layout without LayoutKit: the HTML + CSS you'd write by hand -->
-    <div class="editor" style="margin-top: 16px;">
+    <div class="editor">
       <div class="panel-label">Equivalent layout CSS, by hand</div>
       <pre id="pg-css" class="pg-css code"><span class="tok-com">&lt;!-- HTML --&gt;</span>
 <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"center"</span><span class="tok-tag">&gt;</span>
@@ -98,7 +105,8 @@
   <span class="tok-attr">min-block-size</span>: <span class="tok-str">100vh</span>;
 <span class="tok-tag">}</span></pre>
     </div>
-  </main>
+    </lk-stack>
+  </lk-box>
 
   <footer class="footer">
     <lk-spread class="container" align="center">
@@ -107,6 +115,6 @@
     </lk-spread>
   </footer>
 
-  <script src="/assets/playground.js?v=20261115b"></script>
+  <script src="/assets/playground.js?v=20261115c"></script>
 </body>
 </html>

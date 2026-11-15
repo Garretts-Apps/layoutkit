@@ -22,12 +22,8 @@
   <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, TSX/JSX, and package verification.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20260705a">
-  <style>
-    .demo { border: 1px dashed var(--border); border-radius: 8px; padding: 12px; background: var(--surface-2); }
-    .demo article, .demo .cell { background: var(--surface); border-radius: 8px; padding: 8px 12px; }
-    .swatch { block-size: 6rem; inline-size: 100%; background: linear-gradient(120deg, #22d3ee, #a78bfa); }
-  </style>
+  <link rel="stylesheet" href="/assets/site.css?v=20261115c">
+  <meta name="twitter:image:alt" content="LayoutKit">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -39,39 +35,48 @@
             <lk-center class="brand-mark">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
+            <span class="badge">1.5.0</span>
           </lk-row>
         </a>
-        <lk-row class="navlinks" gap="1">
-          <a class="navlink" href="/">Home</a>
-          <a class="navlink" href="/install">Install</a>
-          <a class="navlink" href="/docs" aria-current="page">Docs</a>
-          <a class="navlink" href="/playground">Playground</a>
-          <a class="navlink" href="/tutorial">Tutorial</a>
-        </lk-row>
+        <lk-scroll-area class="nav-scroll" direction="horizontal">
+          <lk-row class="navlinks" gap="1">
+            <a class="navlink" href="/">Home</a>
+            <a class="navlink" href="/install">Install</a>
+            <a class="navlink" href="/docs" aria-current="page">Docs</a>
+            <a class="navlink" href="/playground">Playground</a>
+            <a class="navlink" href="/tutorial">Tutorial</a>
+          </lk-row>
+        </lk-scroll-area>
       </lk-spread>
     </nav>
   </header>
 
-  <main id="main" class="container">
-    <lk-stack gap="3xl" style="padding-block: 56px;">
+  <lk-box id="main" class="container">
+    <lk-sidebar class="docs-frame page" container sticky gap="xl">
+      <nav class="toc" aria-label="On this page">
+        <lk-stack class="toc-stack" gap="1">
+          <span class="eyebrow">On this page</span>
+          <a class="navlink" href="#install">Install</a>
+          <a class="navlink" href="#scope">Scope</a>
+          <a class="navlink" href="#primitives">Primitives</a>
+          <a class="navlink" href="#attributes">Attributes</a>
+          <a class="navlink" href="#layouts">CSS over JS</a>
+          <a class="navlink" href="#gallery">Gallery</a>
+          <a class="navlink" href="#helpers">Helpers</a>
+          <a class="navlink" href="#tokens">Tokens</a>
+          <a class="navlink" href="#accessibility">Accessibility</a>
+          <a class="navlink" href="#examples">Examples</a>
+          <a class="navlink" href="#jsx">TSX/JSX</a>
+          <a class="navlink" href="#browser-support">Browser support</a>
+          <a class="navlink" href="#security">Security</a>
+        </lk-stack>
+      </nav>
+      <lk-stack gap="3xl">
       <section aria-labelledby="docs-heading">
         <lk-stack gap="4">
-          <span class="pill">REFERENCE</span>
-          <h1 id="docs-heading" class="hero-title" style="font-size: 42px;">LayoutKit Docs</h1>
-          <p class="lead sans">A tiny pure-CSS layout vocabulary for readable app structure. Use <code class="sans">lk-*</code> tags to make layout intent visible while native semantic HTML carries document meaning.</p>
-          <lk-row class="navlinks" gap="1" wrap>
-            <a class="navlink" href="#install">Install</a>
-            <a class="navlink" href="#scope">Scope</a>
-            <a class="navlink" href="#primitives">Primitives</a>
-            <a class="navlink" href="#attributes">Attributes</a>
-            <a class="navlink" href="#layouts">CSS over JS</a>
-            <a class="navlink" href="#helpers">Helpers</a>
-            <a class="navlink" href="#tokens">Tokens</a>
-            <a class="navlink" href="#accessibility">Accessibility</a>
-            <a class="navlink" href="#jsx">TSX/JSX</a>
-            <a class="navlink" href="#browser-support">Browser support</a>
-            <a class="navlink" href="#security">Security</a>
-          </lk-row>
+          <span class="pill">REFERENCE · 1.5.0</span>
+          <h1 id="docs-heading" class="hero-title docs-title">LayoutKit Docs</h1>
+          <p class="lead sans">A tiny pure-CSS layout vocabulary for readable app structure. Use <code class="sans">lk-*</code> tags to make layout intent visible while native semantic HTML carries document meaning. Package version 1.5.0. Types ship in <code class="sans">jsx.d.ts</code>.</p>
         </lk-stack>
       </section>
 
@@ -443,6 +448,79 @@
         </lk-stack>
       </section>
 
+      <section id="gallery" aria-labelledby="gallery-heading">
+        <lk-stack gap="4">
+          <h2 id="gallery-heading" class="h2">Live gallery</h2>
+          <p class="sans muted">Each primitive, with the attribute that changes it. Version 1.5.0. A root <code class="sans">lk-progress</code> would pin itself to the viewport, so the live bar uses <code class="sans">scope="nearest"</code>.</p>
+          <lk-grid responsive gap="4">
+            <article class="card">
+              <h3>lk-stack</h3>
+              <div class="demo"><lk-stack gap="sm"><p>One</p><p>Two</p></lk-stack></div>
+            </article>
+            <article class="card">
+              <h3>lk-row</h3>
+              <div class="demo"><lk-row gap="sm" justify="between"><span>Start</span><span>End</span></lk-row></div>
+            </article>
+            <article class="card">
+              <h3>lk-center</h3>
+              <div class="demo stage"><lk-center full-height><strong>Centered</strong></lk-center></div>
+            </article>
+            <article class="card">
+              <h3>lk-box</h3>
+              <div class="demo"><lk-box padding="md" width="full"><p>Padded box</p></lk-box></div>
+            </article>
+            <article class="card">
+              <h3>lk-spread</h3>
+              <div class="demo"><lk-spread align="center"><span>Left</span><span>Right</span></lk-spread></div>
+            </article>
+            <article class="card">
+              <h3>lk-cluster</h3>
+              <div class="demo"><lk-cluster gap="xs"><span class="chip">One</span><span class="chip">Two</span><span class="chip">Three</span></lk-cluster></div>
+            </article>
+            <article class="card">
+              <h3>lk-switcher</h3>
+              <div class="demo"><lk-switcher gap="sm"><article>Alpha</article><article>Beta</article></lk-switcher></div>
+            </article>
+            <article class="card">
+              <h3>lk-cover</h3>
+              <div class="demo stage"><lk-cover><p>Top</p><p center>Middle</p><p>Bottom</p></lk-cover></div>
+            </article>
+            <article class="card">
+              <h3>lk-spacer</h3>
+              <div class="demo"><lk-row gap="sm"><span>A</span><lk-spacer></lk-spacer><span>B</span></lk-row></div>
+            </article>
+            <article class="card">
+              <h3>lk-divider</h3>
+              <div class="demo"><lk-stack gap="sm"><p>Above</p><lk-divider></lk-divider><lk-row gap="sm"><span>Left</span><lk-divider orientation="vertical"></lk-divider><span>Right</span></lk-row></lk-stack></div>
+            </article>
+            <article class="card">
+              <h3>lk-aspect-ratio</h3>
+              <div class="demo"><lk-aspect-ratio ratio="16/9"><div class="swatch" role="img" aria-label="16 by 9 frame"></div></lk-aspect-ratio></div>
+            </article>
+            <article class="card">
+              <h3>lk-scroll-area</h3>
+              <div class="demo"><lk-scroll-area max-h="sm" direction="vertical" tabindex="0" aria-label="Notes"><lk-stack gap="sm"><p>First note.</p><p>Second note.</p><p>Third note.</p><p>Fourth note.</p></lk-stack></lk-scroll-area></div>
+            </article>
+            <article class="card">
+              <h3>lk-grid</h3>
+              <div class="demo"><lk-grid cols="2" gap="xs" place-items="center"><span>A</span><span>B</span><span>C</span><span>D</span></lk-grid></div>
+            </article>
+            <article class="card">
+              <h3>lk-card</h3>
+              <div class="demo"><lk-card radius="lg" surface border="none" flow="sm"><p>Surface</p><p>Rhythm</p></lk-card></div>
+            </article>
+            <article class="card">
+              <h3>lk-sidebar</h3>
+              <div class="demo"><lk-sidebar side="end" gap="sm"><p>Content</p><nav aria-label="End side">Side</nav></lk-sidebar></div>
+            </article>
+            <article class="card">
+              <h3>lk-row wrap</h3>
+              <div class="demo"><lk-row wrap reverse gap="xs"><span class="chip">1</span><span class="chip">2</span><span class="chip">3</span></lk-row></div>
+            </article>
+          </lk-grid>
+        </lk-stack>
+      </section>
+
       <section id="examples" aria-labelledby="examples-heading">
         <lk-stack gap="4">
           <h2 id="examples-heading" class="h2">Examples</h2>
@@ -498,8 +576,9 @@ tar -tzf layoutkit-css-*.tgz</pre></div>
           </lk-row>
         </lk-stack>
       </section>
-    </lk-stack>
-  </main>
+      </lk-stack>
+    </lk-sidebar>
+  </lk-box>
 
   <footer class="footer">
     <lk-spread class="container" align="center">

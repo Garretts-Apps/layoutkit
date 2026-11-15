@@ -377,6 +377,8 @@
     { label: "Grid", code: '<section aria-labelledby="projects-heading">\n  <lk-stack gap="md">\n    <h2 id="projects-heading">Projects</h2>\n    <lk-grid cols="3" gap="lg" responsive>\n      <article><h3>Website</h3><p>Updated today</p></article>\n      <article><h3>Docs</h3><p>Ready for review</p></article>\n      <article><h3>API</h3><p>Stable</p></article>\n    </lk-grid>\n  </lk-stack>\n</section>' },
     { label: "Snap", code: '<section aria-labelledby="slides-heading">\n  <lk-stack gap="sm">\n    <h2 id="slides-heading">Highlights</h2>\n    <lk-row snap slide="peek" tabindex="0" aria-label="Highlights">\n      <article><h3>One</h3><p>First slide</p></article>\n      <article><h3>Two</h3><p>Second slide</p></article>\n      <article><h3>Three</h3><p>Third slide</p></article>\n    </lk-row>\n  </lk-stack>\n</section>' },
     { label: "Menu", code: '<lk-menu anchor>\n  <button type="button" popovertarget="demo-menu">Menu</button>\n  <lk-popover id="demo-menu" popover>\n    <nav aria-label="Demo">\n      <lk-stack gap="xs">\n        <a href="/docs">Docs</a>\n        <a href="/install">Install</a>\n      </lk-stack>\n    </nav>\n  </lk-popover>\n</lk-menu>' },
+    { label: "Container", code: '<lk-grid container cols="3" gap="sm">\n  <article><h3>North</h3></article>\n  <article><h3>South</h3></article>\n  <article><h3>West</h3></article>\n</lk-grid>' },
+    { label: "Columns", code: '<lk-columns cols="3" gap="lg">\n  <p>First point stays together.</p>\n  <p>Second point follows the flow.</p>\n  <p>Third point fills the row.</p>\n</lk-columns>' },
   ];
 
   const input = document.getElementById("pg-input");

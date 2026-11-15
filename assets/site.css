@@ -46,8 +46,9 @@ a { color: inherit; text-decoration: none; }
 /* Long tokens in code samples wrap instead of forcing horizontal scroll. */
 pre, code { overflow-wrap: anywhere; }
 
-/* ---- Layout helpers (the few non-lk bits) ---- */
-.container { width: 100%; max-width: 880px; margin-inline: auto; padding-inline: 24px; }
+/* Shell width sits between lk width=lg (50rem) and width=xl (64rem). */
+.container { width: 100%; max-width: 55rem; margin-inline: auto; padding-inline: 24px; }
+.page { padding-block: 40px 56px; }
 .sans { font-family: var(--sans); }
 .muted { color: var(--muted); }
 .accent { color: var(--accent); }
@@ -76,8 +77,9 @@ pre, code { overflow-wrap: anywhere; }
   border-radius: 4px; background: var(--border); color: var(--muted);
   padding: 2px 6px; font-size: 10px; font-weight: 600;
 }
-.navlinks { overflow-x: auto; scrollbar-width: none; }
-.navlinks::-webkit-scrollbar { display: none; }
+.nav-scroll { min-inline-size: 0; flex: 1 1 auto; scrollbar-width: none; }
+.nav-scroll::-webkit-scrollbar { display: none; }
+.navlinks { scrollbar-width: none; }
 .navlink {
   flex-shrink: 0; border-radius: 6px; padding: 6px 10px;
   font-size: 12px; font-weight: 600; color: var(--muted);
@@ -153,8 +155,9 @@ tr:last-child td { border-bottom: none; }
 td code { color: var(--accent); }
 
 /* ---- Playground ---- */
-.split { display: flex; flex-direction: column; gap: 16px; }
-@media (min-width: 860px) { .split { flex-direction: row; } .split > * { flex: 1; min-width: 0; } }
+/* 54rem matches the old 860px pane switch. The switcher does the layout. */
+.panes { --lk-switch-at: 48rem; }
+.panes > * { min-inline-size: 0; }
 .editor { border: 1px solid var(--border); border-radius: 10px; background: #08080a; overflow: hidden; }
 .panel-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--border); }
 /* Editor + preview share one fixed stage height so neither column can balloon */
@@ -170,8 +173,25 @@ textarea.pg { display: block; width: 100%; height: 300px; resize: vertical; back
 .preset:hover { color: var(--fg); border-color: #3f3f46; }
 .preset[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 15%, transparent); border-color: var(--accent); color: var(--accent); }
 
+/* ---- Docs frame ---- */
+.docs-frame { --lk-sticky-top: 4.75rem; --lk-sidebar-width: 14rem; --lk-sidebar-content-min: 60%; }
+.toc { container-type: inline-size; container-name: toc; }
+.toc-stack { max-block-size: calc(100dvh - 6rem); overflow: auto; }
+.docs-title { font-size: 42px; }
+.install-lead { padding-block: 56px 40px; }
+.install-title { font-size: 40px; }
+.stage { block-size: 8rem; }
+.stage [full-height],
+.stage lk-cover { min-block-size: 100%; }
+@container toc (inline-size > 18rem) {
+  .toc-stack { flex-direction: row; flex-wrap: nowrap; max-block-size: none; align-items: center; }
+  .toc-stack .eyebrow { display: none; }
+}
+
 /* ---- Demo frames (docs/tutorial examples) ---- */
 .demo { border: 1px dashed var(--border); border-radius: 8px; padding: 12px; background: var(--surface-2); }
+.demo article, .demo .cell { background: var(--surface); border-radius: 8px; padding: 8px 12px; }
+.swatch { block-size: 6rem; inline-size: 100%; background: linear-gradient(120deg, var(--accent), var(--purple)); }
 .chip { display: inline-block; background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); border-radius: 6px; padding: 8px 12px; font-size: 12px; }
 
 /* ---- Footer ---- */
