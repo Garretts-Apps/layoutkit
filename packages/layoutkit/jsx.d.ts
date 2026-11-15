@@ -45,6 +45,7 @@ type LayoutKitPlace =
 type LayoutKitWidth = "xs" | "sm" | "md" | "lg" | "xl" | "prose" | "full";
 type LayoutKitText = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
 type LayoutKitWeight = "normal" | "medium" | "semibold" | "bold";
+type LayoutKitFlow = LayoutKitSpace | boolean | "";
 
 interface LayoutKitGlobalAttributes {
   class?: string;
@@ -64,57 +65,104 @@ interface LayoutKitGlobalAttributes {
   [attribute: `data-${string}`]: unknown;
 }
 
-interface LayoutKitCommonAttributes extends LayoutKitGlobalAttributes {
-  gap?: LayoutKitSpace;
-  padding?: LayoutKitSpace;
-  align?: LayoutKitAlign;
-  justify?: LayoutKitJustify;
-  place?: LayoutKitPlace;
-  center?: boolean | "";
-  fill?: boolean | "";
-  "full-height"?: boolean | "";
-  wrap?: boolean | "";
-  width?: LayoutKitWidth;
-}
-
-interface LayoutKitGridAttributes extends LayoutKitCommonAttributes {
-  cols?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
-  rows?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
-  responsive?: boolean | "";
-  min?: "2xs" | "xs" | "sm" | "md" | "lg" | "xl";
-  "col-gap"?: LayoutKitSpace;
-  "row-gap"?: LayoutKitSpace;
-  flow?: "row" | "col" | "dense";
-  "place-items"?: "start" | "center" | "end" | "stretch";
-}
-
-interface LayoutKitCardAttributes extends LayoutKitCommonAttributes {
-  radius?: "none" | "sm" | "md" | "lg" | "full";
-  surface?: boolean | "";
-  border?: "none";
-  flow?: LayoutKitSpace | boolean | "";
-}
-
 declare global {
   namespace JSX {
     interface IntrinsicAttributes extends LayoutKitGlobalAttributes {}
 
     interface IntrinsicElements {
-      "lk-stack": LayoutKitCommonAttributes;
-      "lk-row": LayoutKitCommonAttributes & { reverse?: boolean | "" };
-      "lk-center": LayoutKitCommonAttributes & { inline?: boolean | ""; horizontal?: boolean | ""; vertical?: boolean | "" };
-      "lk-box": LayoutKitCommonAttributes & { flow?: LayoutKitSpace | boolean | "" };
-      "lk-card": LayoutKitCardAttributes;
-      "lk-spread": LayoutKitCommonAttributes;
-      "lk-grid": LayoutKitGridAttributes;
-      "lk-cluster": LayoutKitCommonAttributes;
-      "lk-switcher": LayoutKitCommonAttributes;
-      "lk-sidebar": LayoutKitCommonAttributes & { side?: "end" };
-      "lk-cover": LayoutKitCommonAttributes;
-      "lk-spacer": LayoutKitGlobalAttributes & { size?: LayoutKitSpace | "auto" };
-      "lk-divider": LayoutKitGlobalAttributes & { orientation?: "vertical"; thickness?: "medium" | "thick" };
-      "lk-aspect-ratio": LayoutKitGlobalAttributes & { ratio?: "1/1" | "16/9" | "4/3" | "3/2" | "2/1" | "3/1" | "9/16" | "4/5" };
-      "lk-scroll-area": LayoutKitGlobalAttributes & { direction?: "vertical" | "horizontal" | "both"; "max-h"?: "sm" | "md" | "lg" | "screen" };
+      "lk-stack": LayoutKitGlobalAttributes & {
+        gap?: LayoutKitSpace;
+        padding?: LayoutKitSpace;
+        align?: LayoutKitAlign;
+        justify?: LayoutKitJustify;
+        place?: LayoutKitPlace;
+        center?: boolean | "";
+        fill?: boolean | "";
+        "full-height"?: boolean | "";
+        wrap?: boolean | "";
+        width?: LayoutKitWidth;
+      };
+      "lk-row": LayoutKitGlobalAttributes & {
+        gap?: LayoutKitSpace;
+        padding?: LayoutKitSpace;
+        align?: LayoutKitAlign;
+        justify?: LayoutKitJustify;
+        place?: LayoutKitPlace;
+        center?: boolean | "";
+        fill?: boolean | "";
+        "full-height"?: boolean | "";
+        wrap?: boolean | "";
+        width?: LayoutKitWidth;
+        reverse?: boolean | "";
+      };
+      "lk-center": LayoutKitGlobalAttributes & {
+        place?: LayoutKitPlace;
+        fill?: boolean | "";
+        "full-height"?: boolean | "";
+        inline?: boolean | "";
+        horizontal?: boolean | "";
+        vertical?: boolean | "";
+        width?: LayoutKitWidth;
+      };
+      "lk-box": LayoutKitGlobalAttributes & {
+        padding?: LayoutKitSpace;
+        fill?: boolean | "";
+        width?: LayoutKitWidth;
+        flow?: LayoutKitFlow;
+      };
+      "lk-card": LayoutKitGlobalAttributes & {
+        padding?: LayoutKitSpace;
+        width?: LayoutKitWidth;
+        flow?: LayoutKitFlow;
+        radius?: "none" | "sm" | "md" | "lg" | "full";
+        surface?: boolean | "";
+        border?: "none";
+      };
+      "lk-spread": LayoutKitGlobalAttributes & {
+        align?: LayoutKitAlign;
+        padding?: LayoutKitSpace;
+        place?: LayoutKitPlace;
+      };
+      "lk-grid": LayoutKitGlobalAttributes & {
+        cols?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
+        rows?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
+        responsive?: boolean | "";
+        min?: "2xs" | "xs" | "sm" | "md" | "lg" | "xl";
+        gap?: LayoutKitSpace;
+        "col-gap"?: LayoutKitSpace;
+        "row-gap"?: LayoutKitSpace;
+        flow?: "row" | "col" | "dense";
+        "place-items"?: "start" | "center" | "end" | "stretch";
+        place?: LayoutKitPlace;
+      };
+      "lk-cluster": LayoutKitGlobalAttributes & {
+        gap?: LayoutKitSpace;
+        place?: LayoutKitPlace;
+      };
+      "lk-switcher": LayoutKitGlobalAttributes & {
+        gap?: LayoutKitSpace;
+      };
+      "lk-sidebar": LayoutKitGlobalAttributes & {
+        gap?: LayoutKitSpace;
+        side?: "end";
+      };
+      "lk-cover": LayoutKitGlobalAttributes & {
+        gap?: LayoutKitSpace;
+      };
+      "lk-spacer": LayoutKitGlobalAttributes & {
+        size?: LayoutKitSpace | "auto";
+      };
+      "lk-divider": LayoutKitGlobalAttributes & {
+        orientation?: "vertical";
+        thickness?: "medium" | "thick";
+      };
+      "lk-aspect-ratio": LayoutKitGlobalAttributes & {
+        ratio?: "1/1" | "16/9" | "4/3" | "3/2" | "2/1" | "3/1" | "9/16" | "4/5";
+      };
+      "lk-scroll-area": LayoutKitGlobalAttributes & {
+        direction?: "vertical" | "horizontal" | "both";
+        "max-h"?: "sm" | "md" | "lg" | "screen";
+      };
     }
   }
 }

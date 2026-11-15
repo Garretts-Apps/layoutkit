@@ -15,7 +15,7 @@
 //   - Free-form values (color, ratio, min/max sizes) are driven by CSS custom
 //     properties so they stay in pure CSS without enumerating every value.
 
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -136,8 +136,11 @@ for (const [k, v] of Object.entries(WIDTH)) {
 }
 
 section("Flow — vertical rhythm between flowing children (the owl)");
+// Bare `flow` keeps the md rhythm. Every enumerated spacing value, including the
+// numeric scale, overrides it. These rules share specificity with the bare
+// attribute, so they have to come after it.
 rule("lk-box[flow] > * + *,\n  lk-card[flow] > * + *", "margin-block-start: var(--lk-space-md);");
-for (const k of Object.keys(TOKENS)) rule(`lk-box[flow="${k}"] > * + *,\n  lk-card[flow="${k}"] > * + *`, `margin-block-start: var(--lk-space-${k});`);
+for (const [k, v] of Object.entries(SPACE)) rule(`lk-box[flow="${k}"] > * + *,\n  lk-card[flow="${k}"] > * + *`, `margin-block-start: ${v};`);
 
 section("Card — padding, radius, surface, border");
 variants(["lk-card"], "padding", SPACE, (v) => `padding: ${v};`);
@@ -176,6 +179,10 @@ placeFlex("lk-cluster", false);
 for (const [val, [inl, blk]] of Object.entries(PLACE)) {
   rule(`lk-grid[place="${val}"]`, `justify-items: ${GRIDP[inl]}; align-items: ${GRIDP[blk]};`);
 }
+// Distribution is extra space between tracks, not item alignment inside them.
+for (const [val, jc] of Object.entries(DIST)) {
+  rule(`lk-grid[place="${val}"]`, `justify-content: ${jc}; align-content: ${jc};`);
+}
 
 section("Boolean modifiers");
 rule("lk-stack[center],\n  lk-row[center]", "align-items: center; justify-content: center;");
@@ -192,10 +199,14 @@ rule("lk-center[vertical]:not([horizontal])", "align-items: stretch;");
 section("Grid columns / rows / flow / placement");
 for (let n = 1; n <= 12; n++) rule(`lk-grid[cols="${n}"]`, `grid-template-columns: repeat(${n}, minmax(0, 1fr));`);
 for (let n = 1; n <= 12; n++) rule(`lk-grid[rows="${n}"]`, `grid-template-rows: repeat(${n}, minmax(0, 1fr));`);
-rule("lk-grid[responsive]", "grid-template-columns: repeat(auto-fit, minmax(var(--lk-min-child-width, 250px), 1fr));");
+// Clamp the track minimum to the container so a viewport narrower than the
+// preferred track does not force horizontal overflow. At wider sizes min()
+// resolves to the same preferred length as before.
+rule("lk-grid[responsive]", "grid-template-columns: repeat(auto-fit, minmax(min(var(--lk-min-child-width, 250px), 100%), 1fr));");
 // `min` = responsive auto-fill with an enumerated min child width (CSP-clean
-// alternative to inline --lk-min-child-width).
-for (const [k, v] of Object.entries(MINW)) rule(`lk-grid[min="${k}"]`, `grid-template-columns: repeat(auto-fill, minmax(${v}, 1fr));`);
+// alternative to inline --lk-min-child-width). It replaces `responsive` when
+// both are set, and empty tracks keep their share of the row.
+for (const [k, v] of Object.entries(MINW)) rule(`lk-grid[min="${k}"]`, `grid-template-columns: repeat(auto-fill, minmax(min(${v}, 100%), 1fr));`);
 variants(["lk-grid"], "col-gap", SPACE, (v) => `column-gap: ${v};`);
 variants(["lk-grid"], "row-gap", SPACE, (v) => `row-gap: ${v};`);
 rule('lk-grid[flow="row"]', "grid-auto-flow: row;");
@@ -205,7 +216,10 @@ for (const p of ["start", "center", "end", "stretch"]) rule(`lk-grid[place-items
 
 section("Spacer — fixed sizes (default is flexible)");
 rule('lk-spacer[size="auto"]', "flex: 1 1 0%;");
-variants(["lk-spacer"], "size", SPACE, (v) => `flex: none; block-size: ${v};`);
+// flex-basis is the main size, so the same size separates siblings in a row or
+// a stack. block-size preserves the previous vertical size, including when the
+// spacer is not a flex item.
+variants(["lk-spacer"], "size", SPACE, (v) => `flex: 0 0 ${v}; block-size: ${v};`);
 
 section("Divider — thickness + vertical orientation");
 rule('lk-divider[thickness="medium"]', "border-block-start-width: 2px;");
@@ -233,6 +247,16 @@ const targets = [
   join(pkgDir, "layoutkit.css"),
   join(pkgDir, "..", "..", "layoutkit.css"), // site root — dogfooded by the docs + offered as the download
 ];
-for (const target of targets) writeFileSync(target, css);
-const kb = (Buffer.byteLength(css, "utf8") / 1024).toFixed(1);
-console.log(`Wrote layoutkit.css (${kb} KB, ${out.filter((l) => l.includes("{") && !l.includes("@layer")).length} rules) -> ${targets.length} targets`);
+const check = process.argv.includes("--check");
+if (check) {
+  const drifted = targets.filter((target) => !existsSync(target) || readFileSync(target, "utf8") !== css);
+  if (drifted.length) {
+    console.error(`layoutkit.css is out of date:\n${drifted.map((target) => `- ${target}`).join("\n")}\nRun: npm run build`);
+    process.exit(1);
+  }
+  console.log("generated layoutkit.css matches the committed files");
+} else {
+  for (const target of targets) writeFileSync(target, css);
+  const kb = (Buffer.byteLength(css, "utf8") / 1024).toFixed(1);
+  console.log(`Wrote layoutkit.css (${kb} KB, ${out.filter((l) => l.includes("{") && !l.includes("@layer")).length} rules) -> ${targets.length} targets`);
+}
