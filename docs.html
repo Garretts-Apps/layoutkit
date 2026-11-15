@@ -3,593 +3,594 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Docs - LayoutKit primitives, attributes, accessibility, and tokens</title>
-  <meta name="description" content="LayoutKit documentation for pure-CSS layout primitives, attributes, accessibility guidance, semantic HTML usage, design tokens, TSX/JSX, and package verification.">
+  <title>Docs — LayoutKit primitives, attributes, and 2.0 defaults</title>
+  <meta name="description" content="LayoutKit 2.0 documentation: container-query switcher, sidebar, and grid, fluid spacing, snap scrolling, width tokens, accessibility, and JSX types.">
   <link rel="canonical" href="https://layoutkit.dev/docs">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#0a0a0b">
+  <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="LayoutKit Docs">
-  <meta property="og:description" content="Reference for a tiny pure-CSS layout vocabulary used inside native semantic HTML.">
+  <meta property="og:description" content="Reference for pure-CSS layout primitives. Version 2.0 measures switcher, sidebar, and grid from their container.">
   <meta property="og:url" content="https://layoutkit.dev/docs">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit">
+  <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="LayoutKit Docs">
-  <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, TSX/JSX, and package verification.">
+  <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, and the 2.0.0 defaults.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
+  <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
-  <meta name="twitter:image:alt" content="LayoutKit">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
     <lk-box class="nav" sticky>
-    <nav aria-label="Primary">
-      <lk-spread align="center">
-        <a href="/" aria-label="LayoutKit home">
-          <lk-row gap="2" align="center">
-            <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
-            <span class="brand brand-name">LayoutKit</span>
-            <span class="badge">CSS</span>
-            <span class="badge">2.0.0</span>
+      <lk-box width="3xl" padding="4">
+        <nav aria-label="Primary">
+          <lk-row align="center" gap="sm" wrap>
+            <a class="brand-link" href="/" aria-label="LayoutKit home">
+              <lk-row gap="2" align="center">
+                <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
+                <span class="brand">LayoutKit</span>
+                <span class="badge">2.0.0</span>
+              </lk-row>
+            </a>
+            <lk-spacer></lk-spacer>
+            <lk-cluster gap="1">
+              <a class="navlink" href="/">Home</a>
+              <a class="navlink" href="/install">Install</a>
+              <a class="navlink" href="/docs" aria-current="page">Docs</a>
+              <a class="navlink" href="/playground">Playground</a>
+              <a class="navlink" href="/tutorial">Tutorial</a>
+            </lk-cluster>
           </lk-row>
-        </a>
-        <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
-          <lk-row class="navlinks" gap="1">
-            <a class="navlink" href="/">Home</a>
-            <a class="navlink" href="/install">Install</a>
-            <a class="navlink" href="/docs" aria-current="page">Docs</a>
-            <a class="navlink" href="/playground">Playground</a>
-            <a class="navlink" href="/tutorial">Tutorial</a>
-          </lk-row>
-        </lk-scroll-area>
-      </lk-spread>
-    </nav>
+        </nav>
+      </lk-box>
     </lk-box>
   </header>
 
-  <lk-box id="main" class="container" width="xl">
-    <lk-sidebar class="docs-frame page" container sticky gap="xl">
-      <nav class="toc" aria-label="On this page">
-        <lk-stack class="toc-stack" gap="1">
-          <span class="eyebrow">On this page</span>
-          <a class="navlink" href="#install">Install</a>
-          <a class="navlink" href="#scope">Scope</a>
-          <a class="navlink" href="#primitives">Primitives</a>
-          <a class="navlink" href="#attributes">Attributes</a>
-          <a class="navlink" href="#layouts">CSS over JS</a>
-          <a class="navlink" href="#gallery">Gallery</a>
-          <a class="navlink" href="#helpers">Helpers</a>
-          <a class="navlink" href="#tokens">Tokens</a>
-          <a class="navlink" href="#accessibility">Accessibility</a>
-          <a class="navlink" href="#examples">Examples</a>
-          <a class="navlink" href="#jsx">TSX/JSX</a>
-          <a class="navlink" href="#browser-support">Browser support</a>
-          <a class="navlink" href="#security">Security</a>
-        </lk-stack>
-      </nav>
-      <lk-stack gap="3xl">
-      <section aria-labelledby="docs-heading">
-        <lk-stack gap="4">
-          <span class="pill">REFERENCE · 2.0.0</span>
-          <h1 id="docs-heading" class="hero-title docs-title">LayoutKit Docs</h1>
-          <p class="lead sans">A tiny pure-CSS layout vocabulary for readable app structure. Use <code class="sans">lk-*</code> tags to make layout intent visible while native semantic HTML carries document meaning. Package version 2.0.0. Types ship in <code class="sans">jsx.d.ts</code>.</p>
-        </lk-stack>
-      </section>
+  <main id="main">
+    <lk-box width="3xl" padding="4">
+      <lk-sidebar class="docs-frame" sticky gap="xl">
+        <nav class="toc" aria-label="On this page">
+          <lk-stack gap="sm">
+            <p class="kicker">On this page</p>
+            <lk-switcher at="xs" limit="off" gap="1">
+              <a class="navlink" href="#install">Install</a>
+              <a class="navlink" href="#scope">Scope</a>
+              <a class="navlink" href="#semantic-html">Semantic HTML</a>
+              <a class="navlink" href="#primitives">Primitives</a>
+              <a class="navlink" href="#attributes">Attributes</a>
+              <a class="navlink" href="#layouts">Live layouts</a>
+              <a class="navlink" href="#gallery">Gallery</a>
+              <a class="navlink" href="#helpers">Helpers</a>
+              <a class="navlink" href="#tokens">Tokens</a>
+              <a class="navlink" href="#accessibility">Accessibility</a>
+              <a class="navlink" href="#examples">Examples</a>
+              <a class="navlink" href="#jsx">TSX / JSX</a>
+              <a class="navlink" href="#browser-support">Browsers</a>
+              <a class="navlink" href="#security">Security</a>
+            </lk-switcher>
+          </lk-stack>
+        </nav>
 
-      <section id="install" aria-labelledby="install-heading">
-        <lk-stack gap="4">
-          <h2 id="install-heading" class="h2">Install and load CSS</h2>
-          <p class="sans muted">Load LayoutKit early in the document <code class="sans">&lt;head&gt;</code>, or import it at the root/global CSS level in a framework. If the CSS does not load, <code class="sans">lk-*</code> tags are plain unknown elements.</p>
-          <div class="code"><pre>npm install layoutkit-css</pre></div>
-          <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
-          <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span></pre></div>
-        </lk-stack>
-      </section>
-
-      <section id="scope" aria-labelledby="scope-heading">
-        <lk-grid responsive gap="4">
-          <article class="card">
-            <lk-stack gap="2">
-              <h2 id="scope-heading" class="h2">Scope</h2>
-              <p class="sans muted">LayoutKit covers common layout primitives: stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, and menu. Switcher, sidebar, and grid query their own size. Subgrid, row snap, sticky, and anchors stay opt-in.</p>
+        <lk-stack gap="2xl">
+          <section aria-labelledby="docs-heading">
+            <lk-stack gap="md">
+              <p class="kicker">Reference · 2.0.0</p>
+              <h1 id="docs-heading" class="title">LayoutKit docs</h1>
+              <p class="lede">A pure-CSS layout vocabulary. <code>lk-*</code> tags make layout intent visible. Native HTML carries the meaning. Types ship in <code>jsx.d.ts</code>.</p>
+              <p class="measure">Coming from 1.5? <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">MIGRATION.md</a> lists every default that changed, including the restore snippet. The path in the repo is <code>packages/layoutkit/MIGRATION.md</code>.</p>
             </lk-stack>
-          </article>
-          <article class="card">
-            <lk-stack gap="2">
-              <h2 class="h2">Non-goals</h2>
-              <p class="sans muted">No buttons, forms, typography system, color themes, icons, animation system, JavaScript behavior, stateful app shell, data table styling, component library, or design system replacement.</p>
-            </lk-stack>
-          </article>
-        </lk-grid>
-      </section>
+          </section>
 
-      <section id="semantic-html" aria-labelledby="semantic-heading">
-        <lk-stack gap="4">
-          <h2 id="semantic-heading" class="h2">Semantic HTML first</h2>
-          <p class="sans muted">LayoutKit is semantic to developers, not to the browser accessibility tree. It should not replace <code class="sans">main</code>, <code class="sans">nav</code>, <code class="sans">section</code>, <code class="sans">article</code>, <code class="sans">header</code>, <code class="sans">footer</code>, headings, buttons, links, lists, tables, or form controls.</p>
-          <lk-grid responsive gap="4">
-            <article>
-              <span class="eyebrow">Good</span>
-              <div class="code"><pre><span class="tok-tag">&lt;main&gt;</span>
+          <section id="install" aria-labelledby="install-heading">
+            <lk-stack gap="md">
+              <h2 id="install-heading">Install and load CSS</h2>
+              <p class="measure muted">Load LayoutKit in the document head, or import it from the root of a framework. If the file does not load, the tags render as plain unknown elements. 2.0.0 is not on the public registry yet, so link a local copy of this build instead of a package CDN.</p>
+              <figure class="code">
+                <figcaption class="code-label">npm</figcaption>
+                <pre><code>npm install layoutkit-css@2.0.0</code></pre>
+              </figure>
+              <figure class="code">
+                <figcaption class="code-label">import</figcaption>
+                <pre><code><span class="tok-tag">import</span> <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</code></pre>
+              </figure>
+              <figure class="code">
+                <figcaption class="code-label">local file</figcaption>
+                <pre><code><span class="tok-tag">&lt;link</span> <span class="tok-attr">rel</span>=<span class="tok-str">"stylesheet"</span> <span class="tok-attr">href</span>=<span class="tok-str">"/layoutkit.css"</span><span class="tok-tag">&gt;</span></code></pre>
+              </figure>
+            </lk-stack>
+          </section>
+
+          <section id="scope" aria-labelledby="scope-heading">
+            <lk-grid cols="2" gap="lg">
+              <lk-card surface padding="lg">
+                <lk-stack gap="sm">
+                  <h2 id="scope-heading">Scope</h2>
+                  <p class="muted">Stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, menu, and columns. Switcher, sidebar, and grid query their own size. Subgrid, row snap, sticky regions, and anchors stay opt-in.</p>
+                </lk-stack>
+              </lk-card>
+              <lk-card surface padding="lg">
+                <lk-stack gap="sm">
+                  <h2>Non-goals</h2>
+                  <p class="muted">No buttons, forms, type system, color themes, icons, animation kit, JavaScript behavior, app shell, or data-table styling. <code>lk-card</code>, <code>lk-text</code>, and <code>lk-weight</code> are frozen helpers, not the start of a design system.</p>
+                </lk-stack>
+              </lk-card>
+            </lk-grid>
+          </section>
+
+          <section id="semantic-html" aria-labelledby="semantic-heading">
+            <lk-stack gap="md">
+              <h2 id="semantic-heading">Semantic HTML first</h2>
+              <p class="measure muted">LayoutKit is semantic to the person reading the markup, not to the accessibility tree. Do not replace <code>main</code>, <code>nav</code>, <code>section</code>, <code>article</code>, headings, buttons, links, lists, tables, or form controls.</p>
+              <lk-grid cols="2" gap="lg">
+                <article>
+                  <p class="kicker">Good</p>
+                  <figure class="code">
+                    <figcaption class="code-label">landmarks stay native</figcaption>
+                    <pre><code><span class="tok-tag">&lt;main&gt;</span>
   <span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"dashboard-heading"</span><span class="tok-tag">&gt;</span>
     <span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>
       <span class="tok-tag">&lt;h1</span> <span class="tok-attr">id</span>=<span class="tok-str">"dashboard-heading"</span><span class="tok-tag">&gt;</span>Dashboard<span class="tok-tag">&lt;/h1&gt;</span>
       <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h2&gt;</span>Open orders<span class="tok-tag">&lt;/h2&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
     <span class="tok-tag">&lt;/lk-stack&gt;</span>
   <span class="tok-tag">&lt;/section&gt;</span>
-<span class="tok-tag">&lt;/main&gt;</span></pre></div>
-            </article>
-            <article>
-              <span class="eyebrow">Bad</span>
-              <div class="code"><pre><span class="tok-tag">&lt;lk-box&gt;</span>
+<span class="tok-tag">&lt;/main&gt;</span></code></pre>
+                  </figure>
+                </article>
+                <article>
+                  <p class="kicker">Bad</p>
+                  <figure class="code">
+                    <figcaption class="code-label">meaning is gone</figcaption>
+                    <pre><code><span class="tok-tag">&lt;lk-box&gt;</span>
   <span class="tok-tag">&lt;lk-stack&gt;</span>
     <span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">lk-text</span>=<span class="tok-str">"2xl"</span><span class="tok-tag">&gt;</span>Dashboard<span class="tok-tag">&lt;/lk-box&gt;</span>
   <span class="tok-tag">&lt;/lk-stack&gt;</span>
-<span class="tok-tag">&lt;/lk-box&gt;</span></pre></div>
-              <p class="sans muted">This loses native document meaning. <code class="sans">lk-text</code> is an attribute, not a tag.</p>
-            </article>
-          </lk-grid>
-        </lk-stack>
-      </section>
-
-      <section id="primitives" aria-labelledby="primitives-heading">
-        <lk-stack gap="4">
-          <h2 id="primitives-heading" class="h2">Basic primitives</h2>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Tag</th><th>Purpose</th><th>Common attributes</th></tr></thead>
-              <tbody>
-                <tr><td><code>lk-stack</code></td><td>Vertical flow</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt</td></tr>
-                <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> becomes a list when narrow.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, reverse, width, adapt, sticky, snap, slide</td></tr>
-                <tr><td><code>lk-center</code></td><td>Centered layout. Covers a positioned parent unless <code>overlay="off"</code>.</td><td>fill, full-height, inline, horizontal, vertical, place, width, overlay, square</td></tr>
-                <tr><td><code>lk-box</code></td><td>Block wrapper</td><td>padding, fill, width, flow</td></tr>
-                <tr><td><code>lk-card</code></td><td>Neutral padded block</td><td>padding, radius, surface, border, width, flow, adapt</td></tr>
-                <tr><td><code>lk-spread</code></td><td>Space-between row</td><td>align, padding, place</td></tr>
-                <tr><td><code>lk-grid</code></td><td>Grid layout</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items, container, subgrid</td></tr>
-                <tr><td><code>lk-cluster</code></td><td>Wrapping group</td><td>gap, place</td></tr>
-                <tr><td><code>lk-switcher</code></td><td>Container row-to-stack layout. Default threshold is 30rem and the default limit is 4.</td><td>gap, container, limit, at</td></tr>
-                <tr><td><code>lk-sidebar</code></td><td>Wrapping side/content layout</td><td>gap, side, container, sticky, layout</td></tr>
-                <tr><td><code>lk-cover</code></td><td>Min-height cover region</td><td>gap. Put <code>center</code> on the child that should sit in the middle.</td></tr>
-                <tr><td><code>lk-spacer</code></td><td>Flexible or fixed space</td><td>size</td></tr>
-                <tr><td><code>lk-divider</code></td><td>Visual divider</td><td>orientation, thickness</td></tr>
-                <tr><td><code>lk-aspect-ratio</code></td><td>Aspect-ratio wrapper. <code>img</code>, <code>video</code>, <code>iframe</code>, <code>canvas</code>, and <code>svg</code> fill the frame.</td><td>ratio</td></tr>
-                <tr><td><code>lk-scroll-area</code></td><td>Constrained scroll container. Horizontal direction snaps unless <code>snap="off"</code>.</td><td>direction, max-h, gap, snap, slide</td></tr>
-                <tr><td><code>lk-progress</code></td><td>Scroll progress bar. Static when scroll timelines are unsupported.</td><td>scope</td></tr>
-                <tr><td><code>lk-popover</code></td><td>Top-layer panel for a native <code>popover</code>. Does not set <code>display</code>.</td><td>anchor</td></tr>
-                <tr><td><code>lk-disclosure</code></td><td>Layout for native <code>details</code>/<code>summary</code></td><td>panel, anchor, side</td></tr>
-                <tr><td><code>lk-menu</code></td><td>Invoker plus <code>lk-popover</code>. The invoker is the first child.</td><td>anchor, side</td></tr>
-                <tr><td><code>lk-columns</code></td><td>Multi-column text flow. Children avoid splitting.</td><td>cols, gap</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </lk-stack>
-      </section>
-
-      <section id="attributes" aria-labelledby="attributes-heading">
-        <lk-stack gap="4">
-          <h2 id="attributes-heading" class="h2">Attribute reference</h2>
-          <p class="sans muted">Attributes map to stable layout behavior. They are not a mirror of every CSS property.</p>
-          <lk-grid responsive gap="4">
-            <article class="card"><h3>Spacing</h3><p class="sans muted"><code>gap</code>, <code>padding</code>, <code>col-gap</code>, <code>row-gap</code>: <code>none</code>, <code>px</code>, <code>xs</code> through <code>3xl</code>, and the finite numeric scale.</p></article>
-            <article class="card"><h3>Alignment</h3><p class="sans muted"><code>align</code>, <code>justify</code>, <code>place</code>, <code>place-items</code>, and <code>center</code> cover common flex and grid alignment.</p></article>
-            <article class="card"><h3>Sizing</h3><p class="sans muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. <code>full-height</code> and <code>lk-cover</code> use <code>100dvh</code> where supported, then <code>100svh</code>, then <code>100vh</code>. <code>--lk-cover-min</code> still overrides the cover.</p></article>
-            <article class="card"><h3>Grid tracks</h3><p class="sans muted"><code>responsive</code> and <code>min</code> are both auto-fit, so items grow to fill the row and empty tracks collapse. <code>min</code> sets an enumerated minimum and overrides <code>responsive</code>. Both clamp a track that would be wider than the container. <code>flow</code> on a grid is <code>row</code>, <code>col</code>, or <code>dense</code>. On <code>lk-box</code> and <code>lk-card</code>, <code>flow</code> is the spacing scale.</p></article>
-            <article class="card"><h3>Divider and frames</h3><p class="sans muted">The default divider is a <code>currentColor</code> mix, so it stays visible on dark pages. Browsers without <code>color-mix()</code> keep <code>#e5e7eb</code>. Set <code>--lk-divider-color</code> to choose a color. Replaced children of <code>lk-aspect-ratio</code> fill the frame with <code>object-fit: cover</code>.</p></article>
-            <article class="card"><h3>Defaults in 2.0</h3><p class="sans muted">Container queries, a single-child center, center overlay, a switcher limit of 4, fluid space, and horizontal snap are on unless you set <code>off</code>. <code>subgrid</code>, <code>snap</code> on a row, <code>sticky</code>, <code>anchor</code>, and <code>panel</code> stay opt-in. The migration guide lists a restore snippet for each default.</p></article>
-          </lk-grid>
-        </lk-stack>
-      </section>
-
-      <section id="helpers" aria-labelledby="helpers-heading">
-        <lk-stack gap="4">
-          <h2 id="helpers-heading" class="h2">Frozen convenience helpers</h2>
-          <p class="sans muted"><code class="sans">lk-card</code>, <code class="sans">lk-text</code>, and <code class="sans">lk-weight</code> are intentionally small convenience helpers. They are not the start of a component or typography system, and new visual styling primitives should be rejected unless they directly support layout.</p>
-        </lk-stack>
-      </section>
-
-      <section id="tokens" aria-labelledby="tokens-heading">
-        <lk-stack gap="4">
-          <h2 id="tokens-heading" class="h2">Design token customization</h2>
-          <p class="sans muted">LayoutKit variables fall back to default values, but first look for app-level variables such as <code class="sans">--space-md</code>, <code class="sans">--text-md</code>, and <code class="sans">--radius-md</code>.</p>
-          <div class="code"><pre><span class="tok-tag">:root</span> {
-  <span class="tok-attr">--lk-space-sm</span>: <span class="tok-str">var(--space-sm, var(--lk-space-fluid-sm))</span>;
-  <span class="tok-attr">--lk-space-md</span>: <span class="tok-str">var(--space-md, var(--lk-space-fluid-md))</span>;
-  <span class="tok-attr">--lk-space-lg</span>: <span class="tok-str">var(--space-lg, var(--lk-space-fluid-lg))</span>;
-  <span class="tok-attr">--lk-text-md</span>: <span class="tok-str">var(--text-md, 1rem)</span>;
-  <span class="tok-attr">--lk-radius-md</span>: <span class="tok-str">var(--radius-md, 0.75rem)</span>;
-}</pre></div>
-          <p class="sans muted">A host <code class="sans">--space-*</code> token still wins. Otherwise the scale is the fluid clamp in <code class="sans">--lk-space-fluid-*</code>. <code class="sans">--lk-space-static-*</code> keeps the previous rem steps. <code class="sans">width="xl"</code> is 56rem. The previous 64rem step is <code class="sans">width="2xl"</code>, and <code class="sans">3xl</code> is 80rem.</p>
-          <div class="code"><pre><span class="tok-tag">:root</span> {
-  <span class="tok-attr">--space-sm</span>: <span class="tok-str">var(--space-2)</span>;
-  <span class="tok-attr">--space-md</span>: <span class="tok-str">var(--space-4)</span>;
-  <span class="tok-attr">--space-lg</span>: <span class="tok-str">var(--space-6)</span>;
-}</pre></div>
-        </lk-stack>
-      </section>
-
-      <section id="accessibility" aria-labelledby="accessibility-heading">
-        <lk-stack gap="4">
-          <h2 id="accessibility-heading" class="h2">Accessibility</h2>
-          <ul class="sans muted">
-            <li>LayoutKit wraps and arranges semantic HTML.</li>
-            <li>LayoutKit does not replace semantic HTML.</li>
-            <li>Do not put click handlers on <code>lk-*</code> elements. Use <code>button</code> or <code>a</code>.</li>
-            <li>Do not use <code>lk-*</code> elements as headings, lists, tables, forms, landmarks, or controls.</li>
-            <li>If a LayoutKit wrapper has no semantic purpose, it usually does not need ARIA.</li>
-            <li>Do not add ARIA roles just to make layout wrappers seem semantic.</li>
-            <li>Prefer native HTML first.</li>
-            <li>LayoutKit should not interfere with focus order.</li>
-            <li>Avoid hiding overflow in ways that trap keyboard users.</li>
-            <li>Scroll containers should remain keyboard and screen-reader usable. <code>lk-scroll-area</code> does not create a tab stop. If the region itself must be scrolled from the keyboard, set <code>tabindex="0"</code> and a name on it. Without <code>direction</code>, both axes scroll; <code>direction="vertical"</code> clips inline overflow. A <code>snap</code> carousel follows the same rule. Its direct children are the slides.</li>
-            <li><code>lk-menu</code> and <code>lk-disclosure</code> do not invent buttons. The menu invoker is the first child and must be a <code>button</code>, link, or <code>summary</code>. Disclosure uses native <code>details</code>.</li>
-            <li><code>lk-progress</code> is decorative. It does not replace a status message.</li>
-            <li>LayoutKit provides layout behavior only. Accessibility still depends on the underlying HTML and application code.</li>
-          </ul>
-        </lk-stack>
-      </section>
-
-      <section id="layouts" aria-labelledby="layouts-heading">
-        <lk-stack gap="8">
-          <lk-stack gap="4">
-            <h2 id="layouts-heading" class="h2">CSS over JavaScript</h2>
-            <p class="sans muted">These attributes are off until you set them. A browser that lacks the feature keeps the layout you already had.</p>
-          </lk-stack>
-
-          <lk-stack gap="4">
-            <h3>Container queries</h3>
-            <p class="sans muted">Switcher, sidebar, and grid are query containers unless <code class="sans">container="off"</code>. A switcher stacks below 30rem. <code class="sans">at</code> selects xs 20rem, sm 24rem, lg 40rem, xl 48rem, or 2xl 64rem. <code class="sans">at="flex"</code> restores the <code class="sans">--lk-switch-at</code> formula. A fixed-column grid stacks under 32rem. <code class="sans">container="sm"</code>, <code class="sans">md</code>, <code class="sans">lg</code>, and <code class="sans">xl</code> use 24rem, 32rem, 48rem, and 64rem. More than four switcher children each take a row unless <code class="sans">limit</code> says otherwise.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">container</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;article&gt;</span>North<span class="tok-tag">&lt;/article&gt;</span>
-  <span class="tok-tag">&lt;article&gt;</span>South<span class="tok-tag">&lt;/article&gt;</span>
-  <span class="tok-tag">&lt;article&gt;</span>West<span class="tok-tag">&lt;/article&gt;</span>
-<span class="tok-tag">&lt;/lk-grid&gt;</span></pre></div>
-            <div class="demo">
-              <lk-stack gap="sm">
-                <p class="sans muted">16rem container. The columns stack.</p>
-                <div style="inline-size: 16rem; max-inline-size: 100%;">
-                  <lk-grid id="demo-container-narrow" container cols="3" gap="sm">
-                    <article>North</article>
-                    <article>South</article>
-                    <article>West</article>
-                  </lk-grid>
-                </div>
-                <p class="sans muted">Wide container. Three columns stay in a row.</p>
-                <lk-grid id="demo-container-wide" container cols="3" gap="sm">
-                  <article>North</article>
-                  <article>South</article>
-                  <article>West</article>
-                </lk-grid>
-              </lk-stack>
-            </div>
-          </lk-stack>
-
-          <lk-stack gap="4">
-            <h3><code class="sans">:has()</code> adaptation</h3>
-            <p class="sans muted"><code class="sans">adapt="solo"</code> centers a row or stack that has one element child. <code class="sans">place</code> and <code class="sans">justify</code> still win. <code class="sans">adapt="figure"</code> bleeds a direct child <code class="sans">figure</code> and keeps the rest of the card inset.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">adapt</span>=<span class="tok-str">"solo"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"button"</span><span class="tok-tag">&gt;</span>Only action<span class="tok-tag">&lt;/button&gt;</span>
-<span class="tok-tag">&lt;/lk-row&gt;</span>
-<span class="tok-tag">&lt;lk-card</span> <span class="tok-attr">adapt</span>=<span class="tok-str">"figure"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;figure&gt;</span><span class="tok-tag">&lt;img</span> <span class="tok-attr">src</span>=<span class="tok-str">"/photos/shore.jpg"</span> <span class="tok-attr">alt</span>=<span class="tok-str">"Rocky shore"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;/figure&gt;</span>
-  <span class="tok-tag">&lt;h3&gt;</span>Shore<span class="tok-tag">&lt;/h3&gt;</span>
-<span class="tok-tag">&lt;/lk-card&gt;</span></pre></div>
-            <lk-grid responsive gap="4">
-              <div class="demo">
-                <lk-row id="demo-solo" adapt="solo" style="min-block-size: 4rem; outline: 1px dashed var(--border);">
-                  <button type="button">Only action</button>
-                </lk-row>
-              </div>
-              <lk-card id="demo-figure" adapt="figure" width="sm">
-                <figure>
-                  <div class="swatch" role="img" aria-label="Decorative gradient"></div>
-                </figure>
-                <h3>Shore</h3>
-                <p class="sans">The text stays inset while the figure runs to the edges.</p>
-              </lk-card>
-            </lk-grid>
-          </lk-stack>
-
-          <lk-stack gap="4">
-            <h3>Subgrid</h3>
-            <p class="sans muted">A nested <code class="sans">lk-grid</code> with <code class="sans">subgrid</code> spans the parent and uses its columns. Keep <code class="sans">cols</code> so a browser without subgrid still has a template. <code class="sans">subgrid="rows"</code> and <code class="sans">subgrid="both"</code> share row tracks. Gap is inherited unless you set one.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;strong&gt;</span>Name<span class="tok-tag">&lt;/strong&gt;</span>
-  <span class="tok-tag">&lt;strong&gt;</span>Status<span class="tok-tag">&lt;/strong&gt;</span>
-  <span class="tok-tag">&lt;strong&gt;</span>Updated<span class="tok-tag">&lt;/strong&gt;</span>
-  <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">subgrid</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;span&gt;</span>Website<span class="tok-tag">&lt;/span&gt;</span>
-    <span class="tok-tag">&lt;span&gt;</span>Ready<span class="tok-tag">&lt;/span&gt;</span>
-    <span class="tok-tag">&lt;span&gt;</span>Today<span class="tok-tag">&lt;/span&gt;</span>
-  <span class="tok-tag">&lt;/lk-grid&gt;</span>
-<span class="tok-tag">&lt;/lk-grid&gt;</span></pre></div>
-            <div class="demo">
-              <lk-grid id="demo-subgrid" cols="3" gap="sm">
-                <strong class="cell">Name</strong>
-                <strong class="cell">Status</strong>
-                <strong class="cell">Updated</strong>
-                <lk-grid cols="3" subgrid>
-                  <span class="cell">Website</span>
-                  <span class="cell">Ready</span>
-                  <span class="cell">Today</span>
-                </lk-grid>
+<span class="tok-tag">&lt;/lk-box&gt;</span></code></pre>
+                  </figure>
+                  <p class="muted"><code>lk-text</code> is an attribute, not a tag.</p>
+                </article>
               </lk-grid>
-            </div>
-          </lk-stack>
+            </lk-stack>
+          </section>
 
-          <lk-stack gap="4">
-            <h3>Scroll-snap carousel</h3>
-            <p class="sans muted"><code class="sans">snap</code> on <code class="sans">lk-row</code> or <code class="sans">lk-scroll-area</code> makes each direct child a slide. <code class="sans">slide</code> is <code class="sans">full</code>, <code class="sans">half</code>, <code class="sans">third</code>, or <code class="sans">peek</code>. <code class="sans">direction="vertical"</code> on a scroll area snaps on the block axis. Set <code class="sans">tabindex="0"</code> and a name when the region itself must be scrolled from the keyboard.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">snap</span> <span class="tok-attr">slide</span>=<span class="tok-str">"peek"</span> <span class="tok-attr">tabindex</span>=<span class="tok-str">"0"</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Highlights"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>One<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
-  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Two<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
-  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Three<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
-<span class="tok-tag">&lt;/lk-row&gt;</span></pre></div>
-            <div class="demo">
-              <lk-row id="demo-snap" snap slide="peek" tabindex="0" aria-label="Highlights">
-                <article><h3>One</h3><p class="sans">First slide</p></article>
-                <article><h3>Two</h3><p class="sans">Second slide</p></article>
-                <article><h3>Three</h3><p class="sans">Third slide</p></article>
-              </lk-row>
-            </div>
-          </lk-stack>
+          <section id="primitives" aria-labelledby="primitives-heading">
+            <lk-stack gap="md">
+              <h2 id="primitives-heading">Primitives</h2>
+              <div class="table-wrap" tabindex="0" role="region" aria-label="Layout primitives">
+                <table>
+                  <caption>Tags in layoutkit.css 2.0.0</caption>
+                  <thead>
+                    <tr><th scope="col">Tag</th><th scope="col">Purpose</th><th scope="col">Common attributes</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><code>lk-stack</code></td><td>Vertical flow. One child centers unless <code>adapt="off"</code>.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt, sticky</td></tr>
+                    <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> is a snap row that becomes a column below 32rem.</td><td>gap, padding, align, justify, place, fill, wrap, reverse, width, adapt, sticky, snap, slide</td></tr>
+                    <tr><td><code>lk-center</code></td><td>Centers its content. Covers a positioned parent unless <code>overlay="off"</code>.</td><td>fill, full-height, inline, horizontal, vertical, place, width, overlay, square</td></tr>
+                    <tr><td><code>lk-box</code></td><td>Block wrapper.</td><td>padding, fill, width, flow, sticky, square, reveal</td></tr>
+                    <tr><td><code>lk-card</code></td><td>Neutral padded block.</td><td>padding, radius, surface, border, width, flow, adapt, reveal</td></tr>
+                    <tr><td><code>lk-spread</code></td><td>Space-between row. Accepts <code>width</code>.</td><td>align, padding, place, width</td></tr>
+                    <tr><td><code>lk-grid</code></td><td>Grid. Fixed <code>cols</code> stack from the grid’s own width, default 32rem.</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items, container, subgrid</td></tr>
+                    <tr><td><code>lk-cluster</code></td><td>Wrapping group.</td><td>gap, place</td></tr>
+                    <tr><td><code>lk-switcher</code></td><td>Container row that stacks below 30rem. Default limit is 4.</td><td>gap, container, limit, at</td></tr>
+                    <tr><td><code>lk-sidebar</code></td><td>Side and content that wrap on the container.</td><td>gap, side, container, sticky, layout</td></tr>
+                    <tr><td><code>lk-cover</code></td><td>Minimum-height column. Put <code>center</code> on the middle child.</td><td>gap, size</td></tr>
+                    <tr><td><code>lk-spacer</code></td><td>Flexible or fixed space.</td><td>size</td></tr>
+                    <tr><td><code>lk-divider</code></td><td>Visual rule. Default color follows <code>currentColor</code>.</td><td>orientation, thickness</td></tr>
+                    <tr><td><code>lk-aspect-ratio</code></td><td>Aspect frame. Replaced children fill it.</td><td>ratio</td></tr>
+                    <tr><td><code>lk-scroll-area</code></td><td>Bounded scroller. Horizontal direction snaps unless <code>snap="off"</code>.</td><td>direction, max-h, gap, snap, slide</td></tr>
+                    <tr><td><code>lk-progress</code></td><td>Scroll progress. Static when timelines are missing. A bare element tracks the viewport.</td><td>scope</td></tr>
+                    <tr><td><code>lk-popover</code></td><td>Top-layer panel. Does not set <code>display</code>.</td><td>anchor</td></tr>
+                    <tr><td><code>lk-disclosure</code></td><td>Layout for native <code>details</code> and <code>summary</code>.</td><td>panel, anchor, side, animate</td></tr>
+                    <tr><td><code>lk-menu</code></td><td>Invoker plus <code>lk-popover</code>. The invoker is the first child.</td><td>anchor, side</td></tr>
+                    <tr><td><code>lk-columns</code></td><td>Multi-column text. Children avoid splitting.</td><td>cols, gap</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </lk-stack>
+          </section>
 
-          <lk-stack gap="4">
-            <h3>Sticky sidebar and scroll progress</h3>
-            <p class="sans muted"><code class="sans">sticky</code> pins the side panel to <code class="sans">--lk-sticky-top</code> (default 0). <code class="sans">side="end"</code> pins the last child. <code class="sans">lk-progress</code> is a static bar until <code class="sans">animation-timeline: scroll()</code> is available. <code class="sans">scope="nearest"</code> tracks the nearest scroller. Reduced motion keeps the static bar.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-sidebar</span> <span class="tok-attr">sticky</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;nav</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Sections"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"#layouts"</span><span class="tok-tag">&gt;</span>Layouts<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/nav&gt;</span>
-  <span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">max-h</span>=<span class="tok-str">"sm"</span> <span class="tok-attr">tabindex</span>=<span class="tok-str">"0"</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Notes"</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;lk-progress</span> <span class="tok-attr">scope</span>=<span class="tok-str">"nearest"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;/lk-progress&gt;</span>
-    <span class="tok-tag">&lt;p&gt;</span>Notes<span class="tok-tag">&lt;/p&gt;</span>
-  <span class="tok-tag">&lt;/lk-scroll-area&gt;</span>
-<span class="tok-tag">&lt;/lk-sidebar&gt;</span></pre></div>
-            <div class="demo">
-              <lk-sidebar id="demo-sticky" sticky>
-                <nav aria-label="Demo sections">
-                  <lk-stack gap="xs">
-                    <a href="#layouts">Layouts</a>
-                    <a href="#examples">Examples</a>
-                    <a href="#jsx">JSX</a>
-                  </lk-stack>
-                </nav>
-                <lk-stack gap="md">
-                  <lk-scroll-area id="demo-progress" max-h="sm" tabindex="0" aria-label="Notes">
-                    <lk-progress scope="nearest"></lk-progress>
-                    <lk-stack gap="sm">
-                      <p>Scroll this region. The bar above tracks it where scroll timelines are supported, and stays a static line where they are not.</p>
-                      <p>Second paragraph, long enough to overflow the max height.</p>
-                      <p>Third paragraph keeps the scroller honest.</p>
-                      <p>Fourth paragraph is the end of the notes.</p>
-                    </lk-stack>
-                  </lk-scroll-area>
-                  <p style="min-block-size: 28rem;">The side panel sticks while this column is on screen.</p>
-                </lk-stack>
-              </lk-sidebar>
-            </div>
-          </lk-stack>
+          <section id="attributes" aria-labelledby="attributes-heading">
+            <lk-stack gap="md">
+              <h2 id="attributes-heading">Attributes</h2>
+              <p class="measure muted">Attributes name stable layout behavior. They are not a mirror of every CSS property.</p>
+              <lk-grid cols="2" gap="md">
+                <lk-card surface padding="lg">
+                  <h3>Spacing</h3>
+                  <p class="muted"><code>gap</code>, <code>padding</code>, <code>col-gap</code>, and <code>row-gap</code> take <code>none</code>, <code>px</code>, <code>xs</code> through <code>3xl</code>, and the numeric scale. Named steps are fluid unless you set <code>--space-*</code>.</p>
+                </lk-card>
+                <lk-card surface padding="lg">
+                  <h3>Alignment</h3>
+                  <p class="muted"><code>align</code>, <code>justify</code>, <code>place</code>, <code>place-items</code>, and <code>center</code>. <code>place</code> and <code>justify</code> still win over single-child centering.</p>
+                </lk-card>
+                <lk-card surface padding="lg">
+                  <h3>Sizing</h3>
+                  <p class="muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. A boolean <code>full-height</code> and a plain cover use <code>100dvh</code>, then <code>100svh</code>, then <code>100vh</code>. <code>full-height="container"</code> uses the query container.</p>
+                </lk-card>
+                <lk-card surface padding="lg">
+                  <h3>Grid tracks</h3>
+                  <p class="muted"><code>responsive</code> and <code>min</code> are auto-fit, so empty tracks collapse. <code>min</code> overrides <code>responsive</code>. Both clamp a track to the container. <code>flow</code> on a grid is <code>row</code>, <code>col</code>, or <code>dense</code>. On a box or card it is the spacing scale.</p>
+                </lk-card>
+                <lk-card surface padding="lg">
+                  <h3>Switcher</h3>
+                  <p class="muted">Omitted <code>at</code>, or <code>at="md"</code>, stacks below 30rem. <code>xs</code> 20rem, <code>sm</code> 24rem, <code>lg</code> 40rem, <code>xl</code> 48rem, <code>2xl</code> 64rem. <code>at="flex"</code> restores the <code>--lk-switch-at</code> formula. <code>limit</code> is 2–6 or <code>off</code>.</p>
+                </lk-card>
+                <lk-card surface padding="lg">
+                  <h3>On by default</h3>
+                  <p class="muted">Container queries, single-child centering, center overlay, a switcher limit of 4, fluid space, and horizontal snap. Turn one off with <code>container="off"</code>, <code>adapt="off"</code>, <code>overlay="off"</code>, <code>limit="off"</code>, or <code>snap="off"</code>. Subgrid, sticky, anchor, and reveal stay opt-in.</p>
+                </lk-card>
+              </lk-grid>
+            </lk-stack>
+          </section>
 
-          <lk-stack gap="4">
-            <h3>Popover and disclosure</h3>
-            <p class="sans muted"><code class="sans">lk-menu</code> expects the invoker as its first child, then an <code class="sans">lk-popover</code> with the HTML <code class="sans">popover</code> attribute. <code class="sans">anchor</code> tethers the panel with <code class="sans">position-area</code> where that exists, and leaves the user-agent centered top layer otherwise. <code class="sans">lk-disclosure</code> lays out <code class="sans">details</code>. <code class="sans">panel="overlay"</code> stacks the open panel. <code class="sans">anchor</code> tethers it, and the absolute panel remains the fallback. <code class="sans">side="end"</code> flips the inline edge.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-menu</span> <span class="tok-attr">anchor</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"button"</span> <span class="tok-attr">popovertarget</span>=<span class="tok-str">"account-menu"</span><span class="tok-tag">&gt;</span>Account<span class="tok-tag">&lt;/button&gt;</span>
-  <span class="tok-tag">&lt;lk-popover</span> <span class="tok-attr">id</span>=<span class="tok-str">"account-menu"</span> <span class="tok-attr">popover</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;nav</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Account"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/install"</span><span class="tok-tag">&gt;</span>Install<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/nav&gt;</span>
-  <span class="tok-tag">&lt;/lk-popover&gt;</span>
-<span class="tok-tag">&lt;/lk-menu&gt;</span>
-<span class="tok-tag">&lt;lk-disclosure</span> <span class="tok-attr">panel</span>=<span class="tok-str">"overlay"</span> <span class="tok-attr">anchor</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;details&gt;</span>
-    <span class="tok-tag">&lt;summary&gt;</span>Filters<span class="tok-tag">&lt;/summary&gt;</span>
-    <span class="tok-tag">&lt;label&gt;</span><span class="tok-tag">&lt;input</span> <span class="tok-attr">type</span>=<span class="tok-str">"checkbox"</span><span class="tok-tag">&gt;</span> Open<span class="tok-tag">&lt;/label&gt;</span>
-  <span class="tok-tag">&lt;/details&gt;</span>
-<span class="tok-tag">&lt;/lk-disclosure&gt;</span></pre></div>
-            <div class="demo">
-              <lk-cluster gap="lg">
-                <lk-menu id="demo-menu" anchor>
-                  <button type="button" popovertarget="docs-menu">Account</button>
-                  <lk-popover id="docs-menu" popover>
-                    <nav aria-label="Account">
-                      <lk-stack gap="xs">
-                        <a href="/install">Install</a>
-                        <a href="/docs">Docs</a>
-                      </lk-stack>
-                    </nav>
-                  </lk-popover>
-                </lk-menu>
-                <lk-disclosure id="demo-disclosure" panel="overlay" anchor>
-                  <details>
-                    <summary>Filters</summary>
-                    <lk-stack gap="xs">
-                      <label><input type="checkbox"> Open</label>
-                      <label><input type="checkbox"> Closed</label>
-                    </lk-stack>
-                  </details>
-                </lk-disclosure>
-              </lk-cluster>
-            </div>
-          </lk-stack>
+          <section id="layouts" aria-labelledby="layouts-heading">
+            <lk-stack gap="xl">
+              <lk-stack gap="sm">
+                <h2 id="layouts-heading">Live layouts</h2>
+                <p class="measure muted">These regions are the stylesheet. Resize the window. A browser without a feature keeps the previous layout, because each one is wrapped in <code>@supports</code>.</p>
+              </lk-stack>
 
-          <lk-stack gap="4">
-            <h3>Columns, overlay, and fluid space</h3>
-            <p class="sans muted"><code class="sans">lk-columns</code> flows text across <code class="sans">cols</code> of 2, 3, or 4. Direct children do not split. <code class="sans">lk-center</code> covers a positioned parent unless <code class="sans">overlay="off"</code>. Named gaps use fluid clamps. A host <code class="sans">--space-*</code> token still wins, and <code class="sans">--lk-space-static-*</code> keeps the old rem steps.</p>
-            <div class="code"><pre><span class="tok-tag">&lt;lk-columns</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;p&gt;</span>First point.<span class="tok-tag">&lt;/p&gt;</span>
-  <span class="tok-tag">&lt;p&gt;</span>Second point.<span class="tok-tag">&lt;/p&gt;</span>
-  <span class="tok-tag">&lt;p&gt;</span>Third point.<span class="tok-tag">&lt;/p&gt;</span>
-<span class="tok-tag">&lt;/lk-columns&gt;</span>
-<span class="tok-tag">&lt;lk-switcher</span> <span class="tok-attr">limit</span>=<span class="tok-str">"2"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;p&gt;</span>One<span class="tok-tag">&lt;/p&gt;</span><span class="tok-tag">&lt;p&gt;</span>Two<span class="tok-tag">&lt;/p&gt;</span><span class="tok-tag">&lt;p&gt;</span>Three<span class="tok-tag">&lt;/p&gt;</span>
-<span class="tok-tag">&lt;/lk-switcher&gt;</span></pre></div>
-            <div class="demo">
               <lk-stack gap="md">
-                <lk-columns id="demo-columns" cols="3" gap="lg">
-                  <p>First point stays in one column.</p>
-                  <p>Second point follows the flow.</p>
-                  <p>Third point fills the last column.</p>
-                </lk-columns>
-                <lk-switcher id="demo-limit" limit="2" gap="sm">
-                  <article>One</article>
-                  <article>Two</article>
-                  <article>Three</article>
+                <h3>Container queries</h3>
+                <p class="measure muted">You do not set <code>container</code> to turn this on. <code>container="sm"</code>, <code>md</code>, <code>lg</code>, and <code>xl</code> still choose 24rem, 32rem, 48rem, and 64rem for a fixed grid. The narrow frame is 16rem, so the columns stack. The wide frame uses this column.</p>
+                <lk-switcher gap="md" at="md">
+                  <div class="demo">
+                    <lk-box class="cap-16" padding="3">
+                      <lk-grid id="demo-container-narrow" cols="3" gap="xs">
+                        <article>North</article>
+                        <article>South</article>
+                        <article>West</article>
+                      </lk-grid>
+                    </lk-box>
+                  </div>
+                  <div class="demo">
+                    <lk-box padding="3">
+                      <lk-grid id="demo-container-wide" cols="3" gap="sm">
+                        <article>North</article>
+                        <article>South</article>
+                        <article>West</article>
+                      </lk-grid>
+                    </lk-box>
+                  </div>
                 </lk-switcher>
-                <div style="position: relative; min-block-size: 6rem;">
-                  <p>Under the overlay.</p>
-                  <lk-center id="demo-overlay" overlay>
-                    <strong>Centered overlay</strong>
-                  </lk-center>
+              </lk-stack>
+
+              <lk-stack gap="md">
+                <h3>Switcher</h3>
+                <p class="measure muted"><code>flex-direction</code> stays <code>row</code>, so <code>place</code> does not reverse reading order. More than four children each take a full row. <code>limit="2"</code> does that at three children.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-stack gap="sm">
+                      <lk-switcher id="demo-switcher" gap="sm">
+                        <article>Alpha</article>
+                        <article>Beta</article>
+                      </lk-switcher>
+                      <lk-switcher id="demo-limit" limit="2" gap="sm">
+                        <article>One</article>
+                        <article>Two</article>
+                        <article>Three</article>
+                      </lk-switcher>
+                    </lk-stack>
+                  </lk-box>
                 </div>
               </lk-stack>
-            </div>
-          </lk-stack>
-        </lk-stack>
-      </section>
 
-      <section id="gallery" aria-labelledby="gallery-heading">
-        <lk-stack gap="4">
-          <h2 id="gallery-heading" class="h2">Live gallery</h2>
-          <p class="sans muted">Each primitive, with the attribute that changes it. Version 2.0.0. A root <code class="sans">lk-progress</code> would pin itself to the viewport, so the live bar uses <code class="sans">scope="nearest"</code>.</p>
-          <lk-grid responsive gap="4">
-            <article class="card">
-              <h3>lk-stack</h3>
-              <div class="demo"><lk-stack gap="sm"><p>One</p><p>Two</p></lk-stack></div>
-            </article>
-            <article class="card">
-              <h3>lk-row</h3>
-              <div class="demo"><lk-row gap="sm" justify="between"><span>Start</span><span>End</span></lk-row></div>
-            </article>
-            <article class="card">
-              <h3>lk-center</h3>
-              <div class="demo stage"><lk-center full-height overlay="off"><strong>Centered</strong></lk-center></div>
-            </article>
-            <article class="card">
-              <h3>lk-box</h3>
-              <div class="demo"><lk-box padding="md" width="full"><p>Padded box</p></lk-box></div>
-            </article>
-            <article class="card">
-              <h3>lk-spread</h3>
-              <div class="demo"><lk-spread align="center"><span>Left</span><span>Right</span></lk-spread></div>
-            </article>
-            <article class="card">
-              <h3>lk-cluster</h3>
-              <div class="demo"><lk-cluster gap="xs"><span class="chip">One</span><span class="chip">Two</span><span class="chip">Three</span></lk-cluster></div>
-            </article>
-            <article class="card">
-              <h3>lk-switcher</h3>
-              <div class="demo"><lk-switcher gap="sm"><article>Alpha</article><article>Beta</article></lk-switcher></div>
-            </article>
-            <article class="card">
-              <h3>lk-cover</h3>
-              <div class="demo stage"><lk-cover><p>Top</p><p center>Middle</p><p>Bottom</p></lk-cover></div>
-            </article>
-            <article class="card">
-              <h3>lk-spacer</h3>
-              <div class="demo"><lk-row gap="sm"><span>A</span><lk-spacer></lk-spacer><span>B</span></lk-row></div>
-            </article>
-            <article class="card">
-              <h3>lk-divider</h3>
-              <div class="demo"><lk-stack gap="sm"><p>Above</p><lk-divider></lk-divider><lk-row gap="sm"><span>Left</span><lk-divider orientation="vertical"></lk-divider><span>Right</span></lk-row></lk-stack></div>
-            </article>
-            <article class="card">
-              <h3>lk-aspect-ratio</h3>
-              <div class="demo"><lk-aspect-ratio ratio="16/9"><div class="swatch" role="img" aria-label="16 by 9 frame"></div></lk-aspect-ratio></div>
-            </article>
-            <article class="card">
-              <h3>lk-scroll-area</h3>
-              <div class="demo"><lk-scroll-area max-h="sm" direction="vertical" tabindex="0" aria-label="Notes"><lk-stack gap="sm"><p>First note.</p><p>Second note.</p><p>Third note.</p><p>Fourth note.</p></lk-stack></lk-scroll-area></div>
-            </article>
-            <article class="card">
-              <h3>lk-grid</h3>
-              <div class="demo"><lk-grid cols="2" gap="xs" place-items="center"><span>A</span><span>B</span><span>C</span><span>D</span></lk-grid></div>
-            </article>
-            <article class="card">
-              <h3>lk-card</h3>
-              <div class="demo"><lk-card radius="lg" surface border="none" flow="sm"><p>Surface</p><p>Rhythm</p></lk-card></div>
-            </article>
-            <article class="card">
-              <h3>lk-sidebar</h3>
-              <div class="demo"><lk-sidebar side="end" gap="sm"><p>Content</p><nav aria-label="End side">Side</nav></lk-sidebar></div>
-            </article>
-            <article class="card">
-              <h3>lk-row wrap</h3>
-              <div class="demo"><lk-row wrap reverse gap="xs"><span class="chip">1</span><span class="chip">2</span><span class="chip">3</span></lk-row></div>
-            </article>
-          </lk-grid>
-        </lk-stack>
-      </section>
+              <lk-stack gap="md">
+                <h3>Sidebar</h3>
+                <p class="measure muted">The side uses <code>--lk-sidebar-width</code> (18rem). The other child wants at least half the container, then they wrap. <code>side="end"</code> flips which child is the side.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-sidebar id="demo-sidebar" gap="sm">
+                      <nav aria-label="Demo side"><a href="#gallery">Gallery</a></nav>
+                      <p>Content sits beside the side while the container is wide enough, then moves below it.</p>
+                    </lk-sidebar>
+                  </lk-box>
+                </div>
+              </lk-stack>
 
-      <section id="examples" aria-labelledby="examples-heading">
-        <lk-stack gap="4">
-          <h2 id="examples-heading" class="h2">Examples</h2>
-          <lk-grid responsive gap="4">
-            <article>
-              <h3>Form layout</h3>
-              <div class="code"><pre><span class="tok-tag">&lt;form</span> <span class="tok-attr">action</span>=<span class="tok-str">"/settings"</span> <span class="tok-attr">method</span>=<span class="tok-str">"post"</span><span class="tok-tag">&gt;</span>
+              <lk-stack gap="md">
+                <h3>Scroll-snap</h3>
+                <p class="measure muted"><code>slide</code> is <code>full</code>, <code>half</code>, <code>third</code>, or <code>peek</code>. Horizontal scroll areas snap without an extra attribute. <code>snap</code> is what selects the slide size, and what opts a row in.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-scroll-area id="demo-snap" direction="horizontal" snap slide="peek" tabindex="0" aria-label="Highlights" gap="sm">
+                      <article><h3>One</h3><p>First slide</p></article>
+                      <article><h3>Two</h3><p>Second slide</p></article>
+                      <article><h3>Three</h3><p>Third slide</p></article>
+                    </lk-scroll-area>
+                  </lk-box>
+                </div>
+              </lk-stack>
+
+              <lk-stack gap="md">
+                <h3>One child, and a figure</h3>
+                <p class="measure muted">A row or stack with one element child is centered. <code>adapt="figure"</code> bleeds a direct <code>figure</code> to the card edges and keeps the rest inset.</p>
+                <lk-grid cols="2" gap="md">
+                  <div class="demo">
+                    <lk-row id="demo-solo" class="solo-row">
+                      <button type="button">Only action</button>
+                    </lk-row>
+                  </div>
+                  <lk-card id="demo-figure" adapt="figure" surface>
+                    <figure>
+                      <div class="swatch" role="img" aria-label="Decorative gradient"></div>
+                    </figure>
+                    <h3>Shore</h3>
+                    <p>The text stays inset while the figure runs to the edges.</p>
+                  </lk-card>
+                </lk-grid>
+              </lk-stack>
+
+              <lk-stack gap="md">
+                <h3>Subgrid</h3>
+                <p class="measure muted">Keep <code>cols</code> so a browser without subgrid still has a template. Gap is inherited unless you set one.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-grid id="demo-subgrid" cols="3" gap="sm">
+                      <strong class="cell">Name</strong>
+                      <strong class="cell">Status</strong>
+                      <strong class="cell">Updated</strong>
+                      <lk-grid cols="3" subgrid>
+                        <span class="cell">Website</span>
+                        <span class="cell">Ready</span>
+                        <span class="cell">Today</span>
+                      </lk-grid>
+                    </lk-grid>
+                  </lk-box>
+                </div>
+              </lk-stack>
+
+              <lk-stack gap="md">
+                <h3>Sticky side and scroll progress</h3>
+                <p class="measure muted"><code>sticky</code> pins the side to <code>--lk-sticky-top</code>. <code>lk-progress scope="nearest"</code> tracks that scroller where scroll timelines exist, and stays a static bar otherwise. Reduced motion keeps the static bar.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-sidebar id="demo-sticky" sticky>
+                      <nav aria-label="Demo sections">
+                        <lk-stack gap="xs">
+                          <a href="#layouts">Layouts</a>
+                          <a href="#examples">Examples</a>
+                          <a href="#jsx">JSX</a>
+                        </lk-stack>
+                      </nav>
+                      <lk-stack gap="md">
+                        <lk-scroll-area id="demo-progress" max-h="sm" tabindex="0" aria-label="Notes">
+                          <lk-progress scope="nearest"></lk-progress>
+                          <lk-stack gap="sm">
+                            <p>Scroll this region. The bar tracks it where scroll timelines exist.</p>
+                            <p>Second paragraph, long enough to overflow the max height.</p>
+                            <p>Third paragraph keeps the scroller honest.</p>
+                            <p>Fourth paragraph is the end of the notes.</p>
+                          </lk-stack>
+                        </lk-scroll-area>
+                        <p class="sticky-pad">The side panel sticks while this column is on screen.</p>
+                      </lk-stack>
+                    </lk-sidebar>
+                  </lk-box>
+                </div>
+              </lk-stack>
+
+              <lk-stack gap="md">
+                <h3>Popover and disclosure</h3>
+                <p class="measure muted">The menu invoker is a real button. <code>anchor</code> tethers the panel with <code>position-area</code> where that exists. Disclosure uses native <code>details</code>. Height animation requires <code>interpolate-size</code> and is skipped when motion is reduced.</p>
+                <div class="demo">
+                  <lk-box padding="4">
+                    <lk-cluster gap="lg">
+                      <lk-menu id="demo-menu" anchor>
+                        <button type="button" popovertarget="docs-menu">Account</button>
+                        <lk-popover id="docs-menu" popover>
+                          <nav aria-label="Account">
+                            <lk-stack gap="xs">
+                              <a href="/install">Install</a>
+                              <a href="/docs">Docs</a>
+                            </lk-stack>
+                          </nav>
+                        </lk-popover>
+                      </lk-menu>
+                      <lk-disclosure id="demo-disclosure" panel="overlay" anchor>
+                        <details>
+                          <summary>Filters</summary>
+                          <lk-stack gap="xs">
+                            <label><input type="checkbox"> Open</label>
+                            <label><input type="checkbox"> Closed</label>
+                          </lk-stack>
+                        </details>
+                      </lk-disclosure>
+                    </lk-cluster>
+                  </lk-box>
+                </div>
+              </lk-stack>
+
+              <lk-stack gap="md">
+                <h3>Columns and overlay</h3>
+                <p class="measure muted"><code>lk-columns</code> flows text across 2, 3, or 4 columns. Direct children do not split. The center below covers its positioned parent.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-stack gap="md">
+                      <lk-columns id="demo-columns" cols="3" gap="lg">
+                        <p>First point stays in one column.</p>
+                        <p>Second point follows the flow.</p>
+                        <p>Third point fills the last column.</p>
+                      </lk-columns>
+                      <div class="overlay-stage">
+                        <p>Under the overlay.</p>
+                        <lk-center id="demo-overlay">
+                          <strong>Centered overlay</strong>
+                        </lk-center>
+                      </div>
+                    </lk-stack>
+                  </lk-box>
+                </div>
+              </lk-stack>
+            </lk-stack>
+          </section>
+
+          <section id="gallery" aria-labelledby="gallery-heading">
+            <lk-stack gap="md">
+              <h2 id="gallery-heading">Gallery</h2>
+              <p class="measure muted">Each primitive, with the attribute that changes it. A root <code>lk-progress</code> would pin itself to the viewport, so use <code>scope="nearest"</code> inside a region.</p>
+              <lk-grid cols="2" gap="md">
+                <lk-card surface padding="md"><h3>lk-stack</h3><div class="demo"><lk-box padding="3"><lk-stack gap="sm"><p class="demo-cell">One</p><p class="demo-cell">Two</p></lk-stack></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-row</h3><div class="demo"><lk-box padding="3"><lk-row gap="sm" justify="between"><span>Start</span><span>End</span></lk-row></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-center</h3><div class="demo demo-stage"><lk-center full-height overlay="off"><strong>Centered</strong></lk-center></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-box</h3><div class="demo"><lk-box padding="md"><p>Padded box</p></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-spread</h3><div class="demo"><lk-box padding="3"><lk-spread align="center"><span>Left</span><span>Right</span></lk-spread></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-cluster</h3><div class="demo"><lk-box padding="3"><lk-cluster gap="xs"><span class="chip">One</span><span class="chip">Two</span><span class="chip">Three</span></lk-cluster></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-switcher</h3><div class="demo"><lk-box padding="3"><lk-switcher gap="sm"><article>Alpha</article><article>Beta</article></lk-switcher></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-cover</h3><div class="demo demo-stage"><lk-cover><p>Top</p><p center>Middle</p><p>Bottom</p></lk-cover></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-spacer</h3><div class="demo"><lk-box padding="3"><lk-row gap="sm"><span>A</span><lk-spacer></lk-spacer><span>B</span></lk-row></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-divider</h3><div class="demo"><lk-box padding="3"><lk-stack gap="sm"><p>Above</p><lk-divider></lk-divider><lk-row gap="sm"><span>Left</span><lk-divider orientation="vertical"></lk-divider><span>Right</span></lk-row></lk-stack></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-aspect-ratio</h3><div class="demo"><lk-box padding="3"><lk-aspect-ratio ratio="16/9"><div class="swatch" role="img" aria-label="16 by 9 frame"></div></lk-aspect-ratio></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-scroll-area</h3><div class="demo"><lk-box padding="3"><lk-scroll-area max-h="sm" direction="vertical" tabindex="0" aria-label="Notes"><lk-stack gap="sm"><p>First note.</p><p>Second note.</p><p>Third note.</p><p>Fourth note.</p></lk-stack></lk-scroll-area></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-grid</h3><div class="demo"><lk-box padding="3"><lk-grid cols="2" gap="xs"><span class="demo-cell">A</span><span class="demo-cell">B</span><span class="demo-cell">C</span><span class="demo-cell">D</span></lk-grid></lk-box></div></lk-card>
+                <lk-card surface padding="md"><h3>lk-sidebar</h3><div class="demo"><lk-box padding="3"><lk-sidebar side="end" gap="sm"><p>Content</p><nav aria-label="End side">Side</nav></lk-sidebar></lk-box></div></lk-card>
+              </lk-grid>
+            </lk-stack>
+          </section>
+
+          <section id="helpers" aria-labelledby="helpers-heading">
+            <lk-stack gap="sm">
+              <h2 id="helpers-heading">Frozen helpers</h2>
+              <p class="measure muted"><code>lk-card</code>, <code>lk-text</code>, and <code>lk-weight</code> stay small on purpose. New visual primitives are out of scope unless they directly support layout.</p>
+            </lk-stack>
+          </section>
+
+          <section id="tokens" aria-labelledby="tokens-heading">
+            <lk-stack gap="md">
+              <h2 id="tokens-heading">Tokens and widths</h2>
+              <p class="measure muted">LayoutKit reads a host <code>--space-*</code> token first. Otherwise the scale is the fluid clamp in <code>--lk-space-fluid-*</code>. <code>--lk-space-static-*</code> is the previous rem scale.</p>
+              <figure class="code">
+                <figcaption class="code-label">space</figcaption>
+                <pre><code><span class="tok-tag">:root</span> {
+  <span class="tok-attr">--lk-space-md</span>: <span class="tok-str">var(--space-md, var(--lk-space-fluid-md))</span>;
+  <span class="tok-attr">--space-md</span>: <span class="tok-str">1rem</span>;
+}</code></pre>
+              </figure>
+              <div class="table-wrap" tabindex="0" role="region" aria-label="Width tokens">
+                <table>
+                  <caption>width attribute in 2.0.0</caption>
+                  <thead>
+                    <tr><th scope="col">Value</th><th scope="col">1.5.0</th><th scope="col">2.0.0</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><code>lg</code></td><td>50rem</td><td>50rem</td></tr>
+                    <tr><td><code>xl</code></td><td>64rem</td><td>56rem</td></tr>
+                    <tr><td><code>2xl</code></td><td></td><td>64rem</td></tr>
+                    <tr><td><code>3xl</code></td><td></td><td>80rem</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="measure muted">Rename a previous <code>width="xl"</code> to <code>width="2xl"</code>, or set <code>max-inline-size: 64rem</code> on that element. <code>lk-spread</code> accepts <code>width</code>.</p>
+            </lk-stack>
+          </section>
+
+          <section id="accessibility" aria-labelledby="accessibility-heading">
+            <lk-stack gap="md">
+              <h2 id="accessibility-heading">Accessibility</h2>
+              <ul>
+                <li>LayoutKit wraps and arranges semantic HTML. It does not replace it.</li>
+                <li>Do not put click handlers on <code>lk-*</code> elements. Use <code>button</code> or <code>a</code>.</li>
+                <li>Do not use <code>lk-*</code> elements as headings, lists, tables, forms, landmarks, or controls.</li>
+                <li>If a wrapper has no semantic purpose, it usually needs no ARIA. Do not add a role to make it seem semantic.</li>
+                <li>Focus order follows source order. The switcher does not flip <code>flex-direction</code> when it stacks.</li>
+                <li><code>lk-scroll-area</code> does not create a tab stop. Set <code>tabindex="0"</code> and a name when the region itself must scroll from the keyboard. Without <code>direction</code>, both axes scroll. <code>direction="vertical"</code> clips inline overflow.</li>
+                <li><code>lk-menu</code> and <code>lk-disclosure</code> do not invent buttons. The invoker is the first child and must be a <code>button</code>, link, or <code>summary</code>.</li>
+                <li><code>lk-progress</code> is decorative. It does not replace a status message.</li>
+                <li>Reveal and disclosure motion are disabled under <code>prefers-reduced-motion</code>. Scroll buttons, where the browser provides them, do not replace keyboard scrolling.</li>
+              </ul>
+            </lk-stack>
+          </section>
+
+          <section id="examples" aria-labelledby="examples-heading">
+            <lk-stack gap="md">
+              <h2 id="examples-heading">Examples</h2>
+              <lk-grid cols="2" gap="lg">
+                <article>
+                  <h3>Form</h3>
+                  <figure class="code">
+                    <figcaption class="code-label">markup</figcaption>
+                    <pre><code><span class="tok-tag">&lt;form</span> <span class="tok-attr">action</span>=<span class="tok-str">"/settings"</span> <span class="tok-attr">method</span>=<span class="tok-str">"post"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
     <span class="tok-tag">&lt;label&gt;</span>Name <span class="tok-tag">&lt;input</span> <span class="tok-attr">name</span>=<span class="tok-str">"name"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;/label&gt;</span>
     <span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"submit"</span><span class="tok-tag">&gt;</span>Save<span class="tok-tag">&lt;/button&gt;</span>
   <span class="tok-tag">&lt;/lk-stack&gt;</span>
-<span class="tok-tag">&lt;/form&gt;</span></pre></div>
-            </article>
-            <article>
-              <h3>Scroll area</h3>
-              <div class="code"><pre><span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"activity"</span><span class="tok-tag">&gt;</span>
+<span class="tok-tag">&lt;/form&gt;</span></code></pre>
+                  </figure>
+                </article>
+                <article>
+                  <h3>Scroll area</h3>
+                  <figure class="code">
+                    <figcaption class="code-label">markup</figcaption>
+                    <pre><code><span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"activity"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;h2</span> <span class="tok-attr">id</span>=<span class="tok-str">"activity"</span><span class="tok-tag">&gt;</span>Recent activity<span class="tok-tag">&lt;/h2&gt;</span>
-  <span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">max-h</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">max-h</span>=<span class="tok-str">"md"</span> <span class="tok-attr">direction</span>=<span class="tok-str">"vertical"</span><span class="tok-tag">&gt;</span>
     <span class="tok-tag">&lt;ol&gt;</span><span class="tok-tag">&lt;li&gt;</span>Order opened<span class="tok-tag">&lt;/li&gt;</span><span class="tok-tag">&lt;/ol&gt;</span>
   <span class="tok-tag">&lt;/lk-scroll-area&gt;</span>
-<span class="tok-tag">&lt;/section&gt;</span></pre></div>
-            </article>
-          </lk-grid>
-        </lk-stack>
-      </section>
+<span class="tok-tag">&lt;/section&gt;</span></code></pre>
+                  </figure>
+                </article>
+              </lk-grid>
+            </lk-stack>
+          </section>
 
-      <section id="jsx" aria-labelledby="jsx-heading">
-        <lk-stack gap="4">
-          <h2 id="jsx-heading" class="h2">Using LayoutKit with TSX/JSX</h2>
-          <p class="sans muted">The package includes <code class="sans">jsx.d.ts</code>. It only teaches TypeScript about known custom tags and the attributes each one implements. Importing the stylesheet picks up those types. A triple-slash reference works when you do not want <code class="sans">compilerOptions.types</code> to replace the automatic <code class="sans">@types</code> list.</p>
-          <div class="code"><pre><span class="tok-tag">import</span> <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;
+          <section id="jsx" aria-labelledby="jsx-heading">
+            <lk-stack gap="md">
+              <h2 id="jsx-heading">TSX and JSX</h2>
+              <p class="measure muted"><code>jsx.d.ts</code> teaches TypeScript the known tags and the attributes each one implements. Importing the stylesheet picks up those types. A triple-slash reference works when you do not want <code>compilerOptions.types</code> to replace the automatic <code>@types</code> list.</p>
+              <figure class="code">
+                <figcaption class="code-label">types</figcaption>
+                <pre><code><span class="tok-tag">import</span> <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;
 
-<span class="tok-com">/// &lt;reference types="layoutkit-css" /&gt;</span></pre></div>
-        </lk-stack>
-      </section>
+<span class="tok-com">/// &lt;reference types="layoutkit-css" /&gt;</span></code></pre>
+              </figure>
+            </lk-stack>
+          </section>
 
-      <section id="browser-support" aria-labelledby="browser-heading">
-        <lk-stack gap="4">
-          <h2 id="browser-heading" class="h2">Browser support</h2>
-          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, <code class="sans">dvh</code>, <code class="sans">min()</code>, <code class="sans">object-fit</code>, and <code class="sans">color-mix()</code>. Older browsers keep the <code>100vh</code> and <code>#e5e7eb</code> fallbacks. Container queries, <code class="sans">:has()</code>, subgrid, scroll snap, sticky positioning, scroll and view timelines, and anchor positioning (<code class="sans">position-area</code>, with <code class="sans">inset-area</code> as the earlier name) are wrapped in <code class="sans">@supports</code>. Where a feature is missing, the previous layout stays visible.</p>
-        </lk-stack>
-      </section>
+          <section id="browser-support" aria-labelledby="browser-heading">
+            <lk-stack gap="sm">
+              <h2 id="browser-heading">Browser support</h2>
+              <p class="measure muted">LayoutKit targets evergreen browsers with custom properties, flexbox, grid, cascade layers, logical properties, <code>aspect-ratio</code>, <code>svh</code>, <code>dvh</code>, <code>min()</code>, <code>object-fit</code>, and <code>color-mix()</code>. Older browsers keep the <code>100vh</code> and <code>#e5e7eb</code> fallbacks. Container queries, <code>:has()</code>, subgrid, scroll snap, sticky positioning, scroll and view timelines, and anchor positioning are each wrapped in <code>@supports</code>. Where a feature is missing, the previous layout stays visible.</p>
+            </lk-stack>
+          </section>
 
-      <section id="security" aria-labelledby="security-heading">
-        <lk-stack gap="4">
-          <h2 id="security-heading" class="h2">Security and package verification</h2>
-          <p class="sans muted">LayoutKit has no runtime JavaScript, no npm dependencies, no install scripts, no remote imports, and should not perform network requests.</p>
-          <div class="code"><pre>npm pack layoutkit-css
-tar -tzf layoutkit-css-*.tgz</pre></div>
-          <lk-row gap="3" wrap>
-            <a class="btn" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub repository</a>
-            <a class="btn" href="https://www.npmjs.com/package/layoutkit-css" target="_blank" rel="noopener">npm package</a>
-          </lk-row>
+          <section id="security" aria-labelledby="security-heading">
+            <lk-stack gap="md">
+              <h2 id="security-heading">Security</h2>
+              <p class="measure muted">No runtime JavaScript, no dependencies, no install scripts, no remote imports, and no network requests from the stylesheet.</p>
+              <figure class="code">
+                <figcaption class="code-label">terminal</figcaption>
+                <pre><code>npm pack layoutkit-css
+tar -tzf layoutkit-css-*.tgz</code></pre>
+              </figure>
+              <lk-cluster gap="sm">
+                <a class="btn" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener noreferrer">GitHub<span class="sr"> (opens in a new tab)</span></a>
+                <a class="btn" href="https://www.npmjs.com/package/layoutkit-css" target="_blank" rel="noopener noreferrer">npm<span class="sr"> (opens in a new tab)</span></a>
+                <a class="btn" href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration guide</a>
+              </lk-cluster>
+            </lk-stack>
+          </section>
         </lk-stack>
-      </section>
+      </lk-sidebar>
+    </lk-box>
+  </main>
+
+  <footer class="site-footer">
+    <lk-box width="3xl" padding="8">
+      <lk-stack gap="md">
+        <p>LayoutKit 2.0.0. Pure-CSS layout primitives. MIT.</p>
+        <lk-cluster gap="md">
+          <a href="/install">Install</a>
+          <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>
+          <a href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener noreferrer">GitHub<span class="sr"> (opens in a new tab)</span></a>
+        </lk-cluster>
       </lk-stack>
-    </lk-sidebar>
-  </lk-box>
-
-  <footer class="footer">
-    <lk-spread class="container" width="xl" align="center">
-      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
-      <lk-row gap="4">
-        <a class="navlink" href="/install">Install</a>
-        <a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a>
-      </lk-row>
-    </lk-spread>
+    </lk-box>
   </footer>
 </body>
 </html>

@@ -3,113 +3,246 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LayoutKit - Tiny pure-CSS layout vocabulary</title>
-  <meta name="description" content="LayoutKit is a tiny pure-CSS layout vocabulary for readable app structure. One CSS file, no runtime JavaScript, no dependencies, and native semantic HTML first.">
+  <title>LayoutKit — Pure-CSS layout primitives that replace JavaScript</title>
+  <meta name="description" content="LayoutKit is pure-CSS layout primitives that replace JavaScript for layout. One stylesheet: container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. No runtime and no dependencies.">
   <link rel="canonical" href="https://layoutkit.dev/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#0a0a0b">
+  <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
-  <meta property="og:title" content="LayoutKit - Tiny pure-CSS layout vocabulary">
-  <meta property="og:description" content="Readable layout wrappers for native semantic HTML. One CSS file, no runtime JavaScript, no dependencies.">
+  <meta property="og:title" content="LayoutKit — Pure-CSS layout primitives that replace JavaScript">
+  <meta property="og:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet. No runtime.">
   <meta property="og:url" content="https://layoutkit.dev/">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit">
+  <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="LayoutKit - Tiny pure-CSS layout vocabulary">
-  <meta name="twitter:description" content="Readable layout wrappers for native semantic HTML. One CSS file, no runtime JavaScript, no dependencies.">
+  <meta name="twitter:title" content="LayoutKit — Pure-CSS layout primitives that replace JavaScript">
+  <meta name="twitter:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet. No runtime.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
+  <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
-  <meta name="twitter:image:alt" content="LayoutKit">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
     <lk-box class="nav" sticky>
-    <nav aria-label="Primary">
-      <lk-spread align="center">
-        <a href="/" aria-label="LayoutKit home">
-          <lk-row gap="2" align="center">
-            <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
-            <span class="brand brand-name">LayoutKit</span>
-            <span class="badge">CSS</span>
-            <span class="badge">2.0.0</span>
+      <lk-box width="3xl" padding="4">
+        <nav aria-label="Primary">
+          <lk-row align="center" gap="sm" wrap>
+            <a class="brand-link" href="/" aria-label="LayoutKit home">
+              <lk-row gap="2" align="center">
+                <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
+                <span class="brand">LayoutKit</span>
+                <span class="badge">2.0.0</span>
+              </lk-row>
+            </a>
+            <lk-spacer></lk-spacer>
+            <lk-cluster gap="1">
+              <a class="navlink" href="/" aria-current="page">Home</a>
+              <a class="navlink" href="/install">Install</a>
+              <a class="navlink" href="/docs">Docs</a>
+              <a class="navlink" href="/playground">Playground</a>
+              <a class="navlink" href="/tutorial">Tutorial</a>
+            </lk-cluster>
           </lk-row>
-        </a>
-        <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
-          <lk-row class="navlinks" gap="1">
-            <a class="navlink" href="/" aria-current="page">Home</a>
-            <a class="navlink" href="/install">Install</a>
-            <a class="navlink" href="/docs">Docs</a>
-            <a class="navlink" href="/playground">Playground</a>
-            <a class="navlink" href="/tutorial">Tutorial</a>
-          </lk-row>
-        </lk-scroll-area>
-      </lk-spread>
-    </nav>
+        </nav>
+      </lk-box>
     </lk-box>
   </header>
 
-  <lk-box id="main" class="container" width="xl">
-    <lk-stack gap="3xl">
-      <section class="hero center-text" aria-labelledby="home-heading">
-        <lk-stack align="center" gap="5">
-          <span class="pill">ONE CSS FILE · ZERO DEPENDENCIES</span>
-          <h1 id="home-heading" class="hero-title">Readable app structure from one CSS file.</h1>
-          <p class="lead sans">
-            LayoutKit is a tiny pure-CSS layout vocabulary: developer-readable
-            <code class="sans">lk-*</code> wrappers for stacks, rows, grids, centers, and scroll areas inside native semantic HTML. Version 2.0 measures those layouts from their container. Subgrid, sticky regions, and popovers stay opt-in.
-          </p>
-          <lk-cluster place="center" gap="3">
-            <a class="btn btn-primary" href="/install">Install LayoutKit</a>
-            <a class="btn" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a>
-            <a class="btn" href="https://www.npmjs.com/package/layoutkit-css" target="_blank" rel="noopener">npm</a>
-          </lk-cluster>
-        </lk-stack>
-      </section>
-
-      <section aria-labelledby="what-heading">
-        <lk-grid responsive gap="4">
-          <article class="card">
-            <lk-stack gap="2">
-              <h2 id="what-heading" class="h2">What it is</h2>
-              <p class="sans muted">A tiny CSS vocabulary that makes layout intent visible in markup without adding runtime JavaScript, dependencies, or a framework contract.</p>
-            </lk-stack>
-          </article>
-          <article class="card">
-            <lk-stack gap="2">
-              <h2 class="h2">What it is not</h2>
-              <p class="sans muted">Not a component library, design system, substitute for semantic HTML, button kit, form kit, theme, icon set, animation library, or JavaScript app shell.</p>
-            </lk-stack>
-          </article>
-        </lk-grid>
-      </section>
-
-      <section aria-labelledby="install-heading">
-        <lk-box class="card card-green" padding="8">
-          <lk-stack gap="4">
-            <span class="pill pill-green">INSTALL</span>
-            <h2 id="install-heading" class="h2">Load the CSS early</h2>
-            <p class="sans muted">Use a normal stylesheet link for CDN or direct browser usage. In frameworks, import LayoutKit at the root or global CSS layer. There is no JavaScript fallback by design.</p>
-            <div class="code"><pre>npm install layoutkit-css</pre></div>
-            <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
-            <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span></pre></div>
+  <main id="main">
+    <lk-box width="3xl" padding="4">
+      <lk-stack gap="2xl">
+        <section aria-labelledby="home-heading">
+          <lk-stack gap="lg">
+            <p class="kicker">One stylesheet · zero runtime</p>
+            <h1 id="home-heading" class="display">Pure-CSS layout primitives that <em>replace JavaScript</em> for layout.</h1>
+            <p class="lede">LayoutKit is a readable vocabulary of <code>lk-*</code> wrappers — stack, switcher, sidebar, grid, and snap scrolling — used inside real HTML landmarks. Version 2.0 measures those layouts from their own container.</p>
+            <lk-cluster gap="sm">
+              <a class="btn btn-primary" href="/install">Install LayoutKit</a>
+              <a class="btn" href="/docs">Read the docs</a>
+              <a class="btn" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener noreferrer">GitHub<span class="sr"> (opens in a new tab)</span></a>
+            </lk-cluster>
           </lk-stack>
-        </lk-box>
-      </section>
+        </section>
 
-      <section aria-labelledby="example-heading">
-        <lk-stack gap="4">
-          <h2 id="example-heading" class="h2">Use layout wrappers around semantic HTML</h2>
-          <p class="sans muted">Browsers and assistive technologies do not understand <code class="sans">lk-*</code> tags as native landmarks, headings, controls, lists, or forms. Keep the native elements.</p>
-          <div class="code"><pre><span class="tok-tag">&lt;main&gt;</span>
+        <section aria-labelledby="live-heading">
+          <lk-stack gap="lg">
+            <lk-stack gap="sm">
+              <p class="kicker">Live, no JavaScript</p>
+              <h2 id="live-heading">The layout follows the container.</h2>
+              <p class="lede">Drag the corner of the stage. The group labeled “This stage” reflows. The 16rem frame stays capped. Nothing on this page listens for resize.</p>
+            </lk-stack>
+            <lk-card class="stage" surface radius="lg" padding="md">
+              <lk-stack gap="lg">
+                <lk-stack gap="sm">
+                  <p class="kicker">This stage</p>
+                  <lk-switcher gap="sm">
+                    <article class="demo-cell">
+                      <h3>Switcher</h3>
+                      <p class="muted">A row above 30rem.</p>
+                    </article>
+                    <article class="demo-cell">
+                      <h3>Same switcher</h3>
+                      <p class="muted">A stack below 30rem.</p>
+                    </article>
+                  </lk-switcher>
+                  <lk-sidebar gap="sm">
+                    <p class="demo-cell">Side</p>
+                    <p class="demo-cell">Sidebar content keeps the rest of the row, then wraps.</p>
+                  </lk-sidebar>
+                  <lk-grid cols="3" gap="sm">
+                    <p class="demo-cell">Grid one</p>
+                    <p class="demo-cell">Grid two</p>
+                    <p class="demo-cell">Stacks under 32rem</p>
+                  </lk-grid>
+                </lk-stack>
+                <lk-stack gap="sm">
+                  <p class="kicker">Capped at 16rem</p>
+                  <lk-box class="specimen cap-16" padding="3">
+                    <lk-stack gap="xs">
+                      <lk-switcher gap="xs">
+                        <p class="demo-cell">Switcher</p>
+                        <p class="demo-cell">Stacked</p>
+                      </lk-switcher>
+                      <lk-grid cols="3" gap="xs">
+                        <p class="demo-cell">One</p>
+                        <p class="demo-cell">Two</p>
+                        <p class="demo-cell">Three</p>
+                      </lk-grid>
+                      <lk-sidebar gap="xs">
+                        <p class="demo-cell">Side</p>
+                        <p class="demo-cell">Wraps</p>
+                      </lk-sidebar>
+                    </lk-stack>
+                  </lk-box>
+                </lk-stack>
+                <lk-stack gap="sm">
+                  <p class="kicker">Snap scrolling</p>
+                  <lk-scroll-area direction="horizontal" snap slide="peek" tabindex="0" aria-label="Snapping slides" gap="sm">
+                    <article class="demo-cell">
+                      <h3>One</h3>
+                      <p class="muted">Mandatory snap.</p>
+                    </article>
+                    <article class="demo-cell">
+                      <h3>Two</h3>
+                      <p class="muted">Keyboard and pointer.</p>
+                    </article>
+                    <article class="demo-cell">
+                      <h3>Three</h3>
+                      <p class="muted">No carousel script.</p>
+                    </article>
+                  </lk-scroll-area>
+                </lk-stack>
+              </lk-stack>
+            </lk-card>
+          </lk-stack>
+        </section>
+
+        <section aria-labelledby="scope-heading">
+          <lk-stack gap="lg">
+            <h2 id="scope-heading">A vocabulary, not a framework.</h2>
+            <lk-grid cols="2" gap="lg">
+              <lk-card surface padding="lg">
+                <lk-stack gap="sm">
+                  <h3>What it is</h3>
+                  <p class="muted">One CSS file of layout primitives. No runtime, no dependencies, no custom-element registration. Low-specificity rules live in <code>@layer layoutkit</code>, so your stylesheet wins.</p>
+                </lk-stack>
+              </lk-card>
+              <lk-card surface padding="lg">
+                <lk-stack gap="sm">
+                  <h3>What it is not</h3>
+                  <p class="muted">Not a component library, design system, or a substitute for semantic HTML. Not a button kit, form kit, theme, icon set, or JavaScript app shell.</p>
+                </lk-stack>
+              </lk-card>
+            </lk-grid>
+          </lk-stack>
+        </section>
+
+        <section aria-labelledby="defaults-heading">
+          <lk-stack gap="lg">
+            <lk-stack gap="sm">
+              <p class="kicker">Version 2.0.0</p>
+              <h2 id="defaults-heading">Defaults that used to be opt-in.</h2>
+              <p class="measure muted">Tags, attribute names, and the export path are unchanged. The measurements are not. <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Read MIGRATION.md</a> before upgrading. The file in the repo is <code>packages/layoutkit/MIGRATION.md</code>.</p>
+            </lk-stack>
+            <lk-grid cols="2" gap="lg">
+              <lk-card surface padding="lg">
+                <lk-stack gap="sm">
+                  <h3>Container queries</h3>
+                  <p class="muted"><code>lk-switcher</code>, <code>lk-sidebar</code>, and <code>lk-grid</code> set <code>container-type: inline-size</code>. A switcher stacks below 30rem. A grid with fixed <code>cols</code> stacks below 32rem. <code>responsive</code> and <code>min</code> stay auto-fit. Opt out with <code>container="off"</code>.</p>
+                </lk-stack>
+              </lk-card>
+              <lk-card surface padding="lg">
+                <lk-stack gap="sm">
+                  <h3>Fluid spacing</h3>
+                  <p class="muted">Named gaps resolve through <code>--lk-space-*</code>, which is <code>var(--space-*, var(--lk-space-fluid-*))</code>. A host <code>--space-*</code> token still wins. <code>--lk-space-static-*</code> keeps the old rem steps.</p>
+                </lk-stack>
+              </lk-card>
+              <lk-card surface padding="lg">
+                <lk-stack gap="sm">
+                  <h3>Snap scrolling</h3>
+                  <p class="muted"><code>lk-scroll-area direction="horizontal"</code> snaps its children unless <code>snap="off"</code>. Vertical snapping still requires <code>snap</code>. The region needs <code>tabindex="0"</code> and a name when it must be a keyboard stop.</p>
+                </lk-stack>
+              </lk-card>
+              <lk-card surface padding="lg">
+                <lk-stack gap="sm">
+                  <h3>Center, overlay, limit</h3>
+                  <p class="muted">One child in a row or stack is centered unless <code>adapt="off"</code>. <code>lk-center</code> covers a positioned parent unless <code>overlay="off"</code>. Five or more switcher children each take a row. The default limit is 4.</p>
+                </lk-stack>
+              </lk-card>
+            </lk-grid>
+            <lk-stack gap="sm">
+              <h3><code>width="xl"</code> is 56rem.</h3>
+              <p class="measure muted">The previous 64rem step is <code>width="2xl"</code>. <code>width="3xl"</code> is 80rem. This page is an <code>lk-box</code> at <code>3xl</code>. Widen the window to see the steps.</p>
+              <lk-box><lk-box class="meter" width="3xl" padding="3"><strong>3xl</strong> · 80rem</lk-box></lk-box>
+              <lk-box><lk-box class="meter" width="2xl" padding="3"><strong>2xl</strong> · 64rem · this was <code>xl</code></lk-box></lk-box>
+              <lk-box><lk-box class="meter" width="xl" padding="3"><strong>xl</strong> · 56rem</lk-box></lk-box>
+            </lk-stack>
+          </lk-stack>
+        </section>
+
+        <section aria-labelledby="install-heading">
+          <lk-stack gap="lg">
+            <lk-stack gap="sm">
+              <p class="kicker">Install</p>
+              <h2 id="install-heading">Load the stylesheet early.</h2>
+              <p class="measure muted">2.0.0 is not published yet, so the public registry still serves 1.x. Use the file in this repository, or pin the package version when you install. This site loads <code>/layoutkit.css</code> from the 2.0.0 build.</p>
+            </lk-stack>
+            <lk-switcher gap="md" at="lg">
+              <figure class="code">
+                <figcaption class="code-label">npm</figcaption>
+                <pre><code>npm install layoutkit-css@2.0.0</code></pre>
+              </figure>
+              <figure class="code">
+                <figcaption class="code-label">stylesheet</figcaption>
+                <pre><code><span class="tok-tag">&lt;link</span> <span class="tok-attr">rel</span>=<span class="tok-str">"stylesheet"</span> <span class="tok-attr">href</span>=<span class="tok-str">"/layoutkit.css"</span><span class="tok-tag">&gt;</span></code></pre>
+              </figure>
+            </lk-switcher>
+            <lk-cluster gap="sm">
+              <a class="btn" href="/install">Install instructions</a>
+              <a class="btn" href="/layoutkit.css" download="layoutkit.css">Download layoutkit.css</a>
+            </lk-cluster>
+          </lk-stack>
+        </section>
+
+        <section aria-labelledby="semantic-heading">
+          <lk-stack gap="lg">
+            <lk-stack gap="sm">
+              <h2 id="semantic-heading">Wrappers around real HTML.</h2>
+              <p class="measure muted">Browsers do not treat <code>lk-*</code> tags as landmarks, headings, or controls. Keep those elements native.</p>
+            </lk-stack>
+            <figure class="code">
+              <figcaption class="code-label">dashboard</figcaption>
+              <pre><code><span class="tok-tag">&lt;main&gt;</span>
   <span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"dashboard-heading"</span><span class="tok-tag">&gt;</span>
     <span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"lg"</span><span class="tok-tag">&gt;</span>
       <span class="tok-tag">&lt;h1</span> <span class="tok-attr">id</span>=<span class="tok-str">"dashboard-heading"</span><span class="tok-tag">&gt;</span>Dashboard<span class="tok-tag">&lt;/h1&gt;</span>
-      <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">responsive</span><span class="tok-tag">&gt;</span>
+      <span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span><span class="tok-tag">&gt;</span>
         <span class="tok-tag">&lt;article&gt;</span>
           <span class="tok-tag">&lt;h2&gt;</span>Open orders<span class="tok-tag">&lt;/h2&gt;</span>
           <span class="tok-tag">&lt;p&gt;</span>128<span class="tok-tag">&lt;/p&gt;</span>
@@ -117,31 +250,46 @@
       <span class="tok-tag">&lt;/lk-grid&gt;</span>
     <span class="tok-tag">&lt;/lk-stack&gt;</span>
   <span class="tok-tag">&lt;/section&gt;</span>
-<span class="tok-tag">&lt;/main&gt;</span></pre></div>
-        </lk-stack>
-      </section>
+<span class="tok-tag">&lt;/main&gt;</span></code></pre>
+            </figure>
+          </lk-stack>
+        </section>
 
-      <section aria-labelledby="accessibility-heading">
-        <lk-stack gap="4">
-          <h2 id="accessibility-heading" class="h2">Accessibility guidance</h2>
-          <lk-grid responsive gap="3">
-            <article class="card"><p class="sans muted">Use native HTML first. Do not put click handlers on <code class="sans">lk-*</code> elements; use <code class="sans">button</code> or <code class="sans">a</code>.</p></article>
-            <article class="card"><p class="sans muted">Do not add ARIA roles just to make layout wrappers seem semantic. If a wrapper has no semantic purpose, it usually does not need ARIA.</p></article>
-            <article class="card"><p class="sans muted">LayoutKit should not change focus order. Avoid hidden overflow that traps keyboard users, and keep scroll containers usable.</p></article>
-          </lk-grid>
-        </lk-stack>
-      </section>
-    </lk-stack>
-  </lk-box>
+        <section aria-labelledby="a11y-heading">
+          <lk-stack gap="lg">
+            <h2 id="a11y-heading">Accessibility stays in the HTML.</h2>
+            <lk-grid cols="2" gap="md">
+              <lk-card surface padding="lg">
+                <p>Use a <code>button</code> or an <code>a</code> for actions. Do not put click handlers on <code>lk-*</code> elements.</p>
+              </lk-card>
+              <lk-card surface padding="lg">
+                <p>Do not add ARIA roles to make a layout wrapper seem semantic. If it has no role, it usually needs no ARIA.</p>
+              </lk-card>
+              <lk-card surface padding="lg">
+                <p>Focus order follows source order. The switcher does not reverse <code>flex-direction</code> when it stacks. Scroll regions that must be keyboard stops need <code>tabindex="0"</code> and a name.</p>
+              </lk-card>
+              <lk-card surface padding="lg">
+                <p>Reveal and disclosure motion turn off under reduced motion. The content stays visible, and scroll buttons never replace the keyboard.</p>
+              </lk-card>
+            </lk-grid>
+          </lk-stack>
+        </section>
+      </lk-stack>
+    </lk-box>
+  </main>
 
-  <footer class="footer">
-    <lk-spread class="container" width="xl" align="center">
-      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
-      <lk-row gap="4">
-        <a class="navlink" href="/docs">Docs</a>
-        <a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a>
-      </lk-row>
-    </lk-spread>
+  <footer class="site-footer">
+    <lk-box width="3xl" padding="8">
+      <lk-stack gap="md">
+        <p>LayoutKit 2.0.0. Pure-CSS layout primitives. MIT.</p>
+        <lk-cluster gap="md">
+          <a href="/docs">Docs</a>
+          <a href="/install">Install</a>
+          <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>
+          <a href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener noreferrer">GitHub<span class="sr"> (opens in a new tab)</span></a>
+        </lk-cluster>
+      </lk-stack>
+    </lk-box>
   </footer>
 </body>
 </html>
