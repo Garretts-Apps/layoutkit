@@ -3,131 +3,162 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Install LayoutKit - CSS package, CDN, or local file</title>
-  <meta name="description" content="Install layoutkit-css 2.1.0 from npm, a CDN, or a local file. One stylesheet, no runtime JavaScript, no build step to use it.">
+  <title>Install LayoutKit — the 2.1.0 stylesheet</title>
+  <meta name="description" content="Install LayoutKit 2.1.0 from the repository stylesheet or npm. One file, 80,010 bytes, no runtime. The 2.0 defaults are unchanged.">
   <link rel="canonical" href="https://layoutkit.dev/install">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#0a0a0b">
+  <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="Install LayoutKit">
-  <meta property="og:description" content="layoutkit-css 2.1.0 is one stylesheet. Link it or import it. No runtime JavaScript and no dependencies.">
+  <meta property="og:description" content="One CSS file for pure-CSS layout primitives. Load the 2.1.0 stylesheet from this repo until the release is on npm.">
   <meta property="og:url" content="https://layoutkit.dev/install">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit">
+  <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Install LayoutKit">
-  <meta name="twitter:description" content="layoutkit-css 2.1.0: one stylesheet from npm, a CDN, or a local file.">
+  <meta name="twitter:description" content="One CSS file for pure-CSS layout primitives. Load the 2.1.0 stylesheet from this repo until the release is on npm.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
+  <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
   <link rel="stylesheet" href="/assets/site.css?v=20261115f">
-  <meta name="twitter:image:alt" content="LayoutKit">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
     <lk-box class="nav" sticky>
-    <nav aria-label="Primary">
-      <lk-spread align="center">
-        <a href="/" aria-label="LayoutKit home">
-          <lk-row gap="2" align="center">
-            <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
-            <span class="brand brand-name">LayoutKit</span>
-            <span class="badge">CSS</span>
-            <span class="badge">2.1.0</span>
+      <lk-box width="3xl" padding="4">
+        <nav aria-label="Primary">
+          <lk-row align="center" gap="sm" wrap>
+            <a class="brand-link" href="/" aria-label="LayoutKit home">
+              <lk-row gap="2" align="center">
+                <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
+                <span class="brand">LayoutKit</span>
+                <span class="badge">2.1.0</span>
+              </lk-row>
+            </a>
+            <lk-spacer></lk-spacer>
+            <lk-cluster gap="1">
+              <a class="navlink" href="/">Home</a>
+              <a class="navlink" href="/install" aria-current="page">Install</a>
+              <a class="navlink" href="/docs">Docs</a>
+              <a class="navlink" href="/playground">Playground</a>
+              <a class="navlink" href="/tutorial">Tutorial</a>
+            </lk-cluster>
           </lk-row>
-        </a>
-        <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
-          <lk-row class="navlinks" gap="1">
-            <a class="navlink" href="/">Home</a>
-            <a class="navlink" href="/install" aria-current="page">Install</a>
-            <a class="navlink" href="/docs">Docs</a>
-            <a class="navlink" href="/playground">Playground</a>
-            <a class="navlink" href="/tutorial">Tutorial</a>
-          </lk-row>
-        </lk-scroll-area>
-      </lk-spread>
-    </nav>
+        </nav>
+      </lk-box>
     </lk-box>
   </header>
 
-  <lk-box id="main" class="container" width="xl">
-    <lk-stack class="install-lead" gap="2">
-      <span class="pill pill-green">ONE STYLESHEET · 2.1.0 · 78 KB</span>
-      <h1 class="hero-title install-title">Install LayoutKit</h1>
-      <p class="lead sans">One file, 80,010 bytes (12,795 bytes gzipped). Load it from npm, a CDN, or a copy in the repo. There is no build step and no runtime to start.</p>
-    </lk-stack>
-
-    <lk-stack gap="8">
-      <section aria-labelledby="npm-heading">
-        <lk-stack gap="4">
-          <h2 id="npm-heading" class="h2">npm usage</h2>
-          <div class="code"><pre>npm install layoutkit-css</pre></div>
-          <p class="sans muted">Import the stylesheet once at the application root or global CSS entry.</p>
-          <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
-          <p class="sans muted">In a global CSS file, use this form when your bundler resolves CSS package imports:</p>
-          <div class="code"><pre><span class="tok-tag">@import</span> <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
-        </lk-stack>
-      </section>
-
-      <section aria-labelledby="cdn-heading">
-        <lk-stack gap="4">
-          <h2 id="cdn-heading" class="h2">CDN usage</h2>
-          <p class="sans muted">For direct browser usage, put a normal stylesheet link in the document <code class="sans">&lt;head&gt;</code>.</p>
-          <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span></pre></div>
-        </lk-stack>
-      </section>
-
-      <section aria-labelledby="local-heading">
-        <lk-stack gap="4">
-          <h2 id="local-heading" class="h2">Local stylesheet usage</h2>
-          <p class="sans muted">You can vendor the file and link it locally. This keeps usage simple and reviewable.</p>
-          <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="/css/layoutkit.css"&gt;</span></pre></div>
-          <a class="btn" href="/layoutkit.css" download="layoutkit.css">Download layoutkit.css</a>
-        </lk-stack>
-      </section>
-
-      <section aria-labelledby="loading-heading">
-        <lk-box class="card" padding="6">
-          <lk-stack gap="3">
-            <h2 id="loading-heading" class="h2">CSS loading behavior</h2>
-            <p class="sans muted">Load LayoutKit before content that depends on it. Avoid lazy-loading it through JavaScript if it controls initial page layout.</p>
-            <p class="sans muted">If the file does not load, no script reconstructs the layout. The tags stay unknown elements. A browser that lacks a newer feature is a different case: <code class="sans">@supports</code> skips that feature, and the native control or the plain disclosure still works.</p>
+  <main id="main">
+    <lk-box width="3xl" padding="4">
+      <lk-sidebar class="docs-frame" sticky gap="xl">
+        <nav class="toc" aria-label="On this page">
+          <lk-stack gap="sm">
+            <p class="kicker">On this page</p>
+            <lk-switcher at="xs" limit="off" gap="1">
+              <a class="navlink" href="#npm">npm</a>
+              <a class="navlink" href="#browser">Browser</a>
+              <a class="navlink" href="#loading">Loading</a>
+              <a class="navlink" href="#release">Release</a>
+              <a class="navlink" href="#verify">Verify</a>
+            </lk-switcher>
           </lk-stack>
-        </lk-box>
-      </section>
+        </nav>
+        <lk-stack gap="2xl">
+          <section aria-labelledby="install-heading">
+            <lk-stack gap="md">
+              <p class="kicker">One stylesheet · 2.1.0</p>
+              <h1 id="install-heading" class="title">Install LayoutKit</h1>
+              <p class="lede">Load one CSS file early, when it controls the first paint. If it does not load, nothing in JavaScript rebuilds the layout. A missing CSS feature is different: <code>@supports</code> skips that feature.</p>
+            </lk-stack>
+          </section>
 
-      <section aria-labelledby="release-heading">
-        <lk-stack gap="4">
-          <h2 id="release-heading" class="h2">Release 2.1.0</h2>
-          <p class="sans muted">2.1.0 adds <code class="sans">lk-frame</code>, <code class="sans">lk-bleed</code>, <code class="sans">lk-dock</code>, <code class="sans">lk-select</code>, and opt-in panel, pattern, blend, and band styles. It does not change a 2.0.0 default. 2.0.0 is still the release that turned container queries, single-child centering, center overlay, a switcher limit of 4, fluid spacing, and horizontal scroll-snap on. Each of those has an <code class="sans">off</code> value. The migration guide has the unlayered CSS that restores 1.5.0.</p>
-          <a class="btn" href="https://github.com/Garretts-Apps/layoutkit/blob/main/CHANGELOG.md">Read the changelog</a>
+          <section id="npm" aria-labelledby="npm-heading">
+            <lk-stack gap="md">
+              <h2 id="npm-heading">npm</h2>
+              <p class="measure muted">Pin the version. Import the stylesheet once, at the application root or in your global CSS.</p>
+              <figure class="code">
+                <figcaption class="code-label">terminal</figcaption>
+                <pre><code>npm install layoutkit-css@2.1.0</code></pre>
+              </figure>
+              <figure class="code">
+                <figcaption class="code-label">JavaScript</figcaption>
+                <pre><code><span class="tok-tag">import</span> <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</code></pre>
+              </figure>
+              <figure class="code">
+                <figcaption class="code-label">global CSS</figcaption>
+                <pre><code><span class="tok-tag">@import</span> <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</code></pre>
+              </figure>
+            </lk-stack>
+          </section>
+
+          <section id="browser" aria-labelledby="browser-heading">
+            <lk-stack gap="md">
+              <h2 id="browser-heading">Browser</h2>
+              <p class="measure muted">2.1.0 is not on the npm registry yet, so a public package URL would still serve 1.x. Link the stylesheet shipped with this site, or copy <code>packages/layoutkit/layoutkit.css</code> from the repository. The copy at the site root is that same 2.1.0 build.</p>
+              <figure class="code">
+                <figcaption class="code-label">document head</figcaption>
+                <pre><code><span class="tok-tag">&lt;link</span> <span class="tok-attr">rel</span>=<span class="tok-str">"stylesheet"</span> <span class="tok-attr">href</span>=<span class="tok-str">"/layoutkit.css"</span><span class="tok-tag">&gt;</span></code></pre>
+              </figure>
+              <a class="btn" href="/layoutkit.css" download="layoutkit.css">Download layoutkit.css</a>
+            </lk-stack>
+          </section>
+
+          <section id="loading" aria-labelledby="loading-heading">
+            <lk-card class="callout" surface padding="lg">
+              <lk-stack gap="sm">
+                <h2 id="loading-heading">Loading</h2>
+                <p>Put the link or the import where it applies before first paint. Do not lazy-load it with script if it lays out the page.</p>
+                <p class="muted">If the CSS does not load, <code>lk-*</code> tags are unknown elements with no layout styling. That is intentional.</p>
+              </lk-stack>
+            </lk-card>
+          </section>
+
+          <section id="release" aria-labelledby="release-heading">
+            <lk-stack gap="md">
+              <h2 id="release-heading">What changed</h2>
+              <p class="measure muted">2.1.0 adds <code>lk-frame</code>, <code>lk-bleed</code>, <code>lk-dock</code>, and <code>lk-select</code>, plus opt-in <code>look</code>, <code>pattern</code>, <code>blend</code>, and <code>bands</code>. It does not change a 2.0.0 default.</p>
+              <p class="measure muted">2.0.0 turned container queries on switcher, sidebar, and grid, a switcher limit of 4, single-child centering, center overlay, fluid spacing, and horizontal scroll-snap on. Each one has an <code>off</code> value.</p>
+              <p class="measure muted"><code>width="xl"</code> is 56rem. The old 64rem step is <code>width="2xl"</code>. <code>width="3xl"</code> is 80rem.</p>
+              <lk-cluster gap="sm">
+                <a class="btn btn-primary" href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Read MIGRATION.md</a>
+                <a class="btn" href="https://github.com/Garretts-Apps/layoutkit/blob/main/CHANGELOG.md">Changelog</a>
+              </lk-cluster>
+            </lk-stack>
+          </section>
+
+          <section id="verify" aria-labelledby="verify-heading">
+            <lk-stack gap="md">
+              <h2 id="verify-heading">Package verification</h2>
+              <p class="measure muted">The package ships the stylesheet, <code>jsx.d.ts</code>, docs, license, changelog, migration guide, and security notes. No runtime, no dependencies, no install scripts.</p>
+              <figure class="code">
+                <figcaption class="code-label">terminal</figcaption>
+                <pre><code>npm pack layoutkit-css
+tar -tzf layoutkit-css-*.tgz</code></pre>
+              </figure>
+            </lk-stack>
+          </section>
         </lk-stack>
-      </section>
+      </lk-sidebar>
+    </lk-box>
+  </main>
 
-      <section aria-labelledby="verify-heading">
-        <lk-stack gap="4">
-          <h2 id="verify-heading" class="h2">Package verification</h2>
-          <p class="sans muted">The npm package is intentionally small and ships the stylesheet, declarations, docs, license, changelog, and security notes.</p>
-          <div class="code"><pre>npm pack layoutkit-css
-tar -tzf layoutkit-css-*.tgz</pre></div>
-          <p class="sans muted">Use pinned versions when reproducibility matters:</p>
-          <div class="code"><pre>npm install layoutkit-css@2.1.0</pre></div>
-        </lk-stack>
-      </section>
-    </lk-stack>
-  </lk-box>
-
-  <footer class="footer">
-    <lk-spread class="container" width="xl" align="center">
-      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
-      <lk-row gap="4">
-        <a class="navlink" href="/docs">Docs</a>
-        <a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a>
-      </lk-row>
-    </lk-spread>
+  <footer class="site-footer">
+    <lk-box width="3xl" padding="8">
+      <lk-stack gap="md">
+        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
+        <lk-cluster gap="md">
+          <a href="/docs">Docs</a>
+          <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>
+          <a href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener noreferrer">GitHub<span class="sr"> (opens in a new tab)</span></a>
+        </lk-cluster>
+      </lk-stack>
+    </lk-box>
   </footer>
 </body>
 </html>

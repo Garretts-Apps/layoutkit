@@ -3,162 +3,366 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tutorial - LayoutKit layout wrappers inside semantic HTML</title>
-  <meta name="description" content="A short LayoutKit 2.1.0 tutorial: semantic HTML inside layout tags. The examples do not use JavaScript.">
+  <title>Tutorial — LayoutKit layout wrappers inside semantic HTML</title>
+  <meta name="description" content="Learn LayoutKit 2.1: center, stack, spread, container-query grid and switcher, sidebar, and snap scrolling. Pure CSS, inside native semantic HTML.">
   <link rel="canonical" href="https://layoutkit.dev/tutorial">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#0a0a0b">
+  <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
-  <meta property="og:title" content="Tutorial - LayoutKit">
-  <meta property="og:description" content="Layout examples in semantic HTML, including a frame and a menu. The samples do not use JavaScript.">
+  <meta property="og:title" content="Tutorial — LayoutKit">
+  <meta property="og:description" content="A short tour of LayoutKit 2.1 layouts: switcher, sidebar, grid, and snap scrolling, with no runtime.">
   <meta property="og:url" content="https://layoutkit.dev/tutorial">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="LayoutKit">
+  <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Tutorial - LayoutKit">
-  <meta name="twitter:description" content="Layout examples in semantic HTML. The samples do not use JavaScript.">
+  <meta name="twitter:title" content="Tutorial — LayoutKit">
+  <meta name="twitter:description" content="A short tour of LayoutKit 2.1 layouts: switcher, sidebar, grid, and snap scrolling, with no runtime.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
+  <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
   <link rel="stylesheet" href="/assets/site.css?v=20261115f">
-  <meta name="twitter:image:alt" content="LayoutKit">
-  <style>
-    .demo > * > *, .demo > * { outline: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
-    .demo-grid { --lk-min-child-width: 140px; }
-    .demo-page { block-size: 12.5rem; }
-  </style>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
     <lk-box class="nav" sticky>
-    <nav aria-label="Primary">
-      <lk-spread align="center">
-        <a href="/" aria-label="LayoutKit home">
-          <lk-row gap="2" align="center">
-            <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
-            <span class="brand brand-name">LayoutKit</span>
-            <span class="badge">CSS</span>
-            <span class="badge">2.1.0</span>
+      <lk-box width="3xl" padding="4">
+        <nav aria-label="Primary">
+          <lk-row align="center" gap="sm" wrap>
+            <a class="brand-link" href="/" aria-label="LayoutKit home">
+              <lk-row gap="2" align="center">
+                <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
+                <span class="brand">LayoutKit</span>
+                <span class="badge">2.1.0</span>
+              </lk-row>
+            </a>
+            <lk-spacer></lk-spacer>
+            <lk-cluster gap="1">
+              <a class="navlink" href="/">Home</a>
+              <a class="navlink" href="/install">Install</a>
+              <a class="navlink" href="/docs">Docs</a>
+              <a class="navlink" href="/playground">Playground</a>
+              <a class="navlink" href="/tutorial" aria-current="page">Tutorial</a>
+            </lk-cluster>
           </lk-row>
-        </a>
-        <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
-          <lk-row class="navlinks" gap="1">
-            <a class="navlink" href="/">Home</a>
-            <a class="navlink" href="/install">Install</a>
-            <a class="navlink" href="/docs">Docs</a>
-            <a class="navlink" href="/playground">Playground</a>
-            <a class="navlink" href="/tutorial" aria-current="page">Tutorial</a>
-          </lk-row>
-        </lk-scroll-area>
-      </lk-spread>
-    </nav>
+        </nav>
+      </lk-box>
     </lk-box>
   </header>
 
-  <lk-box id="main" class="container page">
-    <lk-stack gap="2" style="margin-bottom: 32px;">
-      <h1 class="h2">Tutorial</h1>
-      <p class="sans muted">LayoutKit arranges native HTML. The examples keep headings, links, buttons, lists, and landmarks as real elements. Nothing here is opened or measured by a script. <code class="sans">lk-center</code> covers its parent unless you set <code class="sans">overlay="off"</code>.</p>
-    </lk-stack>
+  <main id="main">
+    <lk-box width="3xl" padding="4">
+      <lk-sidebar class="docs-frame" sticky gap="xl">
+        <nav class="toc" aria-label="Tutorial steps">
+          <lk-stack gap="sm">
+            <p class="kicker">Steps</p>
+            <lk-switcher at="xs" limit="off" gap="1">
+              <a class="navlink" href="#center">1 Center</a>
+              <a class="navlink" href="#stack">2 Stack</a>
+              <a class="navlink" href="#spread">3 Spread</a>
+              <a class="navlink" href="#grid">4 Grid</a>
+              <a class="navlink" href="#switcher">5 Switcher</a>
+              <a class="navlink" href="#sidebar">6 Sidebar</a>
+              <a class="navlink" href="#snap">7 Snap</a>
+              <a class="navlink" href="#page">8 Page</a>
+              <a class="navlink" href="#menu">9 Menu</a>
+            </lk-switcher>
+          </lk-stack>
+        </nav>
+        <lk-stack gap="2xl">
+          <section aria-labelledby="tutorial-heading">
+            <lk-stack gap="md">
+              <p class="kicker">Tutorial · 2.1.0</p>
+              <h1 id="tutorial-heading" class="title">Arrange native HTML.</h1>
+              <p class="lede">Every example keeps headings, links, buttons, lists, and landmarks as real elements. The <code>lk-*</code> tags only place them. Upgrading from 1.x? <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Read MIGRATION.md</a>.</p>
+            </lk-stack>
+          </section>
 
-    <lk-stack gap="8">
-      <!-- Step 1 -->
-      <lk-box class="card">
-        <lk-stack gap="4">
-          <div><span class="eyebrow">Step 1</span><h2 class="h2" style="font-size:18px;">Center content</h2></div>
-          <p class="sans muted">Use <code class="code-inline">lk-center</code> as a wrapper around meaningful content.</p>
-          <div class="code"><pre><span class="tok-tag">&lt;lk-center&gt;</span>
+          <section id="center" aria-labelledby="center-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 1</p>
+                <h2 id="center-heading">Center content</h2>
+                <p class="measure muted"><code>lk-center</code> covers a positioned parent unless <code>overlay="off"</code>. Empty states in normal flow use the opt-out.</p>
+                <figure class="code">
+                  <figcaption class="code-label">markup</figcaption>
+                  <pre><code><span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">overlay</span>=<span class="tok-str">"off"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;section</span> <span class="tok-attr">aria-labelledby</span>=<span class="tok-str">"empty-heading"</span><span class="tok-tag">&gt;</span>
     <span class="tok-tag">&lt;h2</span> <span class="tok-attr">id</span>=<span class="tok-str">"empty-heading"</span><span class="tok-tag">&gt;</span>No results<span class="tok-tag">&lt;/h2&gt;</span>
   <span class="tok-tag">&lt;/section&gt;</span>
-<span class="tok-tag">&lt;/lk-center&gt;</span></pre></div>
-          <div class="demo"><lk-center class="stage" overlay="off"><section aria-labelledby="empty-heading-demo"><h2 id="empty-heading-demo">No results</h2></section></lk-center></div>
-        </lk-stack>
-      </lk-box>
+<span class="tok-tag">&lt;/lk-center&gt;</span></code></pre>
+                </figure>
+                <div class="demo demo-stage">
+                  <lk-center overlay="off">
+                    <section aria-labelledby="empty-heading-demo"><h2 id="empty-heading-demo">No results</h2></section>
+                  </lk-center>
+                </div>
+              </lk-stack>
+            </lk-card>
+          </section>
 
-      <!-- Step 2 -->
-      <lk-box class="card">
-        <lk-stack gap="4">
-          <div><span class="eyebrow">Step 2</span><h2 class="h2" style="font-size:18px;">Stack with consistent spacing</h2></div>
-          <p class="sans muted"><code class="code-inline">lk-stack</code> is a vertical flex column; <code class="code-inline">gap</code> sets the rhythm.</p>
-          <div class="code"><pre><span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+          <section id="stack" aria-labelledby="stack-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 2</p>
+                <h2 id="stack-heading">Stack with a fluid gap</h2>
+                <p class="measure muted"><code>gap="md"</code> uses the fluid space scale. A host <code>--space-md</code> token still wins.</p>
+                <figure class="code">
+                  <figcaption class="code-label">markup</figcaption>
+                  <pre><code><span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;p&gt;</span>Summary<span class="tok-tag">&lt;/p&gt;</span>
   <span class="tok-tag">&lt;p&gt;</span>Details<span class="tok-tag">&lt;/p&gt;</span>
-<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-          <div class="demo"><lk-stack gap="md"><p>Summary</p><p>Details</p><p>Next steps</p></lk-stack></div>
-        </lk-stack>
-      </lk-box>
+<span class="tok-tag">&lt;/lk-stack&gt;</span></code></pre>
+                </figure>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-stack gap="md">
+                      <p class="demo-cell">Summary</p>
+                      <p class="demo-cell">Details</p>
+                      <p class="demo-cell">Next steps</p>
+                    </lk-stack>
+                  </lk-box>
+                </div>
+              </lk-stack>
+            </lk-card>
+          </section>
 
-      <!-- Step 3 -->
-      <lk-box class="card">
-        <lk-stack gap="4">
-          <div><span class="eyebrow">Step 3</span><h2 class="h2" style="font-size:18px;">A header with <code class="code-inline">lk-spread</code></h2></div>
-          <p class="sans muted">Push children to opposite ends — logo left, links right.</p>
-          <div class="code"><pre><span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">align</span>=<span class="tok-str">"center"</span><span class="tok-tag">&gt;</span>
+          <section id="spread" aria-labelledby="spread-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 3</p>
+                <h2 id="spread-heading">A header with spread</h2>
+                <p class="measure muted"><code>lk-spread</code> pushes the first and last children apart. The landmark stays a <code>nav</code>.</p>
+                <figure class="code">
+                  <figcaption class="code-label">markup</figcaption>
+                  <pre><code><span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">align</span>=<span class="tok-str">"center"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>Logo<span class="tok-tag">&lt;/a&gt;</span>
   <span class="tok-tag">&lt;nav</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Primary"</span><span class="tok-tag">&gt;</span>
-    <span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>Home<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/docs"</span><span class="tok-tag">&gt;</span>Docs<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/lk-row&gt;</span>
+    <span class="tok-tag">&lt;lk-row</span> <span class="tok-attr">gap</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span>
+      <span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>Home<span class="tok-tag">&lt;/a&gt;</span>
+      <span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/docs"</span><span class="tok-tag">&gt;</span>Docs<span class="tok-tag">&lt;/a&gt;</span>
+    <span class="tok-tag">&lt;/lk-row&gt;</span>
   <span class="tok-tag">&lt;/nav&gt;</span>
-<span class="tok-tag">&lt;/lk-spread&gt;</span></pre></div>
-          <div class="demo"><lk-spread align="center"><a href="/">Logo</a><nav aria-label="Demo"><lk-row gap="sm"><a href="/">Home</a><a href="/docs">Docs</a></lk-row></nav></lk-spread></div>
+<span class="tok-tag">&lt;/lk-spread&gt;</span></code></pre>
+                </figure>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-spread align="center">
+                      <a href="/">Logo</a>
+                      <nav aria-label="Demo primary">
+                        <lk-row gap="sm">
+                          <a href="/">Home</a>
+                          <a href="/docs">Docs</a>
+                        </lk-row>
+                      </nav>
+                    </lk-spread>
+                  </lk-box>
+                </div>
+              </lk-stack>
+            </lk-card>
+          </section>
+
+          <section id="grid" aria-labelledby="grid-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 4</p>
+                <h2 id="grid-heading">A grid that knows its width</h2>
+                <p class="measure muted">Fixed <code>cols</code> stack below 32rem because the grid is a container. <code>responsive</code> is auto-fit and does not use that stack. The 16rem frame shows the stack. This card shows the wide grid.</p>
+                <figure class="code">
+                  <figcaption class="code-label">markup</figcaption>
+                  <pre><code><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">cols</span>=<span class="tok-str">"3"</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>North<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>South<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>West<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-grid&gt;</span></code></pre>
+                </figure>
+                <lk-switcher gap="md" at="md">
+                  <div class="demo">
+                    <lk-box class="cap-16" padding="3">
+                      <lk-grid cols="3" gap="xs">
+                        <article><h3>North</h3></article>
+                        <article><h3>South</h3></article>
+                        <article><h3>West</h3></article>
+                      </lk-grid>
+                    </lk-box>
+                  </div>
+                  <div class="demo">
+                    <lk-box padding="3">
+                      <lk-grid cols="3" gap="sm">
+                        <article><h3>North</h3></article>
+                        <article><h3>South</h3></article>
+                        <article><h3>West</h3></article>
+                      </lk-grid>
+                    </lk-box>
+                  </div>
+                </lk-switcher>
+              </lk-stack>
+            </lk-card>
+          </section>
+
+          <section id="switcher" aria-labelledby="switcher-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 5</p>
+                <h2 id="switcher-heading">Switcher, from the container</h2>
+                <p class="measure muted">Children sit in a row above 30rem and take the full row below it. <code>at</code> picks another threshold: xs 20rem, sm 24rem, lg 40rem, xl 48rem, 2xl 64rem. Five or more children each take a row unless you set <code>limit</code>.</p>
+                <figure class="code">
+                  <figcaption class="code-label">markup</figcaption>
+                  <pre><code><span class="tok-tag">&lt;lk-switcher</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Alpha<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Beta<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-switcher&gt;</span></code></pre>
+                </figure>
+                <lk-switcher gap="md" at="md">
+                  <div class="demo">
+                    <lk-box class="cap-16" padding="3">
+                      <lk-switcher gap="xs">
+                        <article><h3>Alpha</h3></article>
+                        <article><h3>Beta</h3></article>
+                      </lk-switcher>
+                    </lk-box>
+                  </div>
+                  <div class="demo">
+                    <lk-box padding="3">
+                      <lk-switcher gap="sm">
+                        <article><h3>Alpha</h3></article>
+                        <article><h3>Beta</h3></article>
+                      </lk-switcher>
+                    </lk-box>
+                  </div>
+                </lk-switcher>
+              </lk-stack>
+            </lk-card>
+          </section>
+
+          <section id="sidebar" aria-labelledby="sidebar-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 6</p>
+                <h2 id="sidebar-heading">A sidebar that wraps</h2>
+                <p class="measure muted">The side starts near 18rem. The content keeps at least half the sidebar’s own width, then the pair wraps. <code>sticky</code> pins the side while the content is on screen.</p>
+                <figure class="code">
+                  <figcaption class="code-label">markup</figcaption>
+                  <pre><code><span class="tok-tag">&lt;lk-sidebar</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;nav</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Sections"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"#snap"</span><span class="tok-tag">&gt;</span>Snap<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;/nav&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Notes<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;p&gt;</span>The long column.<span class="tok-tag">&lt;/p&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-sidebar&gt;</span></code></pre>
+                </figure>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-sidebar gap="md">
+                      <nav aria-label="Demo sections"><a href="#snap">Snap</a></nav>
+                      <article>
+                        <h3>Notes</h3>
+                        <p>The long column sits beside the side, and wraps under it when the container is narrow.</p>
+                      </article>
+                    </lk-sidebar>
+                  </lk-box>
+                </div>
+              </lk-stack>
+            </lk-card>
+          </section>
+
+          <section id="snap" aria-labelledby="snap-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 7</p>
+                <h2 id="snap-heading">Snap scrolling</h2>
+                <p class="measure muted">A horizontal <code>lk-scroll-area</code> snaps unless <code>snap="off"</code>. <code>slide="peek"</code> shows the next item. Give the region a tabindex and a name so it is a keyboard stop.</p>
+                <figure class="code">
+                  <figcaption class="code-label">markup</figcaption>
+                  <pre><code><span class="tok-tag">&lt;lk-scroll-area</span> <span class="tok-attr">direction</span>=<span class="tok-str">"horizontal"</span> <span class="tok-attr">snap</span> <span class="tok-attr">slide</span>=<span class="tok-str">"peek"</span> <span class="tok-attr">tabindex</span>=<span class="tok-str">"0"</span> <span class="tok-attr">aria-label</span>=<span class="tok-str">"Highlights"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>One<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Two<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Three<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/lk-scroll-area&gt;</span></code></pre>
+                </figure>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-scroll-area direction="horizontal" snap slide="peek" tabindex="0" aria-label="Highlights" gap="sm">
+                      <article><h3>One</h3><p>First slide</p></article>
+                      <article><h3>Two</h3><p>Second slide</p></article>
+                      <article><h3>Three</h3><p>Third slide</p></article>
+                    </lk-scroll-area>
+                  </lk-box>
+                </div>
+              </lk-stack>
+            </lk-card>
+          </section>
+
+          <section id="page" aria-labelledby="page-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 8</p>
+                <h2 id="page-heading">Compose a page</h2>
+                <p class="measure muted"><code>fill</code> grows a wrapper that is itself a flex item. The landmark stays a native <code>main</code>.</p>
+                <div class="demo">
+                  <lk-stack class="demo-page">
+                    <header>
+                      <lk-spread padding="sm">
+                        <a href="/">App</a>
+                        <button type="button">Menu</button>
+                      </lk-spread>
+                    </header>
+                    <lk-box fill>
+                      <main>
+                        <lk-center overlay="off"><h2>Content</h2></lk-center>
+                      </main>
+                    </lk-box>
+                  </lk-stack>
+                </div>
+              </lk-stack>
+            </lk-card>
+          </section>
+
+          <section id="menu" aria-labelledby="menu-heading">
+            <lk-card surface padding="lg">
+              <lk-stack gap="md">
+                <p class="kicker">Step 9</p>
+                <h2 id="menu-heading">A menu without script</h2>
+                <p class="measure muted"><code>lk-menu</code> with <code>anchor</code> tethers a native popover to the button. The invoker is the first child and must be a real <code>button</code>.</p>
+                <div class="demo">
+                  <lk-box padding="4">
+                    <lk-menu anchor>
+                      <button type="button" popovertarget="tutorial-menu">Menu</button>
+                      <lk-popover id="tutorial-menu" popover>
+                        <nav aria-label="Tutorial menu">
+                          <lk-stack gap="xs">
+                            <a href="/docs">Docs</a>
+                            <a href="/install">Install</a>
+                          </lk-stack>
+                        </nav>
+                      </lk-popover>
+                    </lk-menu>
+                  </lk-box>
+                </div>
+                <lk-cluster gap="sm">
+                  <a class="btn btn-primary" href="/playground">Try the playground</a>
+                  <a class="btn" href="/docs">Full reference</a>
+                </lk-cluster>
+              </lk-stack>
+            </lk-card>
+          </section>
         </lk-stack>
-      </lk-box>
+      </lk-sidebar>
+    </lk-box>
+  </main>
 
-      <!-- Step 4 -->
-      <lk-box class="card">
-        <lk-stack gap="4">
-          <div><span class="eyebrow">Step 4</span><h2 class="h2" style="font-size:18px;">A responsive grid</h2></div>
-          <p class="sans muted"><code class="code-inline">responsive</code> is <code class="code-inline">auto-fit</code>. Tracks come from the available width, not a viewport breakpoint. Resize the window.</p>
-          <div class="code"><pre><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">responsive</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span> <span class="tok-attr">style</span>=<span class="tok-str">"--lk-min-child-width: 140px"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Project<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span> …
-<span class="tok-tag">&lt;/lk-grid&gt;</span></pre></div>
-          <div class="demo"><lk-grid class="demo-grid" responsive gap="md"><article><h3>Project 1</h3></article><article><h3>Project 2</h3></article><article><h3>Project 3</h3></article></lk-grid></div>
-        </lk-stack>
-      </lk-box>
-
-      <!-- Step 5 -->
-      <lk-box class="card">
-        <lk-stack gap="4">
-          <div><span class="eyebrow">Step 5</span><h2 class="h2" style="font-size:18px;">Compose a page</h2></div>
-          <p class="sans muted"><code class="code-inline">fill</code> grows a layout wrapper that is itself a flex item. The landmark stays a native <code class="code-inline">main</code> inside that wrapper.</p>
-          <div class="code"><pre><span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">style</span>=<span class="tok-str">"height: 200px"</span><span class="tok-tag">&gt;</span>
-  <span class="tok-tag">&lt;header&gt;</span><span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">padding</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>App<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"button"</span><span class="tok-tag">&gt;</span>Menu<span class="tok-tag">&lt;/button&gt;</span><span class="tok-tag">&lt;/lk-spread&gt;</span><span class="tok-tag">&lt;/header&gt;</span>
-  <span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">fill</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;main&gt;</span><span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">overlay</span>=<span class="tok-str">"off"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;h2&gt;</span>Content<span class="tok-tag">&lt;/h2&gt;</span><span class="tok-tag">&lt;/lk-center&gt;</span><span class="tok-tag">&lt;/main&gt;</span><span class="tok-tag">&lt;/lk-box&gt;</span>
-<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-          <div class="demo"><lk-stack class="demo-page"><header><lk-spread padding="sm"><a href="/">App</a><button type="button">Menu</button></lk-spread></header><lk-box fill><main><lk-center overlay="off"><h2>Content</h2></lk-center></main></lk-box></lk-stack></div>
-        </lk-stack>
-      </lk-box>
-
-      <lk-box class="card">
-        <lk-stack gap="4">
-          <div><span class="eyebrow">Step 6</span><h2 class="h2" style="font-size:18px;">A menu without script</h2></div>
-          <p class="sans muted"><code class="code-inline">lk-menu</code> with <code class="code-inline">anchor</code> tethers a native popover to the button. The same idea is <code class="code-inline">lk-disclosure</code> for <code class="code-inline">details</code>.</p>
-          <div class="demo"><lk-menu anchor><button type="button" popovertarget="tutorial-menu">Menu</button><lk-popover id="tutorial-menu" popover><nav aria-label="Tutorial"><lk-stack gap="xs"><a href="/docs">Docs</a><a href="/install">Install</a></lk-stack></nav></lk-popover></lk-menu></div>
-        </lk-stack>
-      </lk-box>
-
-      <lk-box class="card">
-        <lk-stack gap="4">
-          <div><span class="eyebrow">Step 7</span><h2 class="h2" style="font-size:18px;">A column with a full-width band</h2></div>
-          <p class="sans muted"><code class="code-inline">lk-frame</code> keeps a measure in the center track. <code class="code-inline">lk-bleed</code> spans the frame. Where subgrid exists, the band's text sits back in the column.</p>
-          <div class="demo"><lk-frame width="xs"><h2>In the column</h2><lk-bleed class="band" padding="sm"><p>This band is the width of the frame.</p></lk-bleed></lk-frame></div>
-        </lk-stack>
-      </lk-box>
-
-      <lk-center overlay="off">
-        <a class="btn btn-primary" href="/playground">Try it in the Playground &rarr;</a>
-      </lk-center>
-    </lk-stack>
-  </lk-box>
-
-  <footer class="footer">
-    <lk-spread class="container" width="xl" align="center">
-      <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
-      <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
-    </lk-spread>
+  <footer class="site-footer">
+    <lk-box width="3xl" padding="8">
+      <lk-stack gap="md">
+        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
+        <lk-cluster gap="md">
+          <a href="/docs">Docs</a>
+          <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>
+          <a href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener noreferrer">GitHub<span class="sr"> (opens in a new tab)</span></a>
+        </lk-cluster>
+      </lk-stack>
+    </lk-box>
   </footer>
 </body>
 </html>
