@@ -89,6 +89,8 @@ declare global {
         sticky?: boolean | "";
         reveal?: boolean | "";
         layout?: "compact";
+        /** Paint each child from --lk-base and sibling-index(), where that function exists. */
+        bands?: boolean | "";
       };
       "lk-row": LayoutKitGlobalAttributes & {
         gap?: LayoutKitSpace;
@@ -110,6 +112,8 @@ declare global {
         snap?: boolean | "" | "mandatory" | "proximity" | "center";
         /** Slide size along the snap axis. Assumes the row gap. */
         slide?: "full" | "half" | "third" | "peek";
+        /** Paint each child from --lk-base and sibling-index(), where that function exists. */
+        bands?: boolean | "";
       };
       "lk-center": LayoutKitGlobalAttributes & {
         place?: LayoutKitPlace;
@@ -133,6 +137,10 @@ declare global {
         square?: LayoutKitSquare;
         reveal?: boolean | "";
         layout?: "compact";
+        /** Gradient texture: checker, dots, or graph paper. */
+        pattern?: "checker" | "dots" | "grid";
+        /** background-blend-mode for layers the author supplies. */
+        blend?: "color" | "saturation" | "multiply";
       };
       "lk-card": LayoutKitGlobalAttributes & {
         padding?: LayoutKitSpace;
@@ -238,6 +246,8 @@ declare global {
         side?: "end";
         /** Height animation is on unless off. Reduced motion disables it. */
         animate?: boolean | "" | "off";
+        /** Bordered accordion. Put the same name on each details for a mutually exclusive group. */
+        look?: "panel";
       };
       /** Pairs an invoker with lk-popover. The invoker is the first child. anchor tethers the panel. */
       "lk-menu": LayoutKitGlobalAttributes & {
@@ -248,6 +258,29 @@ declare global {
       "lk-columns": LayoutKitGlobalAttributes & {
         cols?: "2" | "3" | "4";
         gap?: LayoutKitSpace;
+      };
+      /**
+       * Full-width frame whose center column is a measure, not a max-width.
+       * Gutters grow. width sets the measure. padding replaces the fluid gutter.
+       */
+      "lk-frame": LayoutKitGlobalAttributes & {
+        width?: LayoutKitWidth;
+        padding?: LayoutKitSpace;
+      };
+      /** Spans the frame edge to edge. With subgrid, its children sit back in the column. */
+      "lk-bleed": LayoutKitGlobalAttributes & {
+        padding?: LayoutKitSpace;
+      };
+      /** Hover grows an item and its neighbors. Direct children are the icons. */
+      "lk-dock": LayoutKitGlobalAttributes & {
+        gap?: LayoutKitSpace;
+      };
+      /**
+       * Wraps a native select. appearance: base-select applies only where supported.
+       * Other browsers keep the operating-system control.
+       */
+      "lk-select": LayoutKitGlobalAttributes & {
+        width?: LayoutKitWidth;
       };
     }
   }

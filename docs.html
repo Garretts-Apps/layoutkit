@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Docs - LayoutKit primitives, attributes, accessibility, and tokens</title>
-  <meta name="description" content="LayoutKit documentation for pure-CSS layout primitives, attributes, accessibility guidance, semantic HTML usage, design tokens, TSX/JSX, and package verification.">
+  <meta name="description" content="LayoutKit 2.1.0 reference: layout tags for semantic HTML, 2.0 defaults that are already on, and CSS features that stay behind @supports.">
   <link rel="canonical" href="https://layoutkit.dev/docs">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="LayoutKit Docs">
-  <meta property="og:description" content="Reference for a tiny pure-CSS layout vocabulary used inside native semantic HTML.">
+  <meta property="og:description" content="LayoutKit 2.1.0 reference. One stylesheet, no runtime JavaScript. Support notes for container queries, anchor positioning, interpolate-size, and base-select.">
   <meta property="og:url" content="https://layoutkit.dev/docs">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -19,10 +19,10 @@
   <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="LayoutKit Docs">
-  <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, TSX/JSX, and package verification.">
+  <meta name="twitter:description" content="LayoutKit 2.1.0 reference: tags, defaults, and which CSS features are not in every browser.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
   <meta name="twitter:image:alt" content="LayoutKit">
 </head>
 <body>
@@ -36,7 +36,7 @@
             <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
-            <span class="badge">2.0.0</span>
+            <span class="badge">2.1.0</span>
           </lk-row>
         </a>
         <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
@@ -63,6 +63,7 @@
           <a class="navlink" href="#primitives">Primitives</a>
           <a class="navlink" href="#attributes">Attributes</a>
           <a class="navlink" href="#layouts">CSS over JS</a>
+          <a class="navlink" href="#platform">Platform CSS</a>
           <a class="navlink" href="#gallery">Gallery</a>
           <a class="navlink" href="#helpers">Helpers</a>
           <a class="navlink" href="#tokens">Tokens</a>
@@ -76,9 +77,9 @@
       <lk-stack gap="3xl">
       <section aria-labelledby="docs-heading">
         <lk-stack gap="4">
-          <span class="pill">REFERENCE · 2.0.0</span>
+          <span class="pill">REFERENCE · 2.1.0</span>
           <h1 id="docs-heading" class="hero-title docs-title">LayoutKit Docs</h1>
-          <p class="lead sans">A tiny pure-CSS layout vocabulary for readable app structure. Use <code class="sans">lk-*</code> tags to make layout intent visible while native semantic HTML carries document meaning. Package version 2.0.0. Types ship in <code class="sans">jsx.d.ts</code>.</p>
+          <p class="lead sans">One stylesheet, 80,010 bytes (12,795 bytes gzipped), no runtime JavaScript. <code class="sans">lk-*</code> tags name layout. Native HTML still carries meaning. Version 2.1.0 adds frame, dock, select, and opt-in panel accordions. It does not change the 2.0.0 defaults. Types ship in <code class="sans">jsx.d.ts</code>.</p>
         </lk-stack>
       </section>
 
@@ -97,13 +98,13 @@
           <article class="card">
             <lk-stack gap="2">
               <h2 id="scope-heading" class="h2">Scope</h2>
-              <p class="sans muted">LayoutKit covers common layout primitives: stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, and menu. Switcher, sidebar, and grid query their own size. Subgrid, row snap, sticky, and anchors stay opt-in.</p>
+              <p class="sans muted">Stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, frame, bleed, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, menu, dock, select, and columns. Switcher, sidebar, and grid query their own size unless <code class="sans">container="off"</code>. Subgrid, row snap, sticky, anchors, dock, panel accordions, and customizable selects stay opt-in.</p>
             </lk-stack>
           </article>
           <article class="card">
             <lk-stack gap="2">
               <h2 class="h2">Non-goals</h2>
-              <p class="sans muted">No buttons, forms, typography system, color themes, icons, animation system, JavaScript behavior, stateful app shell, data table styling, component library, or design system replacement.</p>
+              <p class="sans muted">Not a button kit, form theme, or color system that restyles the page. <code class="sans">lk-select</code> only opts a native select into <code class="sans">appearance: base-select</code> where that value exists. <code class="sans">--lk-base</code> and its OKLCH relatives do nothing until you reference them. Not an icon set, data-table skin, or JavaScript app shell.</p>
             </lk-stack>
           </article>
         </lk-grid>
@@ -145,10 +146,10 @@
             <table>
               <thead><tr><th>Tag</th><th>Purpose</th><th>Common attributes</th></tr></thead>
               <tbody>
-                <tr><td><code>lk-stack</code></td><td>Vertical flow</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt</td></tr>
-                <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> becomes a list when narrow.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, reverse, width, adapt, sticky, snap, slide</td></tr>
+                <tr><td><code>lk-stack</code></td><td>Vertical flow. Does not set <code>min-inline-size: 0</code> on children.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt, bands</td></tr>
+                <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> becomes a list when narrow.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, reverse, width, adapt, sticky, snap, slide, bands</td></tr>
                 <tr><td><code>lk-center</code></td><td>Centered layout. Covers a positioned parent unless <code>overlay="off"</code>.</td><td>fill, full-height, inline, horizontal, vertical, place, width, overlay, square</td></tr>
-                <tr><td><code>lk-box</code></td><td>Block wrapper</td><td>padding, fill, width, flow</td></tr>
+                <tr><td><code>lk-box</code></td><td>Block wrapper. <code>pattern</code> and <code>blend</code> are opt-in paint.</td><td>padding, fill, width, flow, pattern, blend</td></tr>
                 <tr><td><code>lk-card</code></td><td>Neutral padded block</td><td>padding, radius, surface, border, width, flow, adapt</td></tr>
                 <tr><td><code>lk-spread</code></td><td>Space-between row</td><td>align, padding, place</td></tr>
                 <tr><td><code>lk-grid</code></td><td>Grid layout</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items, container, subgrid</td></tr>
@@ -162,9 +163,13 @@
                 <tr><td><code>lk-scroll-area</code></td><td>Constrained scroll container. Horizontal direction snaps unless <code>snap="off"</code>.</td><td>direction, max-h, gap, snap, slide</td></tr>
                 <tr><td><code>lk-progress</code></td><td>Scroll progress bar. Static when scroll timelines are unsupported.</td><td>scope</td></tr>
                 <tr><td><code>lk-popover</code></td><td>Top-layer panel for a native <code>popover</code>. Does not set <code>display</code>.</td><td>anchor</td></tr>
-                <tr><td><code>lk-disclosure</code></td><td>Layout for native <code>details</code>/<code>summary</code></td><td>panel, anchor, side</td></tr>
+                <tr><td><code>lk-disclosure</code></td><td>Layout for native <code>details</code>/<code>summary</code>. <code>look="panel"</code> draws the border. The same <code>name</code> on each <code>details</code> makes one open at a time.</td><td>panel, anchor, side, look, animate</td></tr>
                 <tr><td><code>lk-menu</code></td><td>Invoker plus <code>lk-popover</code>. The invoker is the first child.</td><td>anchor, side</td></tr>
                 <tr><td><code>lk-columns</code></td><td>Multi-column text flow. Children avoid splitting.</td><td>cols, gap</td></tr>
+                <tr><td><code>lk-frame</code></td><td>Full-width grid. Center track is the measure. Side tracks are the gutter.</td><td>width, padding</td></tr>
+                <tr><td><code>lk-bleed</code></td><td>Spans the frame. Subgrid puts its children back in the column where subgrid exists.</td><td>padding</td></tr>
+                <tr><td><code>lk-dock</code></td><td>Hover grows an item and its neighbors. <code>:has()</code> reaches the previous item.</td><td>gap</td></tr>
+                <tr><td><code>lk-select</code></td><td>Native <code>select</code>. Custom picker only where <code>appearance: base-select</code> exists.</td><td>width</td></tr>
               </tbody>
             </table>
           </div>
@@ -238,7 +243,7 @@
         <lk-stack gap="8">
           <lk-stack gap="4">
             <h2 id="layouts-heading" class="h2">CSS over JavaScript</h2>
-            <p class="sans muted">These attributes are off until you set them. A browser that lacks the feature keeps the layout you already had.</p>
+            <p class="sans muted">Container queries, single-child centering, center overlay, a switcher limit of 4, fluid space, and horizontal snap are already on. <code class="sans">off</code> turns each one off. Subgrid, row snap, sticky, anchor, and <code class="sans">panel="overlay"</code> stay off until you set them. A browser that lacks the feature keeps the layout that does not need it.</p>
           </lk-stack>
 
           <lk-stack gap="4">
@@ -450,10 +455,119 @@
         </lk-stack>
       </section>
 
+      <section id="platform" aria-labelledby="platform-heading">
+        <lk-stack gap="8">
+          <lk-stack gap="4">
+            <h2 id="platform-heading" class="h2">Platform CSS, without a script</h2>
+            <p class="sans muted">These demos are the stylesheet. Nothing on this page opens them with JavaScript. Where a feature is missing, the note under the demo is the behavior you get.</p>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Frame</h3>
+            <p class="sans muted">The column is a grid track, <code class="sans">min(100% - gutters, measure)</code>, not a <code class="sans">max-width</code> on the frame. Gutters are <code class="sans">clamp(sm, 4vi, xl)</code>. A percentage padding cannot be reused by a child, because the percentage would resolve against the content box, so the tracks are the implementation of that idea. <code class="sans">width="xs"</code> is a 20rem measure so the gutters are visible inside this page.</p>
+            <div class="code"><pre><span class="tok-tag">&lt;lk-frame</span> <span class="tok-attr">width</span>=<span class="tok-str">"xs"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;h3&gt;</span>In the column<span class="tok-tag">&lt;/h3&gt;</span>
+  <span class="tok-tag">&lt;lk-bleed</span> <span class="tok-attr">class</span>=<span class="tok-str">"band"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;p&gt;</span>Full-width band. Text returns to the column where subgrid exists.<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;/lk-bleed&gt;</span>
+<span class="tok-tag">&lt;/lk-frame&gt;</span></pre></div>
+            <div class="demo">
+              <lk-frame id="demo-frame" width="xs">
+                <h3>In the column</h3>
+                <p>Gutters grow. The measure stays 20rem until the frame is narrower than that.</p>
+                <lk-bleed class="band" padding="sm">
+                  <p>Full-width band. Text returns to the column where subgrid exists.</p>
+                </lk-bleed>
+              </lk-frame>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Disclosure</h3>
+            <p class="sans muted"><code class="sans">look="panel"</code> is the border. Both <code class="sans">details</code> elements share <code class="sans">name="docs-faq"</code>, so opening one closes the other. That part is HTML from Baseline 2024. The height animation needs <code class="sans">interpolate-size</code>. Without it, the panel snaps open and is still readable. <code class="sans">animate="off"</code> or reduced motion skips the transition.</p>
+            <div class="demo">
+              <lk-disclosure id="demo-panel" look="panel">
+                <details name="docs-faq">
+                  <summary>Shipping</summary>
+                  <p>Orders leave on weekday mornings.</p>
+                </details>
+                <details name="docs-faq">
+                  <summary>Returns</summary>
+                  <p>Open this and Shipping closes.</p>
+                </details>
+              </lk-disclosure>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Dock</h3>
+            <p class="sans muted">Hover grows the item, the next sibling, and, where <code class="sans">:has()</code> works, the previous sibling. Reduced motion drops the transition and leaves the size change instant. These are buttons with nowhere to go. They are here so the hover is a real control, not a div.</p>
+            <div class="demo">
+              <lk-dock id="demo-dock" aria-label="Sample dock">
+                <button type="button" class="cell">A</button>
+                <button type="button" class="cell">B</button>
+                <button type="button" class="cell">C</button>
+                <button type="button" class="cell">D</button>
+              </lk-dock>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Select</h3>
+            <p class="sans muted">The control is a native <code class="sans">select</code>. In Chromium, and in Safari 27, <code class="sans">appearance: base-select</code> styles the closed control, the picker, the checkmark, and a <code class="sans">rotateX</code> on the icon. Firefox stable keeps the operating-system menu. Options are plain text, because a browser without the new parser drops tags inside an option.</p>
+            <div class="demo">
+              <lk-select id="demo-select" width="xs">
+                <label for="demo-route">Route</label>
+                <select id="demo-route" name="route">
+                  <option>North</option>
+                  <option>South</option>
+                  <option>West</option>
+                </select>
+              </lk-select>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>One color, four relatives</h3>
+            <p class="sans muted">Set <code class="sans">--lk-base</code>. Where relative <code class="sans">oklch()</code> parses, <code class="sans">--lk-complement</code>, <code class="sans">--lk-tetrad</code>, and <code class="sans">--lk-tetrad-2</code> are the other three tetrad stops. <code class="sans">bands</code> shifts each child by <code class="sans">sibling-index()</code>. If that function is missing, the children stay unpainted by this rule. The hue box registers <code class="sans">--lk-hue</code> with <code class="sans">@property</code> so the hover can interpolate an angle. The hover rule is this page's CSS, not the library. Nothing animates until something changes the variable.</p>
+            <div class="demo" style="--lk-base: oklch(0.62 0.17 150)">
+              <lk-stack gap="sm">
+                <lk-row gap="sm" wrap>
+                  <lk-box class="swatch" style="background: var(--lk-base)">Base</lk-box>
+                  <lk-box class="swatch" style="background: var(--lk-complement)">+180</lk-box>
+                  <lk-box class="swatch" style="background: var(--lk-tetrad)">+90</lk-box>
+                  <lk-box class="swatch" style="background: var(--lk-tetrad-2)">+270</lk-box>
+                </lk-row>
+                <lk-stack id="demo-bands" bands gap="xs">
+                  <p>First</p>
+                  <p>Second</p>
+                  <p>Third</p>
+                  <p>Fourth</p>
+                </lk-stack>
+                <div class="hue-demo">Hover to move <code>--lk-hue</code> from 150deg to 40deg.</div>
+              </lk-stack>
+            </div>
+          </lk-stack>
+
+          <lk-stack gap="4">
+            <h3>Gradients and blend modes</h3>
+            <p class="sans muted"><code class="sans">pattern</code> is a repeating gradient: checker, dots, or graph paper. <code class="sans">blend</code> sets <code class="sans">background-blend-mode</code> and does not fetch an image. The tinted example layers a flat gradient over <code class="sans">/assets/og.png</code> with <code class="sans">blend="color"</code>.</p>
+            <div class="demo">
+              <lk-grid cols="3" gap="sm">
+                <lk-box id="demo-checker" pattern="checker" style="min-block-size: 4rem"></lk-box>
+                <lk-box id="demo-dots" pattern="dots" style="min-block-size: 4rem"></lk-box>
+                <lk-box id="demo-grid" pattern="grid" style="min-block-size: 4rem"></lk-box>
+              </lk-grid>
+              <lk-box id="demo-blend" blend="color" style="margin-top: 12px; min-block-size: 8rem; background-image: linear-gradient(oklch(0.7 0.16 30), oklch(0.7 0.16 30)), url(/assets/og.png); background-size: cover; background-position: center;"></lk-box>
+            </div>
+          </lk-stack>
+        </lk-stack>
+      </section>
+
       <section id="gallery" aria-labelledby="gallery-heading">
         <lk-stack gap="4">
           <h2 id="gallery-heading" class="h2">Live gallery</h2>
-          <p class="sans muted">Each primitive, with the attribute that changes it. Version 2.0.0. A root <code class="sans">lk-progress</code> would pin itself to the viewport, so the live bar uses <code class="sans">scope="nearest"</code>.</p>
+          <p class="sans muted">Each primitive, with the attribute that changes it. Version 2.1.0. A root <code class="sans">lk-progress</code> would pin itself to the viewport, so the live bar uses <code class="sans">scope="nearest"</code>.</p>
           <lk-grid responsive gap="4">
             <article class="card">
               <h3>lk-stack</h3>
@@ -562,7 +676,9 @@
       <section id="browser-support" aria-labelledby="browser-heading">
         <lk-stack gap="4">
           <h2 id="browser-heading" class="h2">Browser support</h2>
-          <p class="sans muted">LayoutKit targets modern evergreen browsers with support for custom properties, flexbox, grid, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">svh</code>, <code class="sans">dvh</code>, <code class="sans">min()</code>, <code class="sans">object-fit</code>, and <code class="sans">color-mix()</code>. Older browsers keep the <code>100vh</code> and <code>#e5e7eb</code> fallbacks. Container queries, <code class="sans">:has()</code>, subgrid, scroll snap, sticky positioning, scroll and view timelines, and anchor positioning (<code class="sans">position-area</code>, with <code class="sans">inset-area</code> as the earlier name) are wrapped in <code class="sans">@supports</code>. Where a feature is missing, the previous layout stays visible.</p>
+          <p class="sans muted">The everyday layout (flex, grid, custom properties, cascade layers, logical properties, <code class="sans">aspect-ratio</code>, <code class="sans">min()</code>, <code class="sans">object-fit</code>) is what current Chrome, Firefox, and Safari already ship. <code class="sans">100dvh</code> and <code class="sans">100svh</code> sit on top of <code class="sans">100vh</code>. Dividers use <code class="sans">color-mix()</code> and fall back to <code class="sans">#e5e7eb</code>. Card borders use <code class="sans">color-mix()</code> with no second color of their own, so a browser without that function drops the card border unless you set <code class="sans">--lk-card-border</code>.</p>
+          <p class="sans muted">Container queries, <code class="sans">:has()</code>, subgrid, scroll snap, and sticky positioning are in current major browsers and still wrapped so an older engine keeps the earlier layout. Anchor positioning (<code class="sans">position-area</code>, earlier name <code class="sans">inset-area</code>), scroll and view timelines, and <code class="sans">::scroll-button()</code> are not. State of CSS 2025 still lists anchor positioning and scroll-driven animations among the features people avoid because of support. Where the <code class="sans">@supports</code> test fails, the popover stays in the user-agent top layer, the progress bar stays a static strip, and reveal stays visible.</p>
+          <p class="sans muted">Two 2.1 features are narrower than that. <code class="sans">interpolate-size: allow-keywords</code> animates a disclosure to <code class="sans">height: auto</code> in Chromium. As of November 2026, Firefox stable and Safari stable do not ship it (Safari Technology Preview does). The details element still opens. <code class="sans">appearance: base-select</code> is Chromium and Safari 27. Firefox has it disabled by default, so <code class="sans">lk-select</code> leaves the operating-system menu in place. <code class="sans">bands</code> paints nothing unless relative <code class="sans">oklch()</code> and <code class="sans">sibling-index()</code> both parse. Nesting, used for <code class="sans">look="panel"</code>, is in current major browsers.</p>
         </lk-stack>
       </section>
 

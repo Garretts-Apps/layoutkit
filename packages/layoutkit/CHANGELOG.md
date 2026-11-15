@@ -3,6 +3,26 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 2.1.0
+
+Additions. No tag, attribute, or default from 2.0.0 changes meaning.
+`MIGRATION.md` says so at the top. The stylesheet is 80,010 bytes
+(12,795 bytes gzipped).
+
+### Added
+
+- `lk-frame` and `lk-bleed`. The frame is a full-width grid. The center track is `min(100% - gutters, measure)` and the side tracks are at least a fluid gutter (`clamp`, then `vi` where that unit exists). `width` sets the measure. `padding` replaces the fluid gutter with one spacing step. `lk-bleed` spans the frame. Where subgrid exists, children of the bleed sit back in the center track, so the band's background is full width and the text is not.
+- `lk-dock`. The hovered child grows, the next sibling grows a little, and `:has(+ :hover)` grows the previous sibling where `selector(:has())` matches. `prefers-reduced-motion: reduce` drops the transition.
+- `lk-select`. Wraps a native `<select>`. `appearance: base-select`, `::picker(select)`, `::picker-icon` (a `rotateX` flip), and `::checkmark` apply only inside `@supports (appearance: base-select)`. Other browsers keep the operating-system control. As of November 2026 that is Chromium and Safari 27, not Firefox stable.
+- `look="panel"` on `lk-disclosure`. Bordered summary and panel, nested so the open corners are one rule. The first element inside the panel loses its top margin. Put the same `name` on each `<details>` for a mutually exclusive group. That `name` behavior is HTML.
+- `pattern` on `lk-box`: `checker`, `dots`, or `grid`, from repeating gradients. `color-mix()` recolors them where it exists. `blend` sets `background-blend-mode` to `color`, `saturation`, or `multiply`. You supply the background layers.
+- `--lk-base`, and, where relative `oklch()` parses, `--lk-complement`, `--lk-tetrad`, `--lk-tetrad-2`, `--lk-tint`, and `--lk-shade`. Nothing paints until you use them. `--lk-hue` is registered with `@property` as an angle so a transition can interpolate it. `bands` on `lk-stack` or `lk-row` paints children with `sibling-index()` only when that function and relative `oklch()` both parse.
+- Disclosure height animation is unchanged. `look="panel"` summaries also transition their end radii where `interpolate-size: allow-keywords` exists. Firefox stable and Safari stable still open and close without that interpolation.
+
+### Changed (visual behavior)
+
+None by default. `look="panel"`, `bands`, `pattern`, `blend`, and the new tags do nothing until you use them.
+
 ## 2.0.0
 
 Container queries, single-child centering, center overlay, a switcher limit of

@@ -84,6 +84,10 @@
       const d = [["display", "block"]];
       if (p.padding) d.push(["padding", sp(p.padding)]);
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
+      if (p.pattern === "checker") d.push(["background-image", "repeating-conic-gradient(#d4d4d8 0% 25%, transparent 0% 50%)"], ["background-size", "1rem 1rem"]);
+      else if (p.pattern === "dots") d.push(["background-image", "radial-gradient(circle, #71717a 1px, transparent 1.5px)"], ["background-size", "1rem 1rem"]);
+      else if (p.pattern === "grid") d.push(["background-image", "repeating-linear-gradient(to right, #71717a 0 1px, transparent 1px 1.5rem), repeating-linear-gradient(to bottom, #71717a 0 1px, transparent 1px 1.5rem)"]);
+      if (p.blend === "color" || p.blend === "saturation" || p.blend === "multiply") d.push(["background-blend-mode", p.blend]);
       d.push(...widthDecls(p));
       return d;
     },
@@ -193,6 +197,30 @@
       if (has(p, "anchor")) d.push(["anchor-scope", "--lk-menu"]);
       return d;
     },
+    "lk-frame"(p) {
+      const size = p.width === "full" ? "100%" : (WIDTH[p.width] || "var(--lk-measure, 65ch)");
+      const gutter = p.padding ? sp(p.padding) : "clamp(var(--lk-space-sm), 4vw, var(--lk-space-xl))";
+      return [
+        ["--lk-frame-size", size],
+        ["--lk-frame-gutter", gutter],
+        ["display", "grid"],
+        ["grid-template-columns", "[full-start] minmax(var(--lk-frame-gutter), 1fr) [content-start] min(100% - var(--lk-frame-gutter) * 2, var(--lk-frame-size)) [content-end] minmax(var(--lk-frame-gutter), 1fr) [full-end]"],
+      ];
+    },
+    "lk-bleed"(p) {
+      const d = [["display", "block"], ["grid-column", "full"]];
+      if (p.padding) d.push(["padding-block", sp(p.padding)]);
+      return d;
+    },
+    "lk-dock"(p) {
+      return [["display", "flex"], ["align-items", "end"], ["justify-content", "center"], ["gap", sp(str(p, "gap", "sm"))]];
+    },
+    "lk-select"(p) {
+      const d = [["display", "block"], ["max-inline-size", "100%"]];
+      if (p.width === "full") d.push(["inline-size", "100%"]);
+      else if (WIDTH[p.width]) d.push(["inline-size", WIDTH[p.width]]);
+      return d;
+    },
   };
 
   function childRules(tag, attrs) {
@@ -245,6 +273,16 @@
         : attrs.slide === "peek" ? "80%"
         : "auto";
       rules.push([" > *", [["scroll-snap-align", attrs.snap === "center" ? "center" : "start"], ["flex", `0 0 ${slide}`]]]);
+    }
+    if (tag === "lk-frame") {
+      rules.push([" > *", [["grid-column", "content"], ["min-inline-size", "0"]]]);
+      rules.push([" > lk-bleed", [["grid-column", "full"]]]);
+    }
+    if (tag === "lk-dock") {
+      rules.push([" > *", [["inline-size", "3rem"], ["block-size", "3rem"], ["transition", "inline-size 200ms ease, block-size 200ms ease"]]]);
+      rules.push([" > :hover", [["inline-size", "4.5rem"], ["block-size", "4.5rem"]]]);
+      rules.push([" > :hover + *", [["inline-size", "3.75rem"], ["block-size", "3.75rem"]]]);
+      rules.push([" > :has(+ :hover)", [["inline-size", "3.75rem"], ["block-size", "3.75rem"]]]);
     }
     if (tag === "lk-menu" && has(attrs, "anchor")) {
       rules.push([" > button:first-child", [["anchor-name", "--lk-menu"]]]);
@@ -382,6 +420,8 @@
     { label: "Menu", code: '<lk-menu anchor>\n  <button type="button" popovertarget="demo-menu">Menu</button>\n  <lk-popover id="demo-menu" popover>\n    <nav aria-label="Demo">\n      <lk-stack gap="xs">\n        <a href="/docs">Docs</a>\n        <a href="/install">Install</a>\n      </lk-stack>\n    </nav>\n  </lk-popover>\n</lk-menu>' },
     { label: "Container", code: '<lk-grid container cols="3" gap="sm">\n  <article><h3>North</h3></article>\n  <article><h3>South</h3></article>\n  <article><h3>West</h3></article>\n</lk-grid>' },
     { label: "Columns", code: '<lk-columns cols="3" gap="lg">\n  <p>First point stays together.</p>\n  <p>Second point follows the flow.</p>\n  <p>Third point fills the row.</p>\n</lk-columns>' },
+    { label: "Frame", code: '<lk-frame width="md">\n  <h2>Column</h2>\n  <p>The measure stays put. Gutters grow.</p>\n  <lk-bleed>\n    <p>This band is the full width of the frame.</p>\n  </lk-bleed>\n</lk-frame>' },
+    { label: "Disclosure", code: '<lk-disclosure look="panel">\n  <details name="faq">\n    <summary>Shipping</summary>\n    <p>Orders leave on weekday mornings.</p>\n  </details>\n  <details name="faq">\n    <summary>Returns</summary>\n    <p>Open one and the other closes.</p>\n  </details>\n</lk-disclosure>' },
   ];
 
   const input = document.getElementById("pg-input");

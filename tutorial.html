@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tutorial - LayoutKit layout wrappers inside semantic HTML</title>
-  <meta name="description" content="Learn LayoutKit as pure-CSS layout wrappers for native semantic HTML. No runtime JavaScript, no dependencies, no custom element registration.">
+  <meta name="description" content="A short LayoutKit 2.1.0 tutorial: semantic HTML inside layout tags. The examples do not use JavaScript.">
   <link rel="canonical" href="https://layoutkit.dev/tutorial">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="Tutorial - LayoutKit">
-  <meta property="og:description" content="Learn LayoutKit as pure-CSS layout wrappers for native semantic HTML.">
+  <meta property="og:description" content="Layout examples in semantic HTML, including a frame and a menu. The samples do not use JavaScript.">
   <meta property="og:url" content="https://layoutkit.dev/tutorial">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -19,10 +19,10 @@
   <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Tutorial - LayoutKit">
-  <meta name="twitter:description" content="Pure-CSS layout wrappers for native semantic HTML.">
+  <meta name="twitter:description" content="Layout examples in semantic HTML. The samples do not use JavaScript.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
   <meta name="twitter:image:alt" content="LayoutKit">
   <style>
     .demo > * > *, .demo > * { outline: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
@@ -41,7 +41,7 @@
             <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
-            <span class="badge">2.0.0</span>
+            <span class="badge">2.1.0</span>
           </lk-row>
         </a>
         <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
@@ -61,7 +61,7 @@
   <lk-box id="main" class="container page">
     <lk-stack gap="2" style="margin-bottom: 32px;">
       <h1 class="h2">Tutorial</h1>
-      <p class="sans muted">LayoutKit arranges native HTML. The examples keep headings, links, buttons, lists, and landmarks as real HTML elements.</p>
+      <p class="sans muted">LayoutKit arranges native HTML. The examples keep headings, links, buttons, lists, and landmarks as real elements. Nothing here is opened or measured by a script. <code class="sans">lk-center</code> covers its parent unless you set <code class="sans">overlay="off"</code>.</p>
     </lk-stack>
 
     <lk-stack gap="8">
@@ -111,7 +111,7 @@
       <lk-box class="card">
         <lk-stack gap="4">
           <div><span class="eyebrow">Step 4</span><h2 class="h2" style="font-size:18px;">A responsive grid</h2></div>
-          <p class="sans muted"><code class="code-inline">responsive</code> auto-fits columns by available width — no breakpoints. Resize the window.</p>
+          <p class="sans muted"><code class="code-inline">responsive</code> is <code class="code-inline">auto-fit</code>. Tracks come from the available width, not a viewport breakpoint. Resize the window.</p>
           <div class="code"><pre><span class="tok-tag">&lt;lk-grid</span> <span class="tok-attr">responsive</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span> <span class="tok-attr">style</span>=<span class="tok-str">"--lk-min-child-width: 140px"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;article&gt;</span><span class="tok-tag">&lt;h3&gt;</span>Project<span class="tok-tag">&lt;/h3&gt;</span><span class="tok-tag">&lt;/article&gt;</span> …
 <span class="tok-tag">&lt;/lk-grid&gt;</span></pre></div>
@@ -126,7 +126,7 @@
           <p class="sans muted"><code class="code-inline">fill</code> grows a layout wrapper that is itself a flex item. The landmark stays a native <code class="code-inline">main</code> inside that wrapper.</p>
           <div class="code"><pre><span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">style</span>=<span class="tok-str">"height: 200px"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;header&gt;</span><span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">padding</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>App<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"button"</span><span class="tok-tag">&gt;</span>Menu<span class="tok-tag">&lt;/button&gt;</span><span class="tok-tag">&lt;/lk-spread&gt;</span><span class="tok-tag">&lt;/header&gt;</span>
-  <span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">fill</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;main&gt;</span><span class="tok-tag">&lt;lk-center&gt;</span><span class="tok-tag">&lt;h2&gt;</span>Content<span class="tok-tag">&lt;/h2&gt;</span><span class="tok-tag">&lt;/lk-center&gt;</span><span class="tok-tag">&lt;/main&gt;</span><span class="tok-tag">&lt;/lk-box&gt;</span>
+  <span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">fill</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;main&gt;</span><span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">overlay</span>=<span class="tok-str">"off"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;h2&gt;</span>Content<span class="tok-tag">&lt;/h2&gt;</span><span class="tok-tag">&lt;/lk-center&gt;</span><span class="tok-tag">&lt;/main&gt;</span><span class="tok-tag">&lt;/lk-box&gt;</span>
 <span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
           <div class="demo"><lk-stack class="demo-page"><header><lk-spread padding="sm"><a href="/">App</a><button type="button">Menu</button></lk-spread></header><lk-box fill><main><lk-center overlay="off"><h2>Content</h2></lk-center></main></lk-box></lk-stack></div>
         </lk-stack>
@@ -137,6 +137,14 @@
           <div><span class="eyebrow">Step 6</span><h2 class="h2" style="font-size:18px;">A menu without script</h2></div>
           <p class="sans muted"><code class="code-inline">lk-menu</code> with <code class="code-inline">anchor</code> tethers a native popover to the button. The same idea is <code class="code-inline">lk-disclosure</code> for <code class="code-inline">details</code>.</p>
           <div class="demo"><lk-menu anchor><button type="button" popovertarget="tutorial-menu">Menu</button><lk-popover id="tutorial-menu" popover><nav aria-label="Tutorial"><lk-stack gap="xs"><a href="/docs">Docs</a><a href="/install">Install</a></lk-stack></nav></lk-popover></lk-menu></div>
+        </lk-stack>
+      </lk-box>
+
+      <lk-box class="card">
+        <lk-stack gap="4">
+          <div><span class="eyebrow">Step 7</span><h2 class="h2" style="font-size:18px;">A column with a full-width band</h2></div>
+          <p class="sans muted"><code class="code-inline">lk-frame</code> keeps a measure in the center track. <code class="code-inline">lk-bleed</code> spans the frame. Where subgrid exists, the band's text sits back in the column.</p>
+          <div class="demo"><lk-frame width="xs"><h2>In the column</h2><lk-bleed class="band" padding="sm"><p>This band is the width of the frame.</p></lk-bleed></lk-frame></div>
         </lk-stack>
       </lk-box>
 

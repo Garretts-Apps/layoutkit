@@ -15,8 +15,15 @@
  *   --lk-ratio, --lk-divider-color, --lk-min-child-width, --lk-max-height, --lk-max-width,
  *   --lk-switch-at, --lk-sidebar-width, --lk-sidebar-content-min, --lk-sticky-top,
  *   --lk-snap-gap, --lk-pad, --lk-anchor, --lk-progress-color, --lk-popover-bg, --lk-popover-fg,
- *   --lk-space-fluid-*, --lk-overlay-inset, --lk-overlay-z.
+ *   --lk-space-fluid-*, --lk-overlay-inset, --lk-overlay-z, --lk-frame-size, --lk-frame-gutter,
+ *   --lk-base, --lk-hue, --lk-complement, --lk-tetrad, --lk-tetrad-2, --lk-tint, --lk-shade.
  */
+@property --lk-hue {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 150deg;
+}
+
 @layer layoutkit {
 
   /* Design tokens — host --space-* still wins; otherwise the scale is fluid */
@@ -45,7 +52,11 @@
   lk-popover,
   lk-disclosure,
   lk-menu,
-  lk-columns { box-sizing: border-box; }
+  lk-columns,
+  lk-frame,
+  lk-bleed,
+  lk-dock,
+  lk-select { box-sizing: border-box; }
   lk-stack { display: flex; flex-direction: column; gap: var(--lk-space-md); align-items: stretch; justify-content: flex-start; }
   lk-row { display: flex; flex-direction: row; gap: var(--lk-space-md); align-items: center; justify-content: flex-start; }
   lk-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -1259,6 +1270,34 @@
   @supports (color: color-mix(in srgb, currentColor 20%, transparent)) {
     lk-popover, lk-disclosure[panel="overlay"] > details > :not(summary) { border-color: var(--lk-popover-border, color-mix(in srgb, currentColor 20%, transparent)); }
   }
+  lk-disclosure[look="panel"] > details {
+    border: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb));
+    border-radius: var(--lk-radius-md);
+    background: var(--lk-popover-bg, canvas);
+    color: var(--lk-popover-fg, canvastext);
+    margin-block-end: var(--lk-space-sm);
+    & > summary {
+      cursor: pointer;
+      padding-block: var(--lk-space-sm);
+      padding-inline: var(--lk-space-md);
+      border-start-start-radius: var(--lk-radius-md);
+      border-start-end-radius: var(--lk-radius-md);
+    }
+    &[open] > summary {
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+    }
+    & > :not(summary) {
+      margin-block-start: 0;
+      padding: var(--lk-space-md);
+      border-block-start: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb));
+      & > :first-child { margin-block-start: 0; }
+    }
+  }
+  @supports (color: color-mix(in srgb, currentColor 20%, transparent)) {
+    lk-disclosure[look="panel"] > details,
+    lk-disclosure[look="panel"] > details > :not(summary) { border-color: var(--lk-popover-border, color-mix(in srgb, currentColor 20%, transparent)); }
+  }
   @supports (anchor-scope: --lk-menu) {
     lk-menu[anchor] {
       anchor-scope: --lk-menu;
@@ -1461,9 +1500,13 @@
       transition: none;
       height: auto;
     }
+    lk-disclosure[look="panel"]:not([animate="off"]) > details > summary {
+      transition: border-end-start-radius 200ms ease, border-end-end-radius 200ms ease;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    lk-disclosure > details::details-content { transition: none; }
+    lk-disclosure > details::details-content,
+    lk-disclosure[look="panel"] > details > summary { transition: none; }
   }
   lk-box[layout="compact"],
   lk-stack[layout="compact"],
@@ -1529,4 +1572,227 @@
   lk-columns[gap="1.5"] { column-gap: 0.375rem; }
   lk-columns[gap="2.5"] { column-gap: 0.625rem; }
   lk-columns[gap="3.5"] { column-gap: 0.875rem; }
+
+  /* Frame — fluid gutters around a measured column. lk-bleed is the full-width band */
+  lk-frame { --lk-frame-size: var(--lk-measure, 65ch); --lk-frame-gutter: clamp(var(--lk-space-sm), 4vw, var(--lk-space-xl)); display: grid; align-content: start; grid-template-columns: [full-start] minmax(var(--lk-frame-gutter), 1fr) [content-start] min(100% - var(--lk-frame-gutter) * 2, var(--lk-frame-size)) [content-end] minmax(var(--lk-frame-gutter), 1fr) [full-end]; }
+  @supports (width: 1vi) {
+    lk-frame { --lk-frame-gutter: clamp(var(--lk-space-sm), 4vi, var(--lk-space-xl)); }
+  }
+  lk-frame[width="xs"] { --lk-frame-size: 20rem; }
+  lk-frame[width="sm"] { --lk-frame-size: 30rem; }
+  lk-frame[width="md"] { --lk-frame-size: 40rem; }
+  lk-frame[width="lg"] { --lk-frame-size: 50rem; }
+  lk-frame[width="xl"] { --lk-frame-size: 56rem; }
+  lk-frame[width="2xl"] { --lk-frame-size: 64rem; }
+  lk-frame[width="3xl"] { --lk-frame-size: 80rem; }
+  lk-frame[width="prose"] { --lk-frame-size: var(--lk-measure, 65ch); }
+  lk-frame[width="full"] { --lk-frame-size: 100%; }
+  lk-frame[padding="1"] { --lk-frame-gutter: 0.25rem; }
+  lk-frame[padding="2"] { --lk-frame-gutter: 0.5rem; }
+  lk-frame[padding="3"] { --lk-frame-gutter: 0.75rem; }
+  lk-frame[padding="4"] { --lk-frame-gutter: 1rem; }
+  lk-frame[padding="5"] { --lk-frame-gutter: 1.25rem; }
+  lk-frame[padding="6"] { --lk-frame-gutter: 1.5rem; }
+  lk-frame[padding="7"] { --lk-frame-gutter: 1.75rem; }
+  lk-frame[padding="8"] { --lk-frame-gutter: 2rem; }
+  lk-frame[padding="9"] { --lk-frame-gutter: 2.25rem; }
+  lk-frame[padding="10"] { --lk-frame-gutter: 2.5rem; }
+  lk-frame[padding="11"] { --lk-frame-gutter: 2.75rem; }
+  lk-frame[padding="12"] { --lk-frame-gutter: 3rem; }
+  lk-frame[padding="14"] { --lk-frame-gutter: 3.5rem; }
+  lk-frame[padding="16"] { --lk-frame-gutter: 4rem; }
+  lk-frame[padding="none"] { --lk-frame-gutter: 0; }
+  lk-frame[padding="px"] { --lk-frame-gutter: 1px; }
+  lk-frame[padding="xs"] { --lk-frame-gutter: var(--lk-space-xs); }
+  lk-frame[padding="sm"] { --lk-frame-gutter: var(--lk-space-sm); }
+  lk-frame[padding="md"] { --lk-frame-gutter: var(--lk-space-md); }
+  lk-frame[padding="lg"] { --lk-frame-gutter: var(--lk-space-lg); }
+  lk-frame[padding="xl"] { --lk-frame-gutter: var(--lk-space-xl); }
+  lk-frame[padding="2xl"] { --lk-frame-gutter: var(--lk-space-2xl); }
+  lk-frame[padding="3xl"] { --lk-frame-gutter: var(--lk-space-3xl); }
+  lk-frame[padding="0.5"] { --lk-frame-gutter: 0.125rem; }
+  lk-frame[padding="1.5"] { --lk-frame-gutter: 0.375rem; }
+  lk-frame[padding="2.5"] { --lk-frame-gutter: 0.625rem; }
+  lk-frame[padding="3.5"] { --lk-frame-gutter: 0.875rem; }
+  lk-frame > * { grid-column: content; min-inline-size: 0; }
+  lk-frame > lk-bleed { grid-column: full; }
+  lk-bleed { display: block; min-inline-size: 0; }
+  lk-bleed[padding="1"] { padding-block: 0.25rem; }
+  lk-bleed[padding="2"] { padding-block: 0.5rem; }
+  lk-bleed[padding="3"] { padding-block: 0.75rem; }
+  lk-bleed[padding="4"] { padding-block: 1rem; }
+  lk-bleed[padding="5"] { padding-block: 1.25rem; }
+  lk-bleed[padding="6"] { padding-block: 1.5rem; }
+  lk-bleed[padding="7"] { padding-block: 1.75rem; }
+  lk-bleed[padding="8"] { padding-block: 2rem; }
+  lk-bleed[padding="9"] { padding-block: 2.25rem; }
+  lk-bleed[padding="10"] { padding-block: 2.5rem; }
+  lk-bleed[padding="11"] { padding-block: 2.75rem; }
+  lk-bleed[padding="12"] { padding-block: 3rem; }
+  lk-bleed[padding="14"] { padding-block: 3.5rem; }
+  lk-bleed[padding="16"] { padding-block: 4rem; }
+  lk-bleed[padding="none"] { padding-block: 0; }
+  lk-bleed[padding="px"] { padding-block: 1px; }
+  lk-bleed[padding="xs"] { padding-block: var(--lk-space-xs); }
+  lk-bleed[padding="sm"] { padding-block: var(--lk-space-sm); }
+  lk-bleed[padding="md"] { padding-block: var(--lk-space-md); }
+  lk-bleed[padding="lg"] { padding-block: var(--lk-space-lg); }
+  lk-bleed[padding="xl"] { padding-block: var(--lk-space-xl); }
+  lk-bleed[padding="2xl"] { padding-block: var(--lk-space-2xl); }
+  lk-bleed[padding="3xl"] { padding-block: var(--lk-space-3xl); }
+  lk-bleed[padding="0.5"] { padding-block: 0.125rem; }
+  lk-bleed[padding="1.5"] { padding-block: 0.375rem; }
+  lk-bleed[padding="2.5"] { padding-block: 0.625rem; }
+  lk-bleed[padding="3.5"] { padding-block: 0.875rem; }
+  @supports (grid-template-columns: subgrid) {
+    lk-frame > lk-bleed {
+      display: grid;
+      grid-template-columns: subgrid;
+    }
+    lk-frame > lk-bleed > * {
+      grid-column: content;
+      min-inline-size: 0;
+    }
+  }
+
+  /* Dock — the hovered item grows, and :has() grows the previous sibling too */
+  lk-dock { display: flex; flex-direction: row; align-items: end; justify-content: center; gap: var(--lk-space-sm); }
+  lk-dock[gap="1"] { gap: 0.25rem; }
+  lk-dock[gap="2"] { gap: 0.5rem; }
+  lk-dock[gap="3"] { gap: 0.75rem; }
+  lk-dock[gap="4"] { gap: 1rem; }
+  lk-dock[gap="5"] { gap: 1.25rem; }
+  lk-dock[gap="6"] { gap: 1.5rem; }
+  lk-dock[gap="7"] { gap: 1.75rem; }
+  lk-dock[gap="8"] { gap: 2rem; }
+  lk-dock[gap="9"] { gap: 2.25rem; }
+  lk-dock[gap="10"] { gap: 2.5rem; }
+  lk-dock[gap="11"] { gap: 2.75rem; }
+  lk-dock[gap="12"] { gap: 3rem; }
+  lk-dock[gap="14"] { gap: 3.5rem; }
+  lk-dock[gap="16"] { gap: 4rem; }
+  lk-dock[gap="none"] { gap: 0; }
+  lk-dock[gap="px"] { gap: 1px; }
+  lk-dock[gap="xs"] { gap: var(--lk-space-xs); }
+  lk-dock[gap="sm"] { gap: var(--lk-space-sm); }
+  lk-dock[gap="md"] { gap: var(--lk-space-md); }
+  lk-dock[gap="lg"] { gap: var(--lk-space-lg); }
+  lk-dock[gap="xl"] { gap: var(--lk-space-xl); }
+  lk-dock[gap="2xl"] { gap: var(--lk-space-2xl); }
+  lk-dock[gap="3xl"] { gap: var(--lk-space-3xl); }
+  lk-dock[gap="0.5"] { gap: 0.125rem; }
+  lk-dock[gap="1.5"] { gap: 0.375rem; }
+  lk-dock[gap="2.5"] { gap: 0.625rem; }
+  lk-dock[gap="3.5"] { gap: 0.875rem; }
+  lk-dock > * { display: grid; place-items: center; inline-size: 3rem; block-size: 3rem; min-inline-size: 0; transition: inline-size 200ms ease, block-size 200ms ease; }
+  lk-dock > :hover { inline-size: 4.5rem; block-size: 4.5rem; }
+  lk-dock > :hover + * { inline-size: 3.75rem; block-size: 3.75rem; }
+  @supports selector(:has(+ :hover)) {
+    lk-dock > :has(+ :hover) { inline-size: 3.75rem; block-size: 3.75rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    lk-dock > * { transition: none; }
+  }
+
+  /* Select — base-select where the engine has it. Everywhere else the control stays native */
+  lk-select { display: block; max-inline-size: 100%; }
+  lk-select[width="xs"] { inline-size: 20rem; max-inline-size: 100%; }
+  lk-select[width="sm"] { inline-size: 30rem; max-inline-size: 100%; }
+  lk-select[width="md"] { inline-size: 40rem; max-inline-size: 100%; }
+  lk-select[width="lg"] { inline-size: 50rem; max-inline-size: 100%; }
+  lk-select[width="xl"] { inline-size: 56rem; max-inline-size: 100%; }
+  lk-select[width="2xl"] { inline-size: 64rem; max-inline-size: 100%; }
+  lk-select[width="3xl"] { inline-size: 80rem; max-inline-size: 100%; }
+  lk-select[width="prose"] { inline-size: var(--lk-measure, 65ch); max-inline-size: 100%; }
+  lk-select[width="full"] { inline-size: 100%; }
+  @supports (appearance: base-select) {
+    lk-select select,
+    lk-select select::picker(select) {
+      appearance: base-select;
+    }
+    lk-select select {
+      box-sizing: border-box;
+      inline-size: 100%;
+      max-inline-size: 100%;
+      margin: 0;
+      font: inherit;
+      cursor: pointer;
+      padding-block: var(--lk-space-sm);
+      padding-inline: var(--lk-space-md);
+      border: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb));
+      border-radius: var(--lk-radius-md);
+      background: var(--lk-popover-bg, canvas);
+      color: var(--lk-popover-fg, canvastext);
+    }
+    lk-select select::picker(select) {
+      border: 1px solid var(--lk-popover-border, var(--lk-divider-color, #e5e7eb));
+      border-radius: var(--lk-radius-md);
+      padding: var(--lk-space-xs);
+      background: var(--lk-popover-bg, canvas);
+      color: var(--lk-popover-fg, canvastext);
+      transition: opacity 200ms ease, display 200ms allow-discrete, overlay 200ms allow-discrete;
+    }
+    lk-select select option {
+      padding-block: var(--lk-space-xs);
+      padding-inline: var(--lk-space-sm);
+      border-radius: var(--lk-radius-sm);
+    }
+    lk-select select option::checkmark {
+      color: currentColor;
+    }
+    lk-select select::picker-icon {
+      transition: transform 200ms ease;
+    }
+    lk-select select:open::picker-icon {
+      transform: rotateX(180deg);
+    }
+    @starting-style {
+      lk-select select::picker(select) { opacity: 0; }
+    }
+  }
+  @supports (appearance: base-select) and (color: color-mix(in srgb, currentColor 20%, transparent)) {
+    lk-select select,
+    lk-select select::picker(select) {
+      border-color: var(--lk-popover-border, color-mix(in srgb, currentColor 20%, transparent));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    lk-select select::picker-icon,
+    lk-select select::picker(select) { transition: none; }
+  }
+
+  /* Patterns and blend — gradient textures and background-blend-mode. Opt-in, no images shipped */
+  lk-box[pattern="checker"] { background-image: repeating-conic-gradient(#d4d4d8 0% 25%, transparent 0% 50%); background-size: 1rem 1rem; }
+  lk-box[pattern="dots"] { background-image: radial-gradient(circle, #71717a 1px, transparent 1.5px); background-size: 1rem 1rem; }
+  lk-box[pattern="grid"] { background-image: repeating-linear-gradient(to right, #71717a 0 1px, transparent 1px 1.5rem), repeating-linear-gradient(to bottom, #71717a 0 1px, transparent 1px 1.5rem); }
+  @supports (color: color-mix(in srgb, currentColor 20%, transparent)) {
+    lk-box[pattern="checker"] { background-image: repeating-conic-gradient(color-mix(in srgb, currentColor 16%, transparent) 0% 25%, transparent 0% 50%); }
+  }
+  @supports (color: color-mix(in srgb, currentColor 20%, transparent)) {
+    lk-box[pattern="dots"] { background-image: radial-gradient(circle, color-mix(in srgb, currentColor 45%, transparent) 1px, transparent 1.5px); }
+  }
+  @supports (color: color-mix(in srgb, currentColor 20%, transparent)) {
+    lk-box[pattern="grid"] { background-image: repeating-linear-gradient(to inline-end, color-mix(in srgb, currentColor 28%, transparent) 0 1px, transparent 1px 1.5rem), repeating-linear-gradient(to block-end, color-mix(in srgb, currentColor 28%, transparent) 0 1px, transparent 1px 1.5rem); }
+  }
+  lk-box[blend="color"] { background-blend-mode: color; }
+  lk-box[blend="saturation"] { background-blend-mode: saturation; }
+  lk-box[blend="multiply"] { background-blend-mode: multiply; }
+
+  /* Palette — one --lk-base, OKLCH relatives. bands paints children from sibling-index() where that exists */
+  @supports (color: oklch(from mediumseagreen l c h)) {
+    :root {
+      --lk-complement: oklch(from var(--lk-base, mediumseagreen) l c calc(h + 180));
+      --lk-tetrad: oklch(from var(--lk-base, mediumseagreen) l c calc(h + 90));
+      --lk-tetrad-2: oklch(from var(--lk-base, mediumseagreen) l c calc(h + 270));
+      --lk-tint: oklch(from var(--lk-base, mediumseagreen) 0.95 0.03 h);
+      --lk-shade: oklch(from var(--lk-base, mediumseagreen) 0.32 0.04 h);
+    }
+  }
+  @supports (background-color: oklch(from mediumseagreen l c calc(h + sibling-index() * 1))) {
+    lk-stack[bands] > *,
+    lk-row[bands] > * {
+      background-color: oklch(from var(--lk-base, mediumseagreen) 0.94 0.035 calc(h + sibling-index() * 18));
+      color: oklch(from var(--lk-base, mediumseagreen) 0.28 0.04 h);
+    }
+  }
 }

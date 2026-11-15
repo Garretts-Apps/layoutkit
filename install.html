@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Install LayoutKit - CSS package, CDN, or local file</title>
-  <meta name="description" content="Install LayoutKit from npm, a CDN, or a local stylesheet. Load the CSS early; LayoutKit has no runtime JavaScript fallback by design.">
+  <meta name="description" content="Install layoutkit-css 2.1.0 from npm, a CDN, or a local file. One stylesheet, no runtime JavaScript, no build step to use it.">
   <link rel="canonical" href="https://layoutkit.dev/install">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="Install LayoutKit">
-  <meta property="og:description" content="Use one CSS file from npm, a CDN, or a local copy. No runtime JavaScript, no dependencies.">
+  <meta property="og:description" content="layoutkit-css 2.1.0 is one stylesheet. Link it or import it. No runtime JavaScript and no dependencies.">
   <meta property="og:url" content="https://layoutkit.dev/install">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -19,10 +19,10 @@
   <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Install LayoutKit">
-  <meta name="twitter:description" content="Use one CSS file from npm, a CDN, or a local copy.">
+  <meta name="twitter:description" content="layoutkit-css 2.1.0: one stylesheet from npm, a CDN, or a local file.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
   <meta name="twitter:image:alt" content="LayoutKit">
 </head>
 <body>
@@ -36,7 +36,7 @@
             <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
-            <span class="badge">2.0.0</span>
+            <span class="badge">2.1.0</span>
           </lk-row>
         </a>
         <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
@@ -55,9 +55,9 @@
 
   <lk-box id="main" class="container" width="xl">
     <lk-stack class="install-lead" gap="2">
-      <span class="pill pill-green">ONE STYLESHEET · 2.0.0</span>
+      <span class="pill pill-green">ONE STYLESHEET · 2.1.0 · 78 KB</span>
       <h1 class="hero-title install-title">Install LayoutKit</h1>
-      <p class="lead sans">Use one CSS file from npm, a CDN, or a local copy. Load it early when it controls initial layout.</p>
+      <p class="lead sans">One file, 80,010 bytes (12,795 bytes gzipped). Load it from npm, a CDN, or a copy in the repo. There is no build step and no runtime to start.</p>
     </lk-stack>
 
     <lk-stack gap="8">
@@ -94,15 +94,15 @@
           <lk-stack gap="3">
             <h2 id="loading-heading" class="h2">CSS loading behavior</h2>
             <p class="sans muted">Load LayoutKit before content that depends on it. Avoid lazy-loading it through JavaScript if it controls initial page layout.</p>
-            <p class="sans muted">LayoutKit has no JavaScript fallback by design. If the CSS does not load, <code class="sans">lk-*</code> tags remain plain unknown elements without intended layout styling.</p>
+            <p class="sans muted">If the file does not load, no script reconstructs the layout. The tags stay unknown elements. A browser that lacks a newer feature is a different case: <code class="sans">@supports</code> skips that feature, and the native control or the plain disclosure still works.</p>
           </lk-stack>
         </lk-box>
       </section>
 
       <section aria-labelledby="release-heading">
         <lk-stack gap="4">
-          <h2 id="release-heading" class="h2">Release 2.0.0</h2>
-          <p class="sans muted">2.0.0 turns container queries, single-child centering, center overlay, a switcher limit of 4, fluid spacing, and horizontal scroll-snap on by default. Each one has an <code class="sans">off</code> value. The migration guide and the changelog list the unlayered CSS that restores 1.5.0.</p>
+          <h2 id="release-heading" class="h2">Release 2.1.0</h2>
+          <p class="sans muted">2.1.0 adds <code class="sans">lk-frame</code>, <code class="sans">lk-bleed</code>, <code class="sans">lk-dock</code>, <code class="sans">lk-select</code>, and opt-in panel, pattern, blend, and band styles. It does not change a 2.0.0 default. 2.0.0 is still the release that turned container queries, single-child centering, center overlay, a switcher limit of 4, fluid spacing, and horizontal scroll-snap on. Each of those has an <code class="sans">off</code> value. The migration guide has the unlayered CSS that restores 1.5.0.</p>
           <a class="btn" href="https://github.com/Garretts-Apps/layoutkit/blob/main/CHANGELOG.md">Read the changelog</a>
         </lk-stack>
       </section>
@@ -114,7 +114,7 @@
           <div class="code"><pre>npm pack layoutkit-css
 tar -tzf layoutkit-css-*.tgz</pre></div>
           <p class="sans muted">Use pinned versions when reproducibility matters:</p>
-          <div class="code"><pre>npm install layoutkit-css@2.0.0</pre></div>
+          <div class="code"><pre>npm install layoutkit-css@2.1.0</pre></div>
         </lk-stack>
       </section>
     </lk-stack>

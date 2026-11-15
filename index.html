@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LayoutKit - Tiny pure-CSS layout vocabulary</title>
-  <meta name="description" content="LayoutKit is a tiny pure-CSS layout vocabulary for readable app structure. One CSS file, no runtime JavaScript, no dependencies, and native semantic HTML first.">
+  <title>LayoutKit — one CSS file for layout</title>
+  <meta name="description" content="LayoutKit is one 78 KB stylesheet (12.5 KB gzipped) of layout tags for semantic HTML. No runtime JavaScript and no build step to use it. Newer CSS stays behind @supports.">
   <link rel="canonical" href="https://layoutkit.dev/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a0a0b">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
-  <meta property="og:title" content="LayoutKit - Tiny pure-CSS layout vocabulary">
-  <meta property="og:description" content="Readable layout wrappers for native semantic HTML. One CSS file, no runtime JavaScript, no dependencies.">
+  <meta property="og:title" content="LayoutKit — one CSS file for layout">
+  <meta property="og:description" content="Layout tags for semantic HTML. 78 KB of CSS, 12.5 KB gzipped, no runtime JavaScript. Unlayered CSS you write later still wins.">
   <meta property="og:url" content="https://layoutkit.dev/">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="LayoutKit">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="LayoutKit - Tiny pure-CSS layout vocabulary">
-  <meta name="twitter:description" content="Readable layout wrappers for native semantic HTML. One CSS file, no runtime JavaScript, no dependencies.">
+  <meta name="twitter:title" content="LayoutKit — one CSS file for layout">
+  <meta name="twitter:description" content="Layout tags for semantic HTML. 78 KB of CSS, 12.5 KB gzipped, no runtime JavaScript.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115f">
   <meta name="twitter:image:alt" content="LayoutKit">
 </head>
 <body>
@@ -36,7 +36,7 @@
             <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
-            <span class="badge">2.0.0</span>
+            <span class="badge">2.1.0</span>
           </lk-row>
         </a>
         <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
@@ -57,11 +57,10 @@
     <lk-stack gap="3xl">
       <section class="hero center-text" aria-labelledby="home-heading">
         <lk-stack align="center" gap="5">
-          <span class="pill">ONE CSS FILE · ZERO DEPENDENCIES</span>
-          <h1 id="home-heading" class="hero-title">Readable app structure from one CSS file.</h1>
+          <span class="pill">78 KB CSS · 12.5 KB GZIPPED · NO RUNTIME JS</span>
+          <h1 id="home-heading" class="hero-title">Name the layout. Leave the arithmetic to the browser.</h1>
           <p class="lead sans">
-            LayoutKit is a tiny pure-CSS layout vocabulary: developer-readable
-            <code class="sans">lk-*</code> wrappers for stacks, rows, grids, centers, and scroll areas inside native semantic HTML. Version 2.0 measures those layouts from their container. Subgrid, sticky regions, and popovers stay opt-in.
+            LayoutKit is one stylesheet of tags such as <code class="sans">lk-stack</code>, <code class="sans">lk-grid</code>, and <code class="sans">lk-frame</code>. A stack is the column and the gap. The <code class="sans">min-inline-size: 0</code> shrink fix is on switcher, sidebar, frame, and scroll area, not on every tag. If you already write CSS on purpose, the rules sit in <code class="sans">@layer layoutkit</code>, so a rule you write later, outside that layer, wins. Version 2.1.0. The 2.0 defaults are unchanged.
           </p>
           <lk-cluster place="center" gap="3">
             <a class="btn btn-primary" href="/install">Install LayoutKit</a>
@@ -71,21 +70,70 @@
         </lk-stack>
       </section>
 
+      <section aria-labelledby="before-heading">
+        <lk-stack gap="4">
+          <h2 id="before-heading" class="h2">The same column, two ways</h2>
+          <p class="sans muted">A stack is a column and a gap from the spacing scale. That is the whole tag. Flex children still default to <code class="sans">min-inline-size: auto</code>, which is why a long word can blow out a row. Switcher, sidebar, frame, and scroll area set <code class="sans">min-inline-size: 0</code> where a child has to be allowed to shrink. A plain stack does not.</p>
+          <lk-grid responsive gap="4">
+            <article class="card">
+              <h3>By hand</h3>
+              <div class="code"><pre>.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lk-space-md);
+}</pre></div>
+              <div class="code"><pre><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"stack"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;h2&gt;</span>Orders<span class="tok-tag">&lt;/h2&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>128 open<span class="tok-tag">&lt;/p&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></pre></div>
+            </article>
+            <article class="card">
+              <h3>With the tag</h3>
+              <div class="code"><pre><span class="tok-tag">&lt;lk-stack</span> <span class="tok-attr">gap</span>=<span class="tok-str">"md"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;h2&gt;</span>Orders<span class="tok-tag">&lt;/h2&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>128 open<span class="tok-tag">&lt;/p&gt;</span>
+<span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
+              <div class="demo"><lk-stack gap="md"><h2>Orders</h2><p>128 open</p></lk-stack></div>
+            </article>
+          </lk-grid>
+        </lk-stack>
+      </section>
+
       <section aria-labelledby="what-heading">
         <lk-grid responsive gap="4">
           <article class="card">
             <lk-stack gap="2">
-              <h2 id="what-heading" class="h2">What it is</h2>
-              <p class="sans muted">A tiny CSS vocabulary that makes layout intent visible in markup without adding runtime JavaScript, dependencies, or a framework contract.</p>
+              <h2 id="what-heading" class="h2">If layout is the part you dread</h2>
+              <p class="sans muted">Pick the tag that matches the picture: stack, row, grid, sidebar, switcher, frame. Spacing is <code class="sans">xs</code> through <code class="sans">3xl</code>, not a new class for every pixel. The playground renders the same file you ship. There is no JavaScript in the package, and no build step to use it: link the CSS, or import it once.</p>
             </lk-stack>
           </article>
           <article class="card">
             <lk-stack gap="2">
-              <h2 class="h2">What it is not</h2>
-              <p class="sans muted">Not a component library, design system, substitute for semantic HTML, button kit, form kit, theme, icon set, animation library, or JavaScript app shell.</p>
+              <h2 class="h2">If you already like CSS</h2>
+              <p class="sans muted">The selectors are attribute selectors in one layer. Container queries measure the component, not the viewport. <code class="sans">:has()</code>, subgrid, logical properties, and nesting are used where they are the right tool. <code class="sans">@supports</code> wraps what is not in every current browser, including disclosure height animation and customizable selects. You are not buying a skin.</p>
             </lk-stack>
           </article>
         </lk-grid>
+      </section>
+
+      <section aria-labelledby="compare-heading">
+        <lk-stack gap="4">
+          <h2 id="compare-heading" class="h2">How this differs from the other options</h2>
+          <lk-grid responsive gap="4">
+            <article class="card">
+              <h3>Tailwind</h3>
+              <p class="sans muted">Utilities are good at “this one element, these pixels,” and some people prefer that to naming classes. LayoutKit is the other job: a handful of layout decisions, readable in the markup, with the arithmetic in the stylesheet. It does not replace utilities for one-off paint.</p>
+            </article>
+            <article class="card">
+              <h3>Bootstrap</h3>
+              <p class="sans muted">No button theme and no accordion script. A disclosure is a <code class="sans">details</code> element. A menu is a <code class="sans">button</code> and a <code class="sans">popover</code>. <code class="sans">lk-select</code> styles a real <code class="sans">select</code> only where <code class="sans">appearance: base-select</code> exists. Firefox keeps the system control.</p>
+            </article>
+            <article class="card">
+              <h3>Every Layout</h3>
+              <p class="sans muted">Stack, switcher, sidebar, cluster, cover, and the centered overlay are those algorithms. Every Layout is the book and a set of custom elements. This package is one CSS file you can vendor, with container queries on by default since 2.0 and a frame whose gutters grow instead of a max-width.</p>
+            </article>
+          </lk-grid>
+        </lk-stack>
       </section>
 
       <section aria-labelledby="install-heading">
@@ -93,7 +141,7 @@
           <lk-stack gap="4">
             <span class="pill pill-green">INSTALL</span>
             <h2 id="install-heading" class="h2">Load the CSS early</h2>
-            <p class="sans muted">Use a normal stylesheet link for CDN or direct browser usage. In frameworks, import LayoutKit at the root or global CSS layer. There is no JavaScript fallback by design.</p>
+            <p class="sans muted">Link it from the document head, or import it once at the root of a bundler. If the file does not load, nothing in JavaScript reconstructs the layout. The tags stay unknown elements. Features that need a newer engine are skipped by <code class="sans">@supports</code>, which is different: the page still works, without the extra motion or the custom select.</p>
             <div class="code"><pre>npm install layoutkit-css</pre></div>
             <div class="code"><pre>import <span class="tok-str">"layoutkit-css/layoutkit.css"</span>;</pre></div>
             <div class="code"><pre><span class="tok-com">&lt;link rel="stylesheet" href="https://unpkg.com/layoutkit-css/layoutkit.css"&gt;</span></pre></div>
