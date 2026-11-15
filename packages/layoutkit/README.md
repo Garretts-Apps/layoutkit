@@ -28,11 +28,10 @@ HTML, button kit, form kit, typography system, color theme, icon library,
 animation system, JavaScript behavior layer, stateful app shell, data table
 solution, or substitute for normal CSS.
 
-Named grid areas, one-off container queries, and component-specific behavior
-still belong in normal CSS. Opt-in attributes cover the common cases:
-container-relative switcher, sidebar, and grid; `:has()` adaptation; subgrid;
-scroll snap; sticky sidebars; scroll progress; and popover or details
-disclosure.
+Named grid areas and component-specific behavior still belong in normal CSS.
+Switcher, sidebar, and grid measure themselves unless `container="off"`.
+Subgrid, row snap, sticky regions, and popovers stay opt-in. See
+`MIGRATION.md` for the 2.0.0 defaults.
 
 ## Install
 
@@ -530,15 +529,15 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@1.5.0
+npm install layoutkit-css@2.0.0
 ```
 
 Review third-party packages before use.
 
 ## Versioning And Stability
 
-The package follows semver. Existing `lk-*` tags and documented attributes are
-kept backward-compatible unless a behavior is clearly a bug or unsafe.
+The package follows semver. 2.0.0 changes several defaults. `MIGRATION.md` lists
+each change and the CSS that restores the 1.5.0 look.
 
 ## Contributing
 

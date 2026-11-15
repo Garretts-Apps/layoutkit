@@ -22,23 +22,24 @@
   <meta name="twitter:description" content="Use one CSS file from npm, a CDN, or a local copy.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115c">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
   <meta name="twitter:image:alt" content="LayoutKit">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
-    <nav class="nav" aria-label="Primary">
+    <lk-box class="nav" sticky>
+    <nav aria-label="Primary">
       <lk-spread align="center">
         <a href="/" aria-label="LayoutKit home">
           <lk-row gap="2" align="center">
-            <lk-center class="brand-mark">L</lk-center>
+            <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
-            <span class="badge">1.5.0</span>
+            <span class="badge">2.0.0</span>
           </lk-row>
         </a>
-        <lk-scroll-area class="nav-scroll" direction="horizontal">
+        <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
           <lk-row class="navlinks" gap="1">
             <a class="navlink" href="/">Home</a>
             <a class="navlink" href="/install" aria-current="page">Install</a>
@@ -49,11 +50,12 @@
         </lk-scroll-area>
       </lk-spread>
     </nav>
+    </lk-box>
   </header>
 
-  <lk-box id="main" class="container">
+  <lk-box id="main" class="container" width="xl">
     <lk-stack class="install-lead" gap="2">
-      <span class="pill pill-green">ONE STYLESHEET · 1.5.0</span>
+      <span class="pill pill-green">ONE STYLESHEET · 2.0.0</span>
       <h1 class="hero-title install-title">Install LayoutKit</h1>
       <p class="lead sans">Use one CSS file from npm, a CDN, or a local copy. Load it early when it controls initial layout.</p>
     </lk-stack>
@@ -99,8 +101,8 @@
 
       <section aria-labelledby="release-heading">
         <lk-stack gap="4">
-          <h2 id="release-heading" class="h2">Release 1.5.0</h2>
-          <p class="sans muted">The current package adds opt-in container queries, <code class="sans">:has()</code> adaptation, subgrid, scroll-snap carousels, sticky sidebars, scroll progress, popovers, and disclosures. Defaults from 1.4.0 stay in place until you set the new attributes. Release notes live in the repository changelog.</p>
+          <h2 id="release-heading" class="h2">Release 2.0.0</h2>
+          <p class="sans muted">2.0.0 turns container queries, single-child centering, center overlay, a switcher limit of 4, fluid spacing, and horizontal scroll-snap on by default. Each one has an <code class="sans">off</code> value. The migration guide and the changelog list the unlayered CSS that restores 1.5.0.</p>
           <a class="btn" href="https://github.com/Garretts-Apps/layoutkit/blob/main/CHANGELOG.md">Read the changelog</a>
         </lk-stack>
       </section>
@@ -112,14 +114,14 @@
           <div class="code"><pre>npm pack layoutkit-css
 tar -tzf layoutkit-css-*.tgz</pre></div>
           <p class="sans muted">Use pinned versions when reproducibility matters:</p>
-          <div class="code"><pre>npm install layoutkit-css@1.5.0</pre></div>
+          <div class="code"><pre>npm install layoutkit-css@2.0.0</pre></div>
         </lk-stack>
       </section>
     </lk-stack>
   </lk-box>
 
   <footer class="footer">
-    <lk-spread class="container" align="center">
+    <lk-spread class="container" width="xl" align="center">
       <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
       <lk-row gap="4">
         <a class="navlink" href="/docs">Docs</a>

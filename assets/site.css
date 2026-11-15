@@ -46,8 +46,8 @@ a { color: inherit; text-decoration: none; }
 /* Long tokens in code samples wrap instead of forcing horizontal scroll. */
 pre, code { overflow-wrap: anywhere; }
 
-/* Shell width sits between lk width=lg (50rem) and width=xl (64rem). */
-.container { width: 100%; max-width: 55rem; margin-inline: auto; padding-inline: 24px; }
+/* Padding only. width="xl" on the shell is the 56rem measure. */
+.container { width: 100%; padding-inline: 24px; }
 .page { padding-block: 40px 56px; }
 .sans { font-family: var(--sans); }
 .muted { color: var(--muted); }
@@ -58,7 +58,8 @@ pre, code { overflow-wrap: anywhere; }
 
 /* ---- Nav ---- */
 .nav {
-  position: sticky; top: 0; z-index: 50;
+  --lk-sticky-top: 0px;
+  --lk-sticky-z: 50;
   border-bottom: 1px solid var(--border);
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(8px);
@@ -155,14 +156,14 @@ tr:last-child td { border-bottom: none; }
 td code { color: var(--accent); }
 
 /* ---- Playground ---- */
-/* 54rem matches the old 860px pane switch. The switcher does the layout. */
-.panes { --lk-switch-at: 48rem; }
+/* at="xl" on the panes switcher is the 48rem breakpoint. */
+.panes { min-inline-size: 0; }
 .panes > * { min-inline-size: 0; }
 .editor { border: 1px solid var(--border); border-radius: 10px; background: #08080a; overflow: hidden; }
 .panel-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--border); }
 /* Editor + preview share one fixed stage height so neither column can balloon */
 textarea.pg { display: block; width: 100%; height: 300px; resize: vertical; background: #08080a; color: var(--accent); font-family: var(--mono); font-size: 13px; line-height: 1.7; border: 0; padding: 16px; outline: none; }
-.preview-frame { height: 300px; padding: 16px; overflow: auto; }
+.preview-frame { position: relative; height: 300px; padding: 16px; overflow: auto; }
 /* Inside the preview, "full-height" fills the stage, not the real viewport */
 #pg-preview { height: 100%; }
 #pg-preview [full-height] { min-height: 100% !important; }

@@ -22,7 +22,7 @@
   <meta name="twitter:description" content="Pure-CSS layout wrappers for native semantic HTML.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <link rel="stylesheet" href="/layoutkit.css">
-  <link rel="stylesheet" href="/assets/site.css?v=20261115c">
+  <link rel="stylesheet" href="/assets/site.css?v=20261115d">
   <meta name="twitter:image:alt" content="LayoutKit">
   <style>
     .demo > * > *, .demo > * { outline: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
@@ -33,17 +33,18 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
-    <nav class="nav" aria-label="Primary">
+    <lk-box class="nav" sticky>
+    <nav aria-label="Primary">
       <lk-spread align="center">
         <a href="/" aria-label="LayoutKit home">
           <lk-row gap="2" align="center">
-            <lk-center class="brand-mark">L</lk-center>
+            <lk-center class="brand-mark" overlay="off" square="sm">L</lk-center>
             <span class="brand brand-name">LayoutKit</span>
             <span class="badge">CSS</span>
-            <span class="badge">1.5.0</span>
+            <span class="badge">2.0.0</span>
           </lk-row>
         </a>
-        <lk-scroll-area class="nav-scroll" direction="horizontal">
+        <lk-scroll-area class="nav-scroll" direction="horizontal" snap="off">
           <lk-row class="navlinks" gap="1">
             <a class="navlink" href="/">Home</a>
             <a class="navlink" href="/install">Install</a>
@@ -54,6 +55,7 @@
         </lk-scroll-area>
       </lk-spread>
     </nav>
+    </lk-box>
   </header>
 
   <lk-box id="main" class="container page">
@@ -73,7 +75,7 @@
     <span class="tok-tag">&lt;h2</span> <span class="tok-attr">id</span>=<span class="tok-str">"empty-heading"</span><span class="tok-tag">&gt;</span>No results<span class="tok-tag">&lt;/h2&gt;</span>
   <span class="tok-tag">&lt;/section&gt;</span>
 <span class="tok-tag">&lt;/lk-center&gt;</span></pre></div>
-          <div class="demo"><lk-center class="stage"><section aria-labelledby="empty-heading-demo"><h2 id="empty-heading-demo">No results</h2></section></lk-center></div>
+          <div class="demo"><lk-center class="stage" overlay="off"><section aria-labelledby="empty-heading-demo"><h2 id="empty-heading-demo">No results</h2></section></lk-center></div>
         </lk-stack>
       </lk-box>
 
@@ -126,7 +128,7 @@
   <span class="tok-tag">&lt;header&gt;</span><span class="tok-tag">&lt;lk-spread</span> <span class="tok-attr">padding</span>=<span class="tok-str">"sm"</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;a</span> <span class="tok-attr">href</span>=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>App<span class="tok-tag">&lt;/a&gt;</span><span class="tok-tag">&lt;button</span> <span class="tok-attr">type</span>=<span class="tok-str">"button"</span><span class="tok-tag">&gt;</span>Menu<span class="tok-tag">&lt;/button&gt;</span><span class="tok-tag">&lt;/lk-spread&gt;</span><span class="tok-tag">&lt;/header&gt;</span>
   <span class="tok-tag">&lt;lk-box</span> <span class="tok-attr">fill</span><span class="tok-tag">&gt;</span><span class="tok-tag">&lt;main&gt;</span><span class="tok-tag">&lt;lk-center&gt;</span><span class="tok-tag">&lt;h2&gt;</span>Content<span class="tok-tag">&lt;/h2&gt;</span><span class="tok-tag">&lt;/lk-center&gt;</span><span class="tok-tag">&lt;/main&gt;</span><span class="tok-tag">&lt;/lk-box&gt;</span>
 <span class="tok-tag">&lt;/lk-stack&gt;</span></pre></div>
-          <div class="demo"><lk-stack class="demo-page"><header><lk-spread padding="sm"><a href="/">App</a><button type="button">Menu</button></lk-spread></header><lk-box fill><main><lk-center><h2>Content</h2></lk-center></main></lk-box></lk-stack></div>
+          <div class="demo"><lk-stack class="demo-page"><header><lk-spread padding="sm"><a href="/">App</a><button type="button">Menu</button></lk-spread></header><lk-box fill><main><lk-center overlay="off"><h2>Content</h2></lk-center></main></lk-box></lk-stack></div>
         </lk-stack>
       </lk-box>
 
@@ -138,14 +140,14 @@
         </lk-stack>
       </lk-box>
 
-      <lk-center>
+      <lk-center overlay="off">
         <a class="btn btn-primary" href="/playground">Try it in the Playground &rarr;</a>
       </lk-center>
     </lk-stack>
   </lk-box>
 
   <footer class="footer">
-    <lk-spread class="container" align="center">
+    <lk-spread class="container" width="xl" align="center">
       <span>LayoutKit - pure-CSS layout vocabulary. MIT.</span>
       <lk-row gap="4"><a class="navlink" href="/docs">Docs</a><a class="navlink" href="https://github.com/Garretts-Apps/layoutkit" target="_blank" rel="noopener">GitHub</a></lk-row>
     </lk-spread>

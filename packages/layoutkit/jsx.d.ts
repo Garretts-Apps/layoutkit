@@ -42,7 +42,9 @@ type LayoutKitPlace =
   | "between"
   | "around"
   | "evenly";
-type LayoutKitWidth = "xs" | "sm" | "md" | "lg" | "xl" | "prose" | "full";
+type LayoutKitWidth = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "prose" | "full";
+type LayoutKitSquare = "xs" | "sm" | "md" | "lg" | "xl";
+type LayoutKitSwitchAt = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "flex";
 type LayoutKitText = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
 type LayoutKitWeight = "normal" | "medium" | "semibold" | "bold";
 type LayoutKitFlow = LayoutKitSpace | boolean | "";
@@ -78,12 +80,15 @@ declare global {
         place?: LayoutKitPlace;
         center?: boolean | "";
         fill?: boolean | "";
-        /** Viewport minimum: 100dvh, then 100svh, then 100vh. */
-        "full-height"?: boolean | "";
+        /** Viewport minimum, or container to fill the query container. */
+        "full-height"?: boolean | "" | "container";
         wrap?: boolean | "";
         width?: LayoutKitWidth;
-        /** Center the only child. place and justify still win. */
-        adapt?: "solo";
+        /** One child centers unless this is off. scroll is a scroller that becomes a list under 32rem. */
+        adapt?: "solo" | "off" | "scroll";
+        sticky?: boolean | "";
+        reveal?: boolean | "";
+        layout?: "compact";
       };
       "lk-row": LayoutKitGlobalAttributes & {
         gap?: LayoutKitSpace;
@@ -93,13 +98,14 @@ declare global {
         place?: LayoutKitPlace;
         center?: boolean | "";
         fill?: boolean | "";
-        /** Viewport minimum: 100dvh, then 100svh, then 100vh. */
-        "full-height"?: boolean | "";
+        /** Viewport minimum, or container to fill the query container. */
+        "full-height"?: boolean | "" | "container";
         wrap?: boolean | "";
         width?: LayoutKitWidth;
         reverse?: boolean | "";
-        /** Center the only child. place and justify still win. */
-        adapt?: "solo";
+        /** One child centers unless this is off. scroll is a scroller that becomes a list under 32rem. */
+        adapt?: "solo" | "off" | "scroll";
+        sticky?: boolean | "";
         /** Horizontal snap carousel. Direct children are slides. */
         snap?: boolean | "" | "mandatory" | "proximity" | "center";
         /** Slide size along the snap axis. Assumes the row gap. */
@@ -108,20 +114,25 @@ declare global {
       "lk-center": LayoutKitGlobalAttributes & {
         place?: LayoutKitPlace;
         fill?: boolean | "";
-        /** Viewport minimum: 100dvh, then 100svh, then 100vh. */
-        "full-height"?: boolean | "";
+        /** Viewport minimum, or container to fill the query container. */
+        "full-height"?: boolean | "" | "container";
         inline?: boolean | "";
         horizontal?: boolean | "";
         vertical?: boolean | "";
         width?: LayoutKitWidth;
-        /** Cover the containing block. The parent must be positioned. */
-        overlay?: boolean | "";
+        /** Covers the containing block unless off. */
+        overlay?: boolean | "" | "off";
+        square?: LayoutKitSquare;
       };
       "lk-box": LayoutKitGlobalAttributes & {
         padding?: LayoutKitSpace;
         fill?: boolean | "";
         width?: LayoutKitWidth;
         flow?: LayoutKitFlow;
+        sticky?: boolean | "";
+        square?: LayoutKitSquare;
+        reveal?: boolean | "";
+        layout?: "compact";
       };
       "lk-card": LayoutKitGlobalAttributes & {
         padding?: LayoutKitSpace;
@@ -132,11 +143,13 @@ declare global {
         border?: "none";
         /** Bleed a direct child figure to the card edges. */
         adapt?: "figure";
+        reveal?: boolean | "";
       };
       "lk-spread": LayoutKitGlobalAttributes & {
         align?: LayoutKitAlign;
         padding?: LayoutKitSpace;
         place?: LayoutKitPlace;
+        width?: LayoutKitWidth;
       };
       "lk-grid": LayoutKitGlobalAttributes & {
         cols?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
@@ -151,10 +164,10 @@ declare global {
         "place-items"?: "start" | "center" | "end" | "stretch";
         place?: LayoutKitPlace;
         /**
-         * Query container. Fixed cols stack below a container width:
-         * sm 24rem, bare or md 32rem, lg 48rem, xl 64rem.
+         * On by default. off restores a non-container grid.
+         * sm 24rem, bare or md 32rem, lg 48rem, xl 64rem choose when fixed cols stack.
          */
-        container?: boolean | "" | "sm" | "md" | "lg" | "xl";
+        container?: boolean | "" | "off" | "sm" | "md" | "lg" | "xl";
         /** Share the parent grid's tracks. columns is the bare-attribute default. */
         subgrid?: boolean | "" | "columns" | "rows" | "both";
       };
@@ -164,21 +177,26 @@ declare global {
       };
       "lk-switcher": LayoutKitGlobalAttributes & {
         gap?: LayoutKitSpace;
-        /** Measure the switch threshold with cqi instead of a percentage. */
-        container?: boolean | "";
-        /** Stack every child when there are more than this many. */
-        limit?: "2" | "3" | "4" | "5" | "6";
+        /** On by default. off removes query containment. */
+        container?: boolean | "" | "off";
+        /** Stack every child when there are more than this many. Default is 4. off disables it. */
+        limit?: "off" | "2" | "3" | "4" | "5" | "6";
+        /** Hard container breakpoint. flex restores the --lk-switch-at formula. Default md is 30rem. */
+        at?: LayoutKitSwitchAt;
       };
       "lk-sidebar": LayoutKitGlobalAttributes & {
         gap?: LayoutKitSpace;
         side?: "end";
-        /** Measure the content minimum with cqi instead of a percentage. */
-        container?: boolean | "";
+        /** On by default. off removes query containment. */
+        container?: boolean | "" | "off";
+        layout?: "compact";
         /** Stick the side panel within the viewport while the content scrolls. */
         sticky?: boolean | "";
       };
       "lk-cover": LayoutKitGlobalAttributes & {
         gap?: LayoutKitSpace;
+        /** container fills the query container instead of the viewport. */
+        size?: "container";
       };
       "lk-spacer": LayoutKitGlobalAttributes & {
         size?: LayoutKitSpace | "auto";
@@ -197,8 +215,8 @@ declare global {
         "max-h"?: "sm" | "md" | "lg" | "screen";
         /** Used once snap turns the region into a flex scroller. */
         gap?: LayoutKitSpace;
-        /** Snap carousel. Direct children are slides. Vertical when direction is vertical. */
-        snap?: boolean | "" | "mandatory" | "proximity" | "center";
+        /** Horizontal scroll areas snap unless this is off. */
+        snap?: boolean | "" | "off" | "mandatory" | "proximity" | "center";
         /** Slide size along the snap axis. */
         slide?: "full" | "half" | "third" | "peek";
       };
@@ -218,6 +236,8 @@ declare global {
         panel?: "overlay";
         anchor?: boolean | "";
         side?: "end";
+        /** Height animation is on unless off. Reduced motion disables it. */
+        animate?: boolean | "" | "off";
       };
       /** Pairs an invoker with lk-popover. The invoker is the first child. anchor tethers the panel. */
       "lk-menu": LayoutKitGlobalAttributes & {

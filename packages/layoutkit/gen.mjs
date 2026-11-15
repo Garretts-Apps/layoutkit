@@ -50,7 +50,8 @@ const GRIDP = { start: "start", center: "center", end: "end" };
 const TEXT = { xs: "0.75rem", sm: "0.875rem", md: "1rem", lg: "1.125rem", xl: "1.25rem", "2xl": "1.5rem", "3xl": "2rem", "4xl": "3rem" };
 const WEIGHT = { normal: "400", medium: "500", semibold: "600", bold: "700" };
 const RADIUS = { none: "0", sm: "0.375rem", md: "0.75rem", lg: "1rem", full: "9999px" };
-const WIDTH = { xs: "20rem", sm: "30rem", md: "40rem", lg: "50rem", xl: "64rem", prose: "var(--lk-measure, 65ch)", full: "100%" };
+const WIDTH = { xs: "20rem", sm: "30rem", md: "40rem", lg: "50rem", xl: "56rem", "2xl": "64rem", "3xl": "80rem", prose: "var(--lk-measure, 65ch)", full: "100%" };
+const SQUARE = { xs: "1.25rem", sm: "1.75rem", md: "2.5rem", lg: "4rem", xl: "6rem" };
 // Enumerated free-form values — CSP-clean alternatives to the inline --lk-* knobs.
 const RATIO = ["1/1", "16/9", "4/3", "3/2", "2/1", "3/1", "9/16", "4/5"];
 const MINW = { "2xs": "8rem", xs: "10rem", sm: "12rem", md: "16rem", lg: "20rem", xl: "24rem" };
@@ -105,14 +106,7 @@ out.push(" */");
 
 out.push("@layer layoutkit {");
 
-section("Design tokens — remap via your --space-* / --text-* / --radius-* tokens, or override --lk-* directly");
-rule(":root", [
-  ...Object.entries(TOKENS).map(([k, v]) => `--lk-space-${k}: var(--space-${k}, ${v});`),
-  ...Object.entries(TEXT).map(([k, v]) => `--lk-text-${k}: var(--text-${k}, ${v});`),
-  ...Object.entries(RADIUS).filter(([k]) => k !== "none" && k !== "full").map(([k, v]) => `--lk-radius-${k}: var(--radius-${k}, ${v});`),
-].join(" "));
-
-section("Fluid space — opt-in tokens. Assign one to --space-* or --lk-space-* to opt in; the static scale is unchanged");
+section("Design tokens — host --space-* still wins; otherwise the scale is fluid");
 const FLUID = {
   xs: ["0.25rem", "0.2rem + 0.25", "0.5rem"],
   sm: ["0.5rem", "0.35rem + 0.5", "0.75rem"],
@@ -123,7 +117,13 @@ const FLUID = {
   "3xl": ["3rem", "1.5rem + 4.5", "6rem"],
 };
 const fluidDecls = (unit) => Object.entries(FLUID).map(([k, [min, pref, max]]) => `--lk-space-fluid-${k}: clamp(${min}, ${pref}${unit}, ${max});`).join(" ");
-rule(":root", fluidDecls("vw"));
+rule(":root", [
+  ...Object.entries(TOKENS).map(([k, v]) => `--lk-space-static-${k}: ${v};`),
+  fluidDecls("vw"),
+  ...Object.entries(TOKENS).map(([k]) => `--lk-space-${k}: var(--space-${k}, var(--lk-space-fluid-${k}));`),
+  ...Object.entries(TEXT).map(([k, v]) => `--lk-text-${k}: var(--text-${k}, ${v});`),
+  ...Object.entries(RADIUS).filter(([k]) => k !== "none" && k !== "full").map(([k, v]) => `--lk-radius-${k}: var(--radius-${k}, ${v});`),
+].join(" "));
 atSupports("(width: 1vi)", ":root", fluidDecls("vi"));
 
 section("Base — every primitive sets its own display + box model");
@@ -137,16 +137,17 @@ rule("lk-grid", "display: grid; grid-template-columns: repeat(1, minmax(0, 1fr))
 rule("lk-spacer", "display: block; flex: 1 1 0%;");
 rule("lk-divider", `display: block; inline-size: 100%; border-block-start: 1px solid ${DIVIDER_FALLBACK};`);
 rule("lk-aspect-ratio", "display: block; aspect-ratio: var(--lk-ratio, 1);");
-rule("lk-scroll-area", "display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none);");
+rule("lk-scroll-area", "display: block; overflow-y: auto; max-block-size: var(--lk-max-height, none); max-inline-size: var(--lk-max-width, none); min-inline-size: 0;");
 rule("lk-card", "display: block; padding: var(--lk-space-lg); --lk-pad: var(--lk-space-lg); border-radius: var(--lk-radius-md); border: 1px solid var(--lk-card-border, color-mix(in srgb, currentColor 12%, transparent));");
 
 section("Responsive intent primitives — respond to available space, no media queries");
 // Cluster: a wrapping group (chips, tags, buttons). align via `place`, gap via `gap`.
 rule("lk-cluster", "display: flex; flex-wrap: wrap; gap: var(--lk-space-sm); align-items: center;");
-// Switcher: a row that flips to a stack when narrower than --lk-switch-at — pure
-// intrinsic sizing (the flex-basis calc trick), no query, no JS.
+// Switcher: hard container breakpoint at 30rem. at="flex" restores the
+// flex-basis formula so --lk-switch-at can name any length.
 rule("lk-switcher", "display: flex; flex-wrap: wrap; gap: var(--lk-space-md);");
-rule("lk-switcher > *", "flex-grow: 1; flex-basis: calc((var(--lk-switch-at, 30rem) - 100%) * 999);");
+rule("lk-switcher > *", "flex-grow: 1; flex-basis: auto; min-inline-size: 0;");
+rule('lk-switcher[at="flex"] > *', "flex-basis: calc((var(--lk-switch-at, 30rem) - 100%) * 999);");
 // Sidebar: a fixed-width side + a flexible content area that wraps under it when
 // the content would get narrower than --lk-sidebar-content-min.
 rule("lk-sidebar", "display: flex; flex-wrap: wrap; gap: var(--lk-space-md);");
@@ -166,7 +167,7 @@ for (const k of Object.keys(TEXT)) rule(`[lk-text="${k}"]`, `font-size: var(--lk
 for (const [k, v] of Object.entries(WEIGHT)) rule(`[lk-weight="${k}"]`, `font-weight: ${v};`);
 
 section("Width — constrain & center content");
-const WIDTH_TAGS = ["lk-box", "lk-card", "lk-stack", "lk-center", "lk-row"];
+const WIDTH_TAGS = ["lk-box", "lk-card", "lk-stack", "lk-center", "lk-row", "lk-spread"];
 for (const [k, v] of Object.entries(WIDTH)) {
   rule(WIDTH_TAGS.map((t) => `${t}[width="${k}"]`).join(",\n  "), `max-inline-size: ${v};${k === "full" ? "" : " margin-inline: auto;"}`);
 }
@@ -281,84 +282,104 @@ for (const r of RATIO) rule(`lk-aspect-ratio[ratio="${r}"]`, `aspect-ratio: ${r}
 // frame and writing-mode-aware browsers use the logical axes.
 rule(["img", "video", "iframe", "canvas", "svg"].map((tag) => `lk-aspect-ratio > ${tag}`).join(",\n  "), "display: block; width: 100%; height: 100%; inline-size: 100%; block-size: 100%; object-fit: cover;");
 
-section("Container queries — opt-in. Without [container], switcher, sidebar, and grid keep their intrinsic layout");
-// cqi is read on the children, so it resolves against this element once it is
-// the query container. Percentage flex-basis stays in place when cqi or
-// container-type is unsupported. A fixed cols grid stacks its children when
-// the grid itself is under 32rem; container queries cannot read a custom
-// property as the threshold, so 32rem is the enumerated cutoff.
+section("Containers are on unless container=off. Fixed cols stack from the element's own inline size");
 lines(`
 @supports (container-type: inline-size) and (width: 1cqi) {
-  lk-switcher[container] {
+  lk-switcher:not([container="off"]) {
     container-type: inline-size;
     container-name: lk-switcher;
   }
-  lk-sidebar[container] {
+  lk-sidebar:not([container="off"]) {
     container-type: inline-size;
     container-name: lk-sidebar;
   }
-  lk-grid[container] {
+  lk-grid:not([container="off"]) {
     container-type: inline-size;
     container-name: lk-grid;
   }
-  lk-switcher[container] > * {
+  lk-switcher[at="flex"]:not([container="off"]) > * {
     flex-basis: calc((var(--lk-switch-at, 30rem) - 100cqi) * 999);
   }
-  lk-sidebar[container]:not([side="end"]) > :last-child,
-  lk-sidebar[container][side="end"] > :first-child {
+  lk-sidebar:not([container="off"]):not([side="end"]) > :last-child,
+  lk-sidebar:not([container="off"])[side="end"] > :first-child {
     min-inline-size: var(--lk-sidebar-content-min, 50cqi);
   }
-  lk-grid[container] > * {
+  lk-grid:not([container="off"]) > * {
     min-inline-size: 0;
     max-inline-size: 100cqi;
   }
-  lk-grid[container] > * :is(img, video, svg, canvas) {
+  lk-grid:not([container="off"]) > * :is(img, video, svg, canvas) {
     max-width: 100%;
     height: auto;
     max-inline-size: 100%;
     block-size: auto;
   }
+  @container lk-switcher (inline-size < 20rem) {
+    lk-switcher[at="xs"]:not([container="off"]) > * { flex-basis: 100%; }
+  }
+  @container lk-switcher (inline-size < 24rem) {
+    lk-switcher[at="sm"]:not([container="off"]) > * { flex-basis: 100%; }
+  }
+  @container lk-switcher (inline-size < 30rem) {
+    lk-switcher:not([at="flex"]):not([at="xs"]):not([at="sm"]):not([at="lg"]):not([at="xl"]):not([at="2xl"]):not([container="off"]) > * { flex-basis: 100%; }
+  }
+  @container lk-switcher (inline-size < 40rem) {
+    lk-switcher[at="lg"]:not([container="off"]) > * { flex-basis: 100%; }
+  }
+  @container lk-switcher (inline-size < 48rem) {
+    lk-switcher[at="xl"]:not([container="off"]) > * { flex-basis: 100%; }
+  }
+  @container lk-switcher (inline-size < 64rem) {
+    lk-switcher[at="2xl"]:not([container="off"]) > * { flex-basis: 100%; }
+  }
   @container lk-grid (inline-size < 24rem) {
-    lk-grid[container="sm"][cols]:not([responsive]):not([min]) > * {
-      grid-column: 1 / -1;
-    }
+    lk-grid[container="sm"][cols]:not([responsive]):not([min]) > * { grid-column: 1 / -1; }
   }
   @container lk-grid (inline-size < 32rem) {
+    lk-grid[cols]:not([container="off"]):not([container="sm"]):not([container="lg"]):not([container="xl"]):not([responsive]):not([min]) > *,
     lk-grid[container=""][cols]:not([responsive]):not([min]) > *,
-    lk-grid[container="md"][cols]:not([responsive]):not([min]) > * {
-      grid-column: 1 / -1;
-    }
+    lk-grid[container="md"][cols]:not([responsive]):not([min]) > * { grid-column: 1 / -1; }
   }
   @container lk-grid (inline-size < 48rem) {
-    lk-grid[container="lg"][cols]:not([responsive]):not([min]) > * {
-      grid-column: 1 / -1;
-    }
+    lk-grid[container="lg"][cols]:not([responsive]):not([min]) > * { grid-column: 1 / -1; }
   }
   @container lk-grid (inline-size < 64rem) {
-    lk-grid[container="xl"][cols]:not([responsive]):not([min]) > * {
-      grid-column: 1 / -1;
-    }
+    lk-grid[container="xl"][cols]:not([responsive]):not([min]) > * { grid-column: 1 / -1; }
   }
 }
 `);
 
-section("Switcher limit — opt-in quantity threshold. More than N children each take a full row");
+section("Switcher limit — default 4. limit=off keeps every child in the threshold layout");
+rule('lk-switcher:not([limit="off"]):not([limit="2"]):not([limit="3"]):not([limit="5"]):not([limit="6"])', "--lk-limit: 4;");
 for (const limit of [2, 3, 4, 5, 6]) {
   const from = limit + 1;
+  rule(`lk-switcher[limit="${limit}"]`, `--lk-limit: ${limit};`);
   rule(
     `lk-switcher[limit="${limit}"] > :nth-last-child(n + ${from}),\n  lk-switcher[limit="${limit}"] > :nth-last-child(n + ${from}) ~ *`,
     "flex-basis: 100%;",
   );
 }
+rule('lk-switcher:not([limit="off"]):not([limit="2"]):not([limit="3"]):not([limit="5"]):not([limit="6"]) > :nth-last-child(n + 5),\n  lk-switcher:not([limit="off"]):not([limit="2"]):not([limit="3"]):not([limit="5"]):not([limit="6"]) > :nth-last-child(n + 5) ~ *', "flex-basis: 100%;");
+rule('lk-switcher[limit="off"]', "--lk-limit: 999;");
+lines(`
+@supports (flex-basis: calc(sibling-count() * 1%)) {
+  lk-switcher:not([limit="off"]) > * {
+    flex-basis: calc(max(0, sibling-count() - var(--lk-limit, 4)) * 100%);
+  }
+}
+`);
 
-section("Center overlay — opt-in imposter. The parent supplies the containing block");
-rule("lk-center[overlay]", "position: absolute; inset: var(--lk-overlay-inset, 0); z-index: var(--lk-overlay-z, 1);");
+section("Center overlay — on unless overlay=off. The parent supplies the containing block");
+rule('lk-center:not([overlay="off"])', "position: absolute; inset: var(--lk-overlay-inset, 0); z-index: var(--lk-overlay-z, 1);");
+rule('lk-center[overlay="off"]', "position: static; inset: auto; z-index: auto;");
 
 section(":has() adaptation — opt-in. Explicit place/justify still wins on a solo row or stack");
 lines(`
 @supports selector(:has(> :only-child)) {
   lk-row[adapt="solo"]:not([justify]):not([place]):has(> :only-child),
-  lk-stack[adapt="solo"]:not([justify]):not([place]):has(> :only-child) {
+  lk-stack[adapt="solo"]:not([justify]):not([place]):has(> :only-child),
+  lk-row:not([adapt="off"]):not([adapt="scroll"]):not([adapt="figure"]):not([justify]):not([place]):has(> :only-child),
+  lk-stack:not([adapt="off"]):not([adapt="scroll"]):not([adapt="figure"]):not([justify]):not([place]):has(> :only-child) {
     justify-content: center;
   }
 }
@@ -420,11 +441,11 @@ lines(`
 `);
 
 section("Scroll snap — opt-in carousels. Direct children are the slides. snap overrides wrap");
-const snapGap = Object.entries(SPACE).map(([k, v]) => `  lk-row[snap][gap="${k}"],\n  lk-scroll-area[snap][gap="${k}"] { --lk-snap-gap: ${v}; }`).join("\n");
+const snapGap = Object.entries(SPACE).map(([k, v]) => `  lk-row[snap][gap="${k}"],\n  lk-scroll-area[snap]:not([snap="off"])[gap="${k}"] { --lk-snap-gap: ${v}; }`).join("\n");
 lines(`
 @supports (scroll-snap-type: x mandatory) {
   lk-row[snap],
-  lk-scroll-area[snap] {
+  lk-scroll-area[snap]:not([snap="off"]) {
     display: flex;
     flex-flow: row nowrap;
     --lk-snap-gap: var(--lk-space-md);
@@ -436,11 +457,11 @@ lines(`
   lk-row[snap]:not([align]):not([place]) {
     align-items: stretch;
   }
-  lk-scroll-area[snap]:not([gap]) {
+  lk-scroll-area[snap]:not([snap="off"]):not([gap]) {
     gap: var(--lk-space-md);
   }
   lk-row[snap] > *,
-  lk-scroll-area[snap] > * {
+  lk-scroll-area[snap]:not([snap="off"]) > * {
     scroll-snap-align: start;
     flex: 0 0 auto;
     min-inline-size: 0;
@@ -474,13 +495,13 @@ lines(`
     flex: 0 0 80%;
   }
   lk-row[snap] :is(img, video, svg, canvas),
-  lk-scroll-area[snap] :is(img, video, svg, canvas) {
+  lk-scroll-area[snap]:not([snap="off"]) :is(img, video, svg, canvas) {
     max-width: 100%;
     height: auto;
     max-inline-size: 100%;
     block-size: auto;
   }
-  lk-scroll-area[snap][direction="vertical"] {
+  lk-scroll-area[snap]:not([snap="off"])[direction="vertical"] {
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: auto;
@@ -495,7 +516,7 @@ ${snapGap}
 }
 @supports (scroll-snap-type: inline mandatory) {
   lk-row[snap],
-  lk-scroll-area[snap],
+  lk-scroll-area[snap]:not([snap="off"]),
   lk-row[snap="mandatory"],
   lk-scroll-area[snap="mandatory"],
   lk-row[snap="center"] {
@@ -505,7 +526,7 @@ ${snapGap}
   lk-scroll-area[snap="proximity"] {
     scroll-snap-type: inline proximity;
   }
-  lk-scroll-area[snap][direction="vertical"],
+  lk-scroll-area[snap]:not([snap="off"])[direction="vertical"],
   lk-scroll-area[snap="mandatory"][direction="vertical"] {
     scroll-snap-type: block mandatory;
   }
@@ -720,6 +741,136 @@ lines(`
     position-area: block-end span-inline-start;
     justify-self: end;
   }
+}
+`);
+
+section("Opt-outs and 2.0 extras — square, sticky, container height, scrolling rows, reveal");
+rule('lk-switcher[container="off"],\n  lk-sidebar[container="off"],\n  lk-grid[container="off"]', "container-type: normal; container-name: none;");
+rule('lk-row[adapt="off"],\n  lk-stack[adapt="off"]', "justify-content: flex-start;");
+rule('lk-scroll-area[snap="off"]', "scroll-snap-type: none;");
+rule("lk-box[sticky],\n  lk-stack[sticky],\n  lk-row[sticky]", "position: sticky; inset-block-start: var(--lk-sticky-top, 0px); z-index: var(--lk-sticky-z, 1);");
+for (const [k, v] of Object.entries(SQUARE)) {
+  rule(`lk-center[square="${k}"],\n  lk-box[square="${k}"]`, `inline-size: ${v}; block-size: ${v}; flex: 0 0 auto;`);
+}
+rule('lk-center[full-height="container"],\n  lk-stack[full-height="container"],\n  lk-row[full-height="container"],\n  lk-cover[size="container"]', "min-block-size: 100%;");
+atSupports('(min-block-size: 100cqb)', 'lk-center[full-height="container"],\n  lk-stack[full-height="container"],\n  lk-row[full-height="container"],\n  lk-cover[size="container"]', "min-block-size: 100cqb;");
+lines(`
+@supports (container-type: inline-size) {
+  lk-row[adapt="scroll"] {
+    container-type: inline-size;
+    container-name: lk-row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+  }
+  lk-row[adapt="scroll"] > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    min-inline-size: 0;
+  }
+  @container lk-row (inline-size < 32rem) {
+    lk-row[adapt="scroll"] {
+      flex-direction: column;
+      overflow: visible;
+      scroll-snap-type: none;
+    }
+  }
+}
+@supports (animation-timeline: view()) {
+  lk-box[reveal],
+  lk-card[reveal],
+  lk-stack[reveal] {
+    animation-name: lk-reveal;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  lk-box[reveal],
+  lk-card[reveal],
+  lk-stack[reveal] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+@supports (selector(::scroll-button(inline-start))) {
+  lk-row[snap],
+  lk-scroll-area[snap]:not([snap="off"]),
+  lk-scroll-area[direction="horizontal"]:not([snap="off"]) {
+    scroll-marker-group: after;
+  }
+  lk-row[snap]::scroll-button(inline-start),
+  lk-scroll-area[snap]:not([snap="off"])::scroll-button(inline-start),
+  lk-scroll-area[direction="horizontal"]:not([snap="off"])::scroll-button(inline-start) {
+    content: "‹" / "Previous";
+  }
+  lk-row[snap]::scroll-button(inline-end),
+  lk-scroll-area[snap]:not([snap="off"])::scroll-button(inline-end),
+  lk-scroll-area[direction="horizontal"]:not([snap="off"])::scroll-button(inline-end) {
+    content: "›" / "Next";
+  }
+  lk-row[snap]::scroll-marker,
+  lk-scroll-area[snap]:not([snap="off"])::scroll-marker,
+  lk-scroll-area[direction="horizontal"]:not([snap="off"])::scroll-marker {
+    content: "";
+  }
+}
+@supports (interpolate-size: allow-keywords) {
+  lk-disclosure:not([animate="off"]) {
+    interpolate-size: allow-keywords;
+  }
+  lk-disclosure:not([animate="off"]) > details::details-content {
+    transition: height 200ms ease, content-visibility 200ms ease allow-discrete;
+    height: 0;
+    overflow: clip;
+  }
+  lk-disclosure:not([animate="off"]) > details[open]::details-content {
+    height: auto;
+  }
+  lk-disclosure[animate="off"] > details::details-content {
+    transition: none;
+    height: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  lk-disclosure > details::details-content { transition: none; }
+}
+lk-box[layout="compact"],
+lk-stack[layout="compact"],
+lk-sidebar[layout="compact"] {
+  --lk-layout: compact;
+  container-type: inline-size;
+}
+@container style(--lk-layout: compact) {
+  lk-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+@supports (scroll-snap-type: x mandatory) {
+  lk-scroll-area[direction="horizontal"]:not([snap="off"]) {
+    display: flex;
+    flex-flow: row nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+  }
+  lk-scroll-area[direction="horizontal"]:not([snap="off"]) > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    min-inline-size: 0;
+  }
+}
+`);
+lines(`
+@keyframes lk-reveal {
+  from { opacity: 0; transform: translateY(1rem); }
+  to { opacity: 1; transform: none; }
 }
 `);
 

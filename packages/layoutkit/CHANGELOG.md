@@ -3,6 +3,80 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 2.0.0
+
+Container queries, single-child centering, center overlay, a switcher limit of
+4, fluid space, and horizontal scroll-snap are now the defaults. Tags,
+attribute names, and export paths are unchanged. `MIGRATION.md` is the
+upgrade guide. Paste this unlayered block after LayoutKit to restore the
+1.5.0 look. A host rule outside `@layer layoutkit` beats the library.
+
+```css
+lk-switcher,
+lk-sidebar,
+lk-grid { container-type: normal; container-name: none; }
+lk-switcher > * { flex-basis: calc((var(--lk-switch-at, 30rem) - 100%) * 999); }
+lk-switcher > :nth-last-child(n + 5),
+lk-switcher > :nth-last-child(n + 5) ~ * { flex-basis: revert; }
+lk-center { position: static; inset: auto; }
+lk-row:has(> :only-child),
+lk-stack:has(> :only-child) { justify-content: flex-start; }
+lk-scroll-area[direction="horizontal"] { scroll-snap-type: none; display: block; }
+:root {
+  --lk-space-xs: var(--space-xs, var(--lk-space-static-xs));
+  --lk-space-sm: var(--space-sm, var(--lk-space-static-sm));
+  --lk-space-md: var(--space-md, var(--lk-space-static-md));
+  --lk-space-lg: var(--space-lg, var(--lk-space-static-lg));
+  --lk-space-xl: var(--space-xl, var(--lk-space-static-xl));
+  --lk-space-2xl: var(--space-2xl, var(--lk-space-static-2xl));
+  --lk-space-3xl: var(--space-3xl, var(--lk-space-static-3xl));
+}
+lk-box[width="xl"], lk-card[width="xl"], lk-stack[width="xl"],
+lk-center[width="xl"], lk-row[width="xl"], lk-spread[width="xl"] {
+  max-inline-size: 64rem;
+}
+```
+
+Per-feature opt-outs, which do not need that block:
+
+- `container="off"` on `lk-switcher`, `lk-sidebar`, and `lk-grid`.
+- `at="flex"` keeps `--lk-switch-at` on the flex-basis formula. `at` otherwise
+  picks a hard breakpoint: xs 20rem, sm 24rem, md 30rem, lg 40rem, xl 48rem,
+  2xl 64rem.
+- `limit="off"` on a switcher. `2` through `6` still set another count.
+- `overlay="off"` on `lk-center`.
+- `adapt="off"` on `lk-row` and `lk-stack`.
+- `snap="off"` on a horizontal `lk-scroll-area`.
+- `animate="off"` on `lk-disclosure`.
+
+### Breaking changes
+
+- **Containers are on.** Switcher, sidebar, and grid set `container-type: inline-size` unless `container="off"`. Fixed `cols` on a grid stack below 32rem. `container="sm|md|lg|xl"` still selects 24, 32, 48, and 64rem.
+- **Switcher threshold is a container breakpoint.** The default is 30rem. Children use `flex-basis: auto` above it and `100%` below it. `at="flex"` restores `calc((var(--lk-switch-at, 30rem) - 100%) * 999)` and the `100cqi` form. Container queries cannot read `--lk-switch-at`, so an arbitrary length still uses `at="flex"`.
+- **Switcher limit defaults to 4.** Five or more children each take a full row. `sibling-count()` supplies the same threshold where that function exists.
+- **One child centers.** An `lk-row` or `lk-stack` with a single element child uses `justify-content: center` unless `justify`, `place`, or `adapt="off"` is set.
+- **`lk-center` overlays.** It is `position: absolute` unless `overlay="off"`. The parent supplies the containing block.
+- **Space is fluid.** `--lk-space-*` is `var(--space-*, var(--lk-space-fluid-*))`. Host `--space-*` tokens still win. `--lk-space-static-*` holds the old rem steps.
+- **Horizontal scroll areas snap.** `direction="horizontal"` sets `scroll-snap-type: x mandatory` unless `snap="off"`. Vertical snap stays opt-in.
+- **`width="xl"` is 56rem.** The previous 64rem value is `width="2xl"`. `width="3xl"` is 80rem. `lk-spread` accepts `width`.
+
+### Added
+
+- `square` on `lk-center` and `lk-box` (`xs` through `xl`).
+- `sticky` on `lk-box`, `lk-stack`, and `lk-row`, using the same `--lk-sticky-top` offset as a sidebar.
+- `full-height="container"` and `lk-cover[size="container"]` fill the query container (`100%`, then `100cqb`). A boolean `full-height` and a plain cover stay on the viewport.
+- `min-inline-size: 0` on `lk-scroll-area`, so a flex parent can shrink it.
+- `adapt="scroll"` on `lk-row`: a horizontal snap scroller that becomes a column list below 32rem.
+- `reveal` on `lk-box`, `lk-card`, and `lk-stack`. `animation-timeline: view()` where supported. Unsupported browsers and `prefers-reduced-motion` leave the content visible.
+- Disclosure height animates with `interpolate-size: allow-keywords` where supported. `animate="off"` and reduced motion skip the transition.
+- `::scroll-button()` and `::scroll-marker` on snap scrollers where `selector(::scroll-button(inline-start))` matches.
+- `layout="compact"` sets `--lk-layout: compact`. Descendants inside `@container style(--lk-layout: compact)` stack their rows. The at-rule is ignored where style queries are unsupported.
+- A bare `lk-progress` stays fixed to the viewport through `scroll(root)`. `scope="nearest"` follows the nearest scroller.
+
+### Changed (visual behavior)
+
+The defaults above change existing pages that relied on in-flow centers, the flex-basis switcher, static space, a 64rem `xl`, or a non-snapping horizontal scroller. Opt out per element, or paste the restore block.
+
 ## 1.5.0
 
 Opt-in layouts that replace common layout JavaScript. Existing tags,

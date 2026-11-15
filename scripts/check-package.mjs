@@ -26,7 +26,7 @@ for (const file of requiredRootFiles) {
   if (!existsSync(join(root, file))) fail(`${file} must exist`);
 }
 
-const requiredPackageFiles = ["layoutkit.css", "jsx.d.ts", "README.md", "CONTRIBUTING.md", "CHANGELOG.md", "LICENSE", "SECURITY.md"];
+const requiredPackageFiles = ["layoutkit.css", "jsx.d.ts", "README.md", "CONTRIBUTING.md", "CHANGELOG.md", "MIGRATION.md", "LICENSE", "SECURITY.md"];
 for (const file of requiredPackageFiles) {
   if (!existsSync(join(pkgDir, file))) fail(`packages/layoutkit/${file} must exist`);
 }
@@ -119,10 +119,17 @@ if (!css.includes("container-type: inline-size")) fail("container opt-in must se
 if (!css.includes("@container lk-grid (inline-size < 32rem)")) fail("container grids must stack fixed columns from the grid's own size");
 if (!css.includes('lk-grid[container=""]')) fail("a boolean container grid must keep the 32rem threshold");
 if (!css.includes('lk-switcher[limit="4"]')) fail("switcher limit must stack once the child count passes the threshold");
-if (!css.includes("lk-center[overlay]")) fail("center overlay must be opt-in");
-if (!css.includes("--lk-space-fluid-md")) fail("fluid space tokens must be available without replacing the static scale");
+if (!css.includes('lk-center[overlay="off"]')) fail("center overlay must have an off opt-out");
+if (!css.includes("--lk-space-fluid-md")) fail("fluid space tokens must exist");
+if (!css.includes("--lk-space-md: var(--space-md, var(--lk-space-fluid-md))")) fail("the default space scale must be fluid unless the host sets --space-md");
 if (!css.includes("lk-columns[cols=\"3\"]")) fail("lk-columns must set an enumerated column count");
-if (/--lk-space-md:\s*clamp\(/.test(css)) fail("the default space scale must stay static");
+if (!css.includes('lk-switcher[at="xs"]')) fail("switcher must expose an enumerated threshold");
+if (!css.includes("min-inline-size: 0")) fail("scroll areas must be allowed to shrink");
+if (!css.includes("sibling-count()")) fail("switcher limit must use sibling-count where supported");
+if (!css.includes("animation-timeline: view()")) fail("reveal must use a view timeline");
+if (!css.includes("interpolate-size: allow-keywords")) fail("disclosure animation must use interpolate-size");
+if (!packageChangelog.includes("## 2.0.0")) fail("changelog must document 2.0.0");
+if (!packageChangelog.includes("### Breaking changes")) fail("changelog must label breaking changes");
 if (!css.includes("grid-template-columns: subgrid")) fail("subgrid opt-in must share parent columns");
 if (!css.includes("scroll-snap-type: x mandatory")) fail("snap carousels must declare a physical scroll-snap fallback");
 if (!css.includes("scroll-snap-type: inline mandatory")) fail("snap carousels must use logical scroll-snap where supported");

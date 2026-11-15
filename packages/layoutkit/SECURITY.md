@@ -27,7 +27,7 @@ and expected impact.
 Use a pinned version when installing:
 
 ```bash
-npm install layoutkit-css@1.5.0
+npm install layoutkit-css@2.0.0
 ```
 
 Inspect the package contents before use:
