@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page, type TestInfo } from "@playwright/test";
+import { expect, test, type APIRequestContext, type Page, type TestInfo } from "@playwright/test";
 
 const START = "/";
 
@@ -247,6 +247,21 @@ const audit = () => {
   } satisfies Audit;
 };
 
+async function externalStatus(request: APIRequestContext, url: string) {
+  let status = 0;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const response = await request.get(url, {
+      failOnStatusCode: false,
+      timeout: 20_000,
+      headers: { "user-agent": "Mozilla/5.0" },
+    });
+    status = response.status();
+    if (status < 500 && status !== 429) return status;
+    await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
+  }
+  return status;
+}
+
 async function scrollAudit(page: Page) {
   const problems: string[] = [];
   const height = await page.evaluate(() => document.documentElement.scrollHeight);
@@ -354,12 +369,7 @@ test.describe("site walk", () => {
     if (info.project.name === "desktop-light") {
       for (const href of hrefs) {
         const url = href.startsWith("http") ? href : new URL(href, "http://127.0.0.1:4173").href;
-        const response = await request.get(url, {
-          failOnStatusCode: false,
-          timeout: 20_000,
-          headers: { "user-agent": "Mozilla/5.0" },
-        });
-        const status = response.status();
+        const status = await externalStatus(request, url);
         const npmBotWall = status === 403 && url.startsWith("https://www.npmjs.com/");
         expect(npmBotWall ? 200 : status, url).toBeLessThan(400);
       }
@@ -483,12 +493,7 @@ test.describe("site walk", () => {
     }
 
     for (const href of hrefs) {
-      const response = await request.get(href, {
-        failOnStatusCode: false,
-        timeout: 20_000,
-        headers: { "user-agent": "Mozilla/5.0" },
-      });
-      const status = response.status();
+      const status = await externalStatus(request, href);
       const npmBotWall = status === 403 && href.startsWith("https://www.npmjs.com/");
       expect(npmBotWall ? 200 : status, href).toBeLessThan(400);
     }

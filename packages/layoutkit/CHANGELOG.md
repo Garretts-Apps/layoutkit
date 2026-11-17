@@ -3,6 +3,59 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## 2.2.0
+
+One default moves, and only when centered content overflows. The stylesheet
+is 85,031 bytes (13,626 bytes gzipped). `MIGRATION.md` has the restore rule.
+
+### Breaking changes
+
+- **Centered alignment is `safe`.** `lk-center`, the `center` attribute, `align="center"`, `justify="center"`, `place="center"`, and `place-items="center"` use `safe center` where that keyword exists. Content that fits stays centered. Content that does not fit aligns to the start, so the beginning is not clipped away. Browsers without `safe` keep plain `center`. A single-axis `horizontal` or `vertical` center only makes the centered axis safe. Paste this unlayered block after LayoutKit to restore plain centering:
+
+```css
+lk-center:not([horizontal]):not([vertical]):not([place]),
+lk-stack[center],
+lk-row[center] {
+  align-items: center;
+  justify-content: center;
+}
+lk-center[horizontal]:not([vertical]),
+lk-stack[align="center"],
+lk-row[align="center"],
+lk-spread[align="center"] { align-items: center; }
+lk-center[vertical]:not([horizontal]),
+lk-stack[justify="center"],
+lk-row[justify="center"] { justify-content: center; }
+lk-stack[place="center"],
+lk-center[place="center"],
+lk-row[place="center"],
+lk-spread[place="center"],
+lk-cluster[place="center"] {
+  justify-content: center;
+  align-items: center;
+}
+lk-grid[place="center"] { justify-items: center; align-items: center; }
+lk-grid[place-items="center"] { place-items: center; }
+```
+
+### Added
+
+- `reading` on `lk-row`, `lk-stack`, and `lk-grid`. `visual` sets `reading-flow` so tab and speech order follow the picture. `source` keeps DOM order and wins over the automatic value. A reversed row and a dense grid opt in on their own where `reading-flow` exists. As of November 2026 that is Chromium, not Firefox or Safari.
+- `spot="first"` or `spot="last"` on a child. The visual move is inside `@supports (reading-flow: flex-visual)`, so a browser that cannot fix the reading order does not reorder the picture either.
+- `stuck` with `sticky` on `lk-box`, `lk-stack`, `lk-row`, and `lk-sidebar`. Where scroll-state queries exist, a stuck bar draws a hairline on its children. The query cannot paint the sticky element itself. Without the feature, sticky is unchanged.
+- `mark="current"` on `lk-row` and `lk-scroll-area`. The current slide's contents get an outline where `scroll-state(snapped)` exists. Text stays at full opacity.
+- `cue` on a vertical `lk-scroll-area`. While more content sits below, the child fades at the end. The fade leaves when you reach the end. A horizontal area is unchanged.
+- `match="width"` on `lk-menu` and `lk-popover`. The panel is at least as wide as its anchor where `anchor-size()` exists. `anchor-size()` is in current Chrome, Firefox, and Safari.
+- `popover="hint"` on `lk-popover` anchors above the invoker where `position-area` exists. The rule does not set `display`. Open it with `popovertarget`. Add `interestfor` where interest invokers exist, for hover and focus. As of November 2026, `popover="hint"` is Chromium and Firefox, not Safari. An unknown hint value uses the `auto` popover state, so `popovertarget` still opens it.
+
+### Changed (visual behavior)
+
+Safe centering, above. `reverse` and dense grids do not move pixels. Where `reading-flow` exists they change tab and speech order to match the picture.
+
+`display: grid-lanes` stays out. Safari 26.4 ships it. Chrome and Firefox do not ship it unflagged. `reading-flow` is not in Safari, so a masonry attribute would reorder the picture in the browser that cannot correct the reading order.
+
+A toolbar-safe cover is still `--lk-cover-min`. Set `--lk-cover-min: calc(100dvh - var(--lk-toolbar, 0px))` on the host. There is no second full-height attribute.
+
 ## 2.1.0
 
 Additions. No tag, attribute, or default from 2.0.0 changes meaning.

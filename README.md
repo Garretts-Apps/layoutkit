@@ -1,7 +1,7 @@
 # LayoutKit
 
 LayoutKit is one CSS file of layout tags for semantic HTML. The file is
-80,010 bytes (12,795 bytes gzipped). There is no runtime JavaScript, no
+85,031 bytes (13,626 bytes gzipped). There is no runtime JavaScript, no
 dependency, and no build step to use it: link the stylesheet or import it once.
 
 It ships as `layoutkit-css` on npm:
@@ -9,6 +9,10 @@ It ships as `layoutkit-css` on npm:
 - npm: https://www.npmjs.com/package/layoutkit-css
 - Website: https://layoutkit.dev
 - GitHub: https://github.com/Garretts-Apps/layoutkit
+
+The registry’s latest release is 1.3.2, published 5 July 2026. The file in
+this repository is 2.2.0. A CDN URL for the package still serves 1.3.2 until
+2.2.0 is published.
 
 `lk-stack`, `lk-row`, `lk-grid`, and `lk-center` name the layout so you are not
 rewriting the same flex column, and so a later reader can see the intent
@@ -42,8 +46,9 @@ This package is the file.
 
 `--lk-base` and the OKLCH relatives derived from it do not paint anything until
 you use the variables. Named grid areas still belong in normal CSS. 2.0.0
-measures switcher, sidebar, and grid from their own size. 2.1.0 does not change
-those defaults. See `packages/layoutkit/MIGRATION.md`.
+measures switcher, sidebar, and grid from their own size. 2.2.0 keeps those
+defaults. Centered overflow uses `safe center` where that keyword exists.
+See `packages/layoutkit/MIGRATION.md`.
 
 ## Install
 
@@ -122,7 +127,7 @@ Common attributes include `gap`, `padding`, `align`, `justify`, `place`,
 `orientation`, `thickness`, `direction`, `max-h`, `ratio`, `radius`, `surface`,
 `border`, `side`, `container`, `subgrid`, `adapt`, `snap`, `slide`, `sticky`,
 `anchor`, `panel`, `scope`, `limit`, `overlay`, `look`, `pattern`, `blend`,
-`bands`, `lk-text`, and `lk-weight`.
+`bands`, `reading`, `stuck`, `mark`, `cue`, `match`, `spot`, `lk-text`, and `lk-weight`.
 
 `min` on `lk-grid` is auto-fit and overrides `responsive`. Empty tracks
 collapse, so items fill the row. `flow` on `lk-box` and `lk-card` uses the
@@ -135,11 +140,14 @@ Since 2.0.0, omitting `container` does not turn container queries off. Switcher,
 sidebar, and grid are query containers unless you set `container="off"`.
 Single-child centering, center overlay, a switcher limit of 4, fluid space, and
 horizontal scroll-snap are also defaults. `subgrid`, `snap` on a row, `sticky`,
-`anchor`, `panel`, `look`, `pattern`, `blend`, and `bands` stay off until set.
+`anchor`, `panel`, `look`, `pattern`, `blend`, `bands`, `reading`, `stuck`,
+`mark`, `cue`, `match`, and `spot` stay off until set. A reversed row and a
+dense grid set `reading-flow` on their own where that property exists.
 Container queries, `:has()`, subgrid, scroll snap, sticky positioning, scroll
-timelines, anchor positioning, `interpolate-size`, and `appearance: base-select`
-are wrapped in `@supports`. The last two are not in every current browser. See
-the docs browser-support section.
+timelines, anchor positioning, `reading-flow`, scroll-state queries,
+`interpolate-size`, and `appearance: base-select` are wrapped in `@supports`.
+The last four are not in every current browser. See the docs browser-support
+section.
 
 ## Frozen Convenience Helpers
 
@@ -293,10 +301,12 @@ property layout. `100dvh` then `100svh` then `100vh`. Dividers fall back from
 Container queries, `:has()`, subgrid, snap, and sticky are baseline in current
 major browsers and still guarded. Anchor positioning, scroll-driven animation,
 `interpolate-size` (disclosure height), and `appearance: base-select` are not
-universal. As of November 2026, `interpolate-size: allow-keywords` is Chromium
-only among stable engines, and `base-select` is Chromium plus Safari 27, not
-Firefox stable. Missing support skips the enhancement. The control or the
-disclosure still works.
+universal. As of November 2026, `reading-flow` and scroll-state queries are
+Chromium only. `popover="hint"` is Chromium and Firefox, not Safari.
+`interpolate-size: allow-keywords` is Chromium only among stable engines, and
+`base-select` is Chromium plus Safari 27, not Firefox stable. Missing support
+skips the enhancement. The control, the disclosure, and the source order still
+work.
 
 ## Security And Package Verification
 
@@ -311,7 +321,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@2.1.0
+npm install layoutkit-css@2.2.0
 ```
 
 ## Repository

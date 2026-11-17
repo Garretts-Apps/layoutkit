@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Docs — LayoutKit primitives, attributes, and 2.1 additions</title>
-  <meta name="description" content="LayoutKit 2.1.0 documentation: container-query switcher, sidebar, and grid, fluid spacing, snap scrolling, and opt-in frame, dock, and select. No runtime.">
+  <title>Docs — LayoutKit primitives, attributes, and 2.2 additions</title>
+  <meta name="description" content="LayoutKit 2.2.0 documentation: container-query layout, safe centering, reading order, and scroll-state sticky bars. No runtime.">
   <link rel="canonical" href="https://layoutkit.dev/docs">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="LayoutKit Docs">
-  <meta property="og:description" content="Reference for pure-CSS layout primitives. Version 2.0 measures switcher, sidebar, and grid from their container. Version 2.1 does not change those defaults.">
+  <meta property="og:description" content="Reference for pure-CSS layout primitives. Version 2.2 keeps the container defaults and adds reading order, stuck bars, and safe centering.">
   <meta property="og:url" content="https://layoutkit.dev/docs">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
   <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="LayoutKit Docs">
-  <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, the 2.0.0 defaults, and the 2.1.0 additions.">
+  <meta name="twitter:description" content="Primitives, attributes, accessibility, tokens, the 2.0.0 defaults, and the 2.2.0 reading-order and scroll-state additions.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
@@ -37,7 +37,7 @@
               <lk-row gap="2" align="center">
                 <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
                 <span class="brand">LayoutKit</span>
-                <span class="badge">2.1.0</span>
+                <span class="badge">2.2.0</span>
               </lk-row>
             </a>
             <lk-spacer></lk-spacer>
@@ -68,6 +68,7 @@
               <a class="navlink" href="#attributes">Attributes</a>
               <a class="navlink" href="#layouts">Live layouts</a>
               <a class="navlink" href="#additions">2.1 additions</a>
+              <a class="navlink" href="#reading-order">2.2 additions</a>
               <a class="navlink" href="#gallery">Gallery</a>
               <a class="navlink" href="#helpers">Helpers</a>
               <a class="navlink" href="#tokens">Tokens</a>
@@ -83,9 +84,9 @@
         <lk-stack gap="2xl">
           <section aria-labelledby="docs-heading">
             <lk-stack gap="md">
-              <p class="kicker">Reference · 2.1.0</p>
+              <p class="kicker">Reference · 2.2.0</p>
               <h1 id="docs-heading" class="title">LayoutKit docs</h1>
-              <p class="lede">A pure-CSS layout vocabulary, 80,010 bytes. <code>lk-*</code> tags make layout intent visible. Native HTML carries the meaning. 2.1.0 adds opt-in tags and does not change the 2.0 defaults. Types ship in <code>jsx.d.ts</code>.</p>
+              <p class="lede">A pure-CSS layout vocabulary, 85,031 bytes. <code>lk-*</code> tags make layout intent visible. Native HTML carries the meaning. 2.2.0 keeps the 2.0 defaults, and centered overflow lines up at the start where <code>safe</code> exists. Types ship in <code>jsx.d.ts</code>.</p>
               <p class="measure">Coming from 1.5? <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">MIGRATION.md</a> lists every default that changed, including the restore snippet. The path in the repo is <code>packages/layoutkit/MIGRATION.md</code>.</p>
             </lk-stack>
           </section>
@@ -93,10 +94,10 @@
           <section id="install" aria-labelledby="install-heading">
             <lk-stack gap="md">
               <h2 id="install-heading">Install and load CSS</h2>
-              <p class="measure muted">Load LayoutKit in the document head, or import it from the root of a framework. If the file does not load, the tags render as plain unknown elements and no script fills in. 2.1.0 is not on the public registry yet, so link a local copy of this build instead of a package CDN.</p>
+              <p class="measure muted">Load LayoutKit in the document head, or import it from the root of a framework. If the file does not load, the tags render as plain unknown elements and no script fills in. The public registry’s latest is 1.3.2, from 5 July 2026. This site is the 2.2.0 file. A package CDN would still serve 1.3.2.</p>
               <figure class="code">
                 <figcaption class="code-label">npm</figcaption>
-                <pre><code>npm install layoutkit-css@2.1.0</code></pre>
+                <pre><code>npm install layoutkit-css@2.2.0</code></pre>
               </figure>
               <figure class="code">
                 <figcaption class="code-label">import</figcaption>
@@ -114,7 +115,7 @@
               <lk-card surface padding="lg">
                 <lk-stack gap="sm">
                   <h2 id="scope-heading">Scope</h2>
-                  <p class="muted">Stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, frame, bleed, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, menu, dock, select, and columns. Switcher, sidebar, and grid query their own size. Subgrid, row snap, sticky regions, anchors, and the 2.1 tags stay opt-in.</p>
+                  <p class="muted">Stack, row, center, spread, grid, box, card, cluster, switcher, sidebar, cover, frame, bleed, spacer, divider, aspect ratio, scroll area, progress, popover, disclosure, menu, dock, select, and columns. Switcher, sidebar, and grid query their own size. Subgrid, row snap, sticky regions, anchors, the 2.1 tags, and the 2.2 attributes stay opt-in. A reversed row sets reading order on its own where <code>reading-flow</code> exists.</p>
                 </lk-stack>
               </lk-card>
               <lk-card surface padding="lg">
@@ -166,30 +167,30 @@
               <h2 id="primitives-heading">Primitives</h2>
               <div class="table-wrap" tabindex="0" role="region" aria-label="Layout primitives">
                 <table>
-                  <caption>Tags in layoutkit.css 2.1.0</caption>
+                  <caption>Tags in layoutkit.css 2.2.0</caption>
                   <thead>
                     <tr><th scope="col">Tag</th><th scope="col">Purpose</th><th scope="col">Common attributes</th></tr>
                   </thead>
                   <tbody>
-                    <tr><td><code>lk-stack</code></td><td>Vertical flow. One child centers unless <code>adapt="off"</code>. Children keep <code>min-inline-size: auto</code>.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt, sticky, bands</td></tr>
-                    <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> is a snap row that becomes a column below 32rem.</td><td>gap, padding, align, justify, place, fill, wrap, reverse, width, adapt, sticky, snap, slide, bands</td></tr>
-                    <tr><td><code>lk-center</code></td><td>Centers its content. Covers a positioned parent unless <code>overlay="off"</code>.</td><td>fill, full-height, inline, horizontal, vertical, place, width, overlay, square</td></tr>
-                    <tr><td><code>lk-box</code></td><td>Block wrapper. <code>pattern</code> and <code>blend</code> are opt-in.</td><td>padding, fill, width, flow, sticky, square, reveal, pattern, blend</td></tr>
+                    <tr><td><code>lk-stack</code></td><td>Vertical flow. One child centers unless <code>adapt="off"</code>. Children keep <code>min-inline-size: auto</code>.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt, sticky, stuck, reading, bands</td></tr>
+                    <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> is a snap row that becomes a column below 32rem. <code>reverse</code> flips the picture. Tab order follows it where <code>reading-flow</code> exists.</td><td>gap, padding, align, justify, place, fill, wrap, reverse, width, adapt, sticky, stuck, snap, slide, mark, reading, bands</td></tr>
+                    <tr><td><code>lk-center</code></td><td>Centers its content. Overflow uses <code>safe center</code> where that keyword exists. Covers a positioned parent unless <code>overlay="off"</code>.</td><td>fill, full-height, inline, horizontal, vertical, place, width, overlay, square</td></tr>
+                    <tr><td><code>lk-box</code></td><td>Block wrapper. <code>pattern</code> and <code>blend</code> are opt-in.</td><td>padding, fill, width, flow, sticky, stuck, square, reveal, pattern, blend</td></tr>
                     <tr><td><code>lk-card</code></td><td>Neutral padded block.</td><td>padding, radius, surface, border, width, flow, adapt, reveal</td></tr>
                     <tr><td><code>lk-spread</code></td><td>Space-between row. Accepts <code>width</code>.</td><td>align, padding, place, width</td></tr>
-                    <tr><td><code>lk-grid</code></td><td>Grid. Fixed <code>cols</code> stack from the grid’s own width, default 32rem.</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items, container, subgrid</td></tr>
+                    <tr><td><code>lk-grid</code></td><td>Grid. Fixed <code>cols</code> stack from the grid’s own width, default 32rem. Dense flow follows the picture for tab order where <code>reading-flow</code> exists.</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items, container, subgrid, reading</td></tr>
                     <tr><td><code>lk-cluster</code></td><td>Wrapping group.</td><td>gap, place</td></tr>
                     <tr><td><code>lk-switcher</code></td><td>Container row that stacks below 30rem. Default limit is 4.</td><td>gap, container, limit, at</td></tr>
-                    <tr><td><code>lk-sidebar</code></td><td>Side and content that wrap on the container.</td><td>gap, side, container, sticky, layout</td></tr>
+                    <tr><td><code>lk-sidebar</code></td><td>Side and content that wrap on the container.</td><td>gap, side, container, sticky, stuck, layout</td></tr>
                     <tr><td><code>lk-cover</code></td><td>Minimum-height column. Put <code>center</code> on the middle child.</td><td>gap, size</td></tr>
                     <tr><td><code>lk-spacer</code></td><td>Flexible or fixed space.</td><td>size</td></tr>
                     <tr><td><code>lk-divider</code></td><td>Visual rule. Default color follows <code>currentColor</code>.</td><td>orientation, thickness</td></tr>
                     <tr><td><code>lk-aspect-ratio</code></td><td>Aspect frame. Replaced children fill it.</td><td>ratio</td></tr>
-                    <tr><td><code>lk-scroll-area</code></td><td>Bounded scroller. Horizontal direction snaps unless <code>snap="off"</code>.</td><td>direction, max-h, gap, snap, slide</td></tr>
+                    <tr><td><code>lk-scroll-area</code></td><td>Bounded scroller. Horizontal direction snaps unless <code>snap="off"</code>.</td><td>direction, max-h, gap, snap, slide, mark, cue</td></tr>
                     <tr><td><code>lk-progress</code></td><td>Scroll progress. Static when timelines are missing. A bare element tracks the viewport.</td><td>scope</td></tr>
-                    <tr><td><code>lk-popover</code></td><td>Top-layer panel. Does not set <code>display</code>.</td><td>anchor</td></tr>
+                    <tr><td><code>lk-popover</code></td><td>Top-layer panel. Does not set <code>display</code>. <code>popover="hint"</code> is the light tooltip.</td><td>anchor, match, popover</td></tr>
                     <tr><td><code>lk-disclosure</code></td><td>Layout for native <code>details</code> and <code>summary</code>. The same <code>name</code> opens one at a time.</td><td>panel, anchor, side, animate, look</td></tr>
-                    <tr><td><code>lk-menu</code></td><td>Invoker plus <code>lk-popover</code>. The invoker is the first child.</td><td>anchor, side</td></tr>
+                    <tr><td><code>lk-menu</code></td><td>Invoker plus <code>lk-popover</code>. The invoker is the first child.</td><td>anchor, side, match</td></tr>
                     <tr><td><code>lk-columns</code></td><td>Multi-column text. Children avoid splitting.</td><td>cols, gap</td></tr>
                     <tr><td><code>lk-frame</code></td><td>Full-width grid. The center track is the measure. Side tracks are the gutter.</td><td>width, padding</td></tr>
                     <tr><td><code>lk-bleed</code></td><td>Spans a frame. Subgrid returns its children to the column where subgrid exists.</td><td>padding</td></tr>
@@ -212,11 +213,11 @@
                 </lk-card>
                 <lk-card surface padding="lg">
                   <h3>Alignment</h3>
-                  <p class="muted"><code>align</code>, <code>justify</code>, <code>place</code>, <code>place-items</code>, and <code>center</code>. <code>place</code> and <code>justify</code> still win over single-child centering.</p>
+                  <p class="muted"><code>align</code>, <code>justify</code>, <code>place</code>, <code>place-items</code>, and <code>center</code>. A center value uses <code>safe center</code> where that keyword exists, so overflow lines up at the start. <code>place</code> and <code>justify</code> still win over single-child centering.</p>
                 </lk-card>
                 <lk-card surface padding="lg">
                   <h3>Sizing</h3>
-                  <p class="muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. A boolean <code>full-height</code> and a plain cover use <code>100dvh</code>, then <code>100svh</code>, then <code>100vh</code>. <code>full-height="container"</code> uses the query container.</p>
+                  <p class="muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. A boolean <code>full-height</code> and a plain cover use <code>100dvh</code>, then <code>100svh</code>, then <code>100vh</code>. <code>full-height="container"</code> uses the query container. A toolbar gap is <code>--lk-cover-min: calc(100dvh - var(--lk-toolbar, 0px))</code> on the host. There is no second height attribute.</p>
                 </lk-card>
                 <lk-card surface padding="lg">
                   <h3>Grid tracks</h3>
@@ -495,6 +496,90 @@
             </lk-stack>
           </section>
 
+          <section id="reading-order" aria-labelledby="reading-order-heading">
+            <lk-stack gap="xl">
+              <lk-stack gap="sm">
+                <h2 id="reading-order-heading">2.2 additions</h2>
+                <p class="measure muted">These replace a listener or a DOM shuffle. Each one is inside <code>@supports</code>. A phone can use the click, scroll, and wrap paths without the newest engine.</p>
+              </lk-stack>
+              <lk-stack gap="md">
+                <h3>Reading order</h3>
+                <p class="measure muted">The reversed row shows Three, then Two, then One. Where <code>reading-flow</code> exists, tab order follows that picture. <code>spot="first"</code> moves Save to the start only in those browsers. Firefox and Safari leave Save last, which is still the source order, and both buttons still work.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-stack gap="sm">
+                      <lk-row id="demo-reverse" gap="sm" wrap reverse>
+                        <span class="chip">One</span>
+                        <span class="chip">Two</span>
+                        <span class="chip">Three</span>
+                      </lk-row>
+                      <lk-row id="demo-spot" gap="sm" wrap reading="visual">
+                        <button type="button">Not now</button>
+                        <button type="button" spot="first">Save</button>
+                      </lk-row>
+                    </lk-stack>
+                  </lk-box>
+                </div>
+              </lk-stack>
+              <lk-stack gap="md">
+                <h3>Stuck title</h3>
+                <p class="measure muted">Scroll this region. The page sets <code>--lk-sticky-top</code> so the real header clears the masthead, and this demo sets it back to 0. Where scroll-state queries exist, the title gets a hairline once it sticks. The query cannot paint the sticky element, so the line is on its child. Other browsers keep a plain sticky title.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-scroll-area id="demo-stuck" max-h="sm" tabindex="0" aria-label="Scroll the section" style="--lk-sticky-top: 0px">
+                      <lk-box sticky stuck>
+                        <p class="demo-cell">Section title</p>
+                      </lk-box>
+                      <lk-stack gap="sm">
+                        <p>First note sits under the title.</p>
+                        <p>Second note gives the region something to scroll.</p>
+                        <p>Third note keeps the scroller honest.</p>
+                        <p>Fourth note is the end of the section.</p>
+                        <p>Fifth note is here so the region actually scrolls.</p>
+                        <p>Sixth note clears the title.</p>
+                      </lk-stack>
+                    </lk-scroll-area>
+                  </lk-box>
+                </div>
+              </lk-stack>
+              <lk-stack gap="md">
+                <h3>Current slide and a hint</h3>
+                <p class="measure muted"><code>mark="current"</code> outlines the snapped slide’s contents where scroll-state queries exist. The hint opens on click through <code>popovertarget</code>, including on a phone. <code>interestfor</code> adds hover and focus where interest invokers exist. <code>match="width"</code> makes the panel at least as wide as the button where <code>anchor-size()</code> exists.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-stack gap="md">
+                      <lk-scroll-area id="demo-current" direction="horizontal" slide="peek" mark="current" tabindex="0" aria-label="Scroll the highlights" gap="sm">
+                        <article><div class="demo-cell"><h3>One</h3><p>First highlight</p></div></article>
+                        <article><div class="demo-cell"><h3>Two</h3><p>Second highlight</p></div></article>
+                        <article><div class="demo-cell"><h3>Three</h3><p>Third highlight</p></div></article>
+                      </lk-scroll-area>
+                      <lk-menu id="demo-hint" anchor match="width">
+                        <button type="button" popovertarget="save-hint" interestfor="save-hint">Save draft</button>
+                        <lk-popover id="save-hint" popover="hint">Writes the draft on this device.</lk-popover>
+                      </lk-menu>
+                    </lk-stack>
+                  </lk-box>
+                </div>
+              </lk-stack>
+              <lk-stack gap="md">
+                <h3>More below</h3>
+                <p class="measure muted"><code>cue</code> fades the end of a vertical scroller while more content sits below, where scroll-state queries exist. At the end the fade goes away. A horizontal scroller is unchanged.</p>
+                <div class="demo">
+                  <lk-box padding="3">
+                    <lk-scroll-area id="demo-cue" cue max-h="sm" direction="vertical" tabindex="0" aria-label="Scroll the notes">
+                      <lk-stack gap="sm">
+                        <p>First note.</p>
+                        <p>Second note.</p>
+                        <p>Third note.</p>
+                        <p>Fourth note is the end.</p>
+                      </lk-stack>
+                    </lk-scroll-area>
+                  </lk-box>
+                </div>
+              </lk-stack>
+            </lk-stack>
+          </section>
+
           <section id="gallery" aria-labelledby="gallery-heading">
             <lk-stack gap="md">
               <h2 id="gallery-heading">Gallery</h2>
@@ -521,7 +606,7 @@
           <section id="helpers" aria-labelledby="helpers-heading">
             <lk-stack gap="sm">
               <h2 id="helpers-heading">Frozen helpers</h2>
-              <p class="measure muted"><code>lk-card</code>, <code>lk-text</code>, and <code>lk-weight</code> stay small on purpose. 2.1.0 adds opt-in <code>look="panel"</code>, <code>pattern</code>, <code>blend</code>, <code>bands</code>, and <code>lk-dock</code>. They do nothing until you set them.</p>
+              <p class="measure muted"><code>lk-card</code>, <code>lk-text</code>, and <code>lk-weight</code> stay small on purpose. 2.1.0 adds opt-in <code>look="panel"</code>, <code>pattern</code>, <code>blend</code>, <code>bands</code>, and <code>lk-dock</code>. 2.2.0 adds <code>reading</code>, <code>stuck</code>, <code>mark</code>, <code>cue</code>, and <code>match</code>. They do nothing until you set them.</p>
             </lk-stack>
           </section>
 
@@ -562,7 +647,7 @@
                 <li>Do not put click handlers on <code>lk-*</code> elements. Use <code>button</code> or <code>a</code>.</li>
                 <li>Do not use <code>lk-*</code> elements as headings, lists, tables, forms, landmarks, or controls.</li>
                 <li>If a wrapper has no semantic purpose, it usually needs no ARIA. Do not add a role to make it seem semantic.</li>
-                <li>Focus order follows source order. The switcher does not flip <code>flex-direction</code> when it stacks.</li>
+                <li>Focus order follows source order, including in Firefox and Safari. Where <code>reading-flow</code> exists, a reversed row, a dense grid, and <code>spot</code> follow the picture instead. <code>reading="source"</code> opts back out. The switcher does not flip <code>flex-direction</code> when it stacks.</li>
                 <li><code>lk-scroll-area</code> does not create a tab stop. Set <code>tabindex="0"</code> and a name when the region itself must scroll from the keyboard. Without <code>direction</code>, both axes scroll. <code>direction="vertical"</code> clips inline overflow.</li>
                 <li><code>lk-menu</code> and <code>lk-disclosure</code> do not invent buttons. The invoker is the first child and must be a <code>button</code>, link, or <code>summary</code>.</li>
                 <li><code>lk-progress</code> is decorative. It does not replace a status message.</li>
@@ -620,7 +705,7 @@
             <lk-stack gap="sm">
               <h2 id="browser-heading">Browser support</h2>
               <p class="measure muted">Current Chrome, Firefox, and Safari cover flex, grid, cascade layers, logical properties, <code>aspect-ratio</code>, and <code>min()</code>. Viewport units step through <code>100dvh</code>, <code>100svh</code>, and <code>100vh</code>. Dividers use <code>color-mix()</code> and fall back to <code>#e5e7eb</code>. A card border uses <code>color-mix()</code> and does not have that second color.</p>
-              <p class="measure muted">Container queries, <code>:has()</code>, subgrid, scroll snap, and sticky positioning are in current major browsers and still inside <code>@supports</code>. Anchor positioning and scroll timelines are not universal. As of November 2026, <code>interpolate-size: allow-keywords</code> is Chromium only among stable engines, and <code>appearance: base-select</code> is Chromium and Safari 27, not Firefox stable. Where the test fails, a disclosure still opens and a select stays the operating-system control.</p>
+              <p class="measure muted">Container queries, <code>:has()</code>, subgrid, scroll snap, and sticky positioning are in current major browsers and still inside <code>@supports</code>. Anchor positioning, <code>anchor-size()</code>, and scroll timelines are not one story. <code>anchor-size()</code> is in current Chrome, Firefox, and Safari. As of November 2026, <code>reading-flow</code> and scroll-state queries are Chromium only. <code>popover="hint"</code> is Chromium and Firefox, not Safari. <code>interpolate-size: allow-keywords</code> is Chromium only among stable engines, and <code>appearance: base-select</code> is Chromium and Safari 27, not Firefox stable. Where the test fails, a disclosure still opens, a select stays the operating-system control, a reversed row keeps source tab order, and a sticky bar stays plain.</p>
             </lk-stack>
           </section>
 
@@ -648,7 +733,7 @@ tar -tzf layoutkit-css-*.tgz</code></pre>
   <footer class="site-footer">
     <lk-box width="3xl" padding="8">
       <lk-stack gap="md">
-        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
+        <p>LayoutKit 2.2.0. Pure-CSS layout primitives. MIT.</p>
         <lk-cluster gap="md">
           <a href="/install">Install</a>
           <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>

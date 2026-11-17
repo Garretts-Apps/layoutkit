@@ -1,7 +1,7 @@
 # layoutkit-css
 
-LayoutKit is one CSS file of layout tags for semantic HTML. 2.1.0 is 80,010
-bytes (12,795 bytes gzipped). There is no runtime JavaScript and no build step
+LayoutKit is one CSS file of layout tags for semantic HTML. 2.2.0 is 85,031
+bytes (13,626 bytes gzipped). There is no runtime JavaScript and no build step
 to use the file.
 
 `lk-stack`, `lk-row`, `lk-grid`, and `lk-center` name the layout so you are not
@@ -14,7 +14,7 @@ Use LayoutKit inside native semantic HTML.
 
 ## What LayoutKit Is
 
-- One CSS file. 80,010 bytes, 12,795 bytes gzipped, in 2.1.0.
+- One CSS file. 85,031 bytes, 13,626 bytes gzipped, in 2.2.0.
 - No runtime JavaScript.
 - No npm dependencies.
 - No custom element registration. The tags are unknown elements with a stylesheet.
@@ -41,7 +41,8 @@ default since 2.0.0.
 
 `--lk-base` does not restyle the page. The OKLCH relatives exist for you to
 reference. Named grid areas still belong in normal CSS. See `MIGRATION.md`.
-2.1.0 adds tags. It does not change 2.0.0 defaults.
+2.1.0 adds tags and does not change 2.0.0 defaults. 2.2.0 changes centered
+overflow to `safe center` where that keyword exists. See `MIGRATION.md`.
 
 ## Install
 
@@ -166,7 +167,8 @@ Common attributes include:
 - Grid: `cols`, `rows`, `responsive`, `flow`, `container`, `subgrid`.
 - Direction and variants: `wrap`, `reverse`, `side`, `orientation`,
   `thickness`, `ratio`, `radius`, `surface`, `border`, `container`, `sticky`,
-  `adapt`, `snap`, `slide`, `anchor`, `panel`, `scope`.
+  `stuck`, `adapt`, `snap`, `slide`, `mark`, `cue`, `anchor`, `match`, `panel`,
+  `scope`, `reading`. `spot` is `first` or `last` on a child.
 - Namespaced text helpers: `lk-text`, `lk-weight`.
 
 Most finite scales are enumerated so markup stays readable. Free-form values use
@@ -185,7 +187,10 @@ clamp a track that would otherwise be wider than the container.
 `lk-grid`, `flow` is `row`, `col`, or `dense`.
 
 `full-height` and the `lk-cover` minimum use `100dvh` where supported, then
-`100svh`, then `100vh`. `--lk-cover-min` still replaces that default. The
+`100svh`, then `100vh`. `--lk-cover-min` still replaces that default. A host
+can set `--lk-cover-min: calc(100dvh - var(--lk-toolbar, 0px))` to clear a
+toolbar. There is no second full-height attribute. Centered alignment uses
+`safe center` where that keyword exists. The
 divider defaults to a `currentColor` mix, with `#e5e7eb` where `color-mix()` is
 unavailable. Replaced children inside `lk-aspect-ratio` (`img`, `video`,
 `iframe`, `canvas`, `svg`) fill the frame with `object-fit: cover`.
@@ -475,7 +480,7 @@ normally. If your app uses cascade layers, place `layoutkit` where you want it:
 - If a LayoutKit wrapper has no semantic purpose, it usually does not need ARIA.
 - Do not add ARIA roles just to make layout wrappers seem semantic.
 - Prefer native HTML first.
-- LayoutKit should not interfere with focus order.
+- Focus order follows source order unless `reading-flow` exists. A reversed row, a dense grid, and `spot` then follow the picture. `reading="source"` opts out. Firefox and Safari keep source order.
 - Avoid hiding overflow in ways that trap keyboard users.
 - Scroll containers should remain keyboard and screen-reader usable.
 - `lk-scroll-area` only applies overflow and max-size behavior; the content
@@ -532,12 +537,16 @@ property, `aspect-ratio`, and `min()` layout. Viewport units step through
 
 Container queries, `:has()`, subgrid, scroll snap, and `position: sticky` are
 in current major browsers and still inside `@supports`. Anchor positioning
-(`position-area`, earlier name `inset-area`) and `animation-timeline` are not
-universal. `interpolate-size: allow-keywords` (disclosure height) is Chromium
-only among stable engines as of November 2026. `appearance: base-select` is
-Chromium and Safari 27, not Firefox stable. Where the test fails, the earlier
-behavior remains: a closed popover stays hidden, a disclosure still opens, a
-select stays the operating-system control.
+(`position-area`, earlier name `inset-area`) and `anchor-size()` are in current
+Chrome, Firefox, and Safari. `animation-timeline` is not universal.
+`reading-flow` and scroll-state queries are Chromium only as of November 2026.
+`popover="hint"` is Chromium and Firefox, not Safari. An unknown hint value
+uses the `auto` popover state, so `popovertarget` still opens the panel.
+`interpolate-size: allow-keywords` (disclosure height) is Chromium only among
+stable engines. `appearance: base-select` is Chromium and Safari 27, not
+Firefox stable. Where the test fails, the earlier behavior remains: a closed
+popover stays hidden, a disclosure still opens, a select stays the
+operating-system control, and tab order follows the source.
 
 ## Security And Package Verification
 
@@ -552,7 +561,7 @@ tar -tzf layoutkit-css-*.tgz
 Use pinned installs when you need reproducible builds:
 
 ```bash
-npm install layoutkit-css@2.1.0
+npm install layoutkit-css@2.2.0
 ```
 
 Review third-party packages before use.
@@ -560,7 +569,9 @@ Review third-party packages before use.
 ## Versioning And Stability
 
 The package follows semver. 2.0.0 changes several defaults. 2.1.0 does not.
-`MIGRATION.md` lists the 2.0.0 changes and the CSS that restores the 1.5.0 look.
+2.2.0 changes centered overflow to `safe center` where that keyword exists.
+`MIGRATION.md` lists the 2.0.0 changes, the 2.2.0 restore rule, and the CSS
+that restores the 1.5.0 look.
 
 ## Contributing
 

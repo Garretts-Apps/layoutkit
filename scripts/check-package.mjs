@@ -146,6 +146,16 @@ if (!css.includes(":has(> :only-child)")) fail("solo adaptation must use :has()"
 if (!css.includes("anchor-scope: --lk-menu")) fail("menus must scope their anchor name");
 if (!css.includes("position-area: block-end span-inline-end")) fail("anchored panels must declare position-area");
 if (!css.includes("justify-self: start")) fail("anchored panels must align to the invoker's start edge");
+if (!css.includes("align-items: safe center")) fail("centering must use safe alignment where the keyword exists");
+if (!css.includes("reading-flow: flex-visual")) fail("reversed rows must follow visual reading order where reading-flow exists");
+if (!css.includes("reading-flow: grid-rows")) fail("dense grids must follow visual reading order where reading-flow exists");
+if (!css.includes('lk-row[reading="source"]')) fail("reading=source must opt back to source order");
+if (!css.includes('order: -1')) fail("spot=first must set order only inside the reading-flow test");
+if (!css.includes("container-type: scroll-state")) fail("stuck and snapped state must use a scroll-state container");
+if (!css.includes("scroll-state(stuck: block-start)")) fail("stuck styling must query the block-start edge");
+if (!css.includes("scroll-state(snapped: inline)")) fail("the current slide must query snapped inline");
+if (!css.includes("anchor-size(width)")) fail("match=width must use anchor-size");
+if (!css.includes('lk-popover[popover="hint"]')) fail("hint popovers must be positioned without setting display");
 if (css.includes("lk-popover {") && /lk-popover \{\s*[^}]*\bdisplay\s*:/.test(css)) fail("lk-popover must not set display; that would override the UA popover hide");
 
 const cssAttrs = new Map();

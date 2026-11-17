@@ -1,6 +1,6 @@
 {
   "name": "layoutkit-css",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "One CSS file of layout primitives for semantic HTML. No runtime JavaScript.",
   "license": "MIT",
   "homepage": "https://layoutkit.dev",

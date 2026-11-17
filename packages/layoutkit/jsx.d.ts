@@ -63,6 +63,11 @@ interface LayoutKitGlobalAttributes {
   "aria-hidden"?: boolean | "true" | "false";
   "lk-text"?: LayoutKitText;
   "lk-weight"?: LayoutKitWeight;
+  /**
+   * Moves this child first or last, and only where reading-flow exists.
+   * Other browsers keep source order.
+   */
+  spot?: "first" | "last";
   [attribute: `aria-${string}`]: unknown;
   [attribute: `data-${string}`]: unknown;
 }
@@ -87,6 +92,10 @@ declare global {
         /** One child centers unless this is off. scroll is a scroller that becomes a list under 32rem. */
         adapt?: "solo" | "off" | "scroll";
         sticky?: boolean | "";
+        /** Hairline on the children once the sticky box is stuck. Needs scroll-state queries. */
+        stuck?: boolean | "";
+        /** visual follows the picture where reading-flow exists. source keeps DOM order. */
+        reading?: "visual" | "source";
         reveal?: boolean | "";
         layout?: "compact";
         /** Paint each child from --lk-base and sibling-index(), where that function exists. */
@@ -114,6 +123,12 @@ declare global {
         slide?: "full" | "half" | "third" | "peek";
         /** Paint each child from --lk-base and sibling-index(), where that function exists. */
         bands?: boolean | "";
+        /** Hairline on the children once the sticky row is stuck. Needs scroll-state queries. */
+        stuck?: boolean | "";
+        /** Outlines the current slide's contents where scroll-state queries exist. */
+        mark?: "current";
+        /** visual follows the picture where reading-flow exists. source keeps DOM order. */
+        reading?: "visual" | "source";
       };
       "lk-center": LayoutKitGlobalAttributes & {
         place?: LayoutKitPlace;
@@ -134,6 +149,8 @@ declare global {
         width?: LayoutKitWidth;
         flow?: LayoutKitFlow;
         sticky?: boolean | "";
+        /** Hairline on the children once the sticky box is stuck. Needs scroll-state queries. */
+        stuck?: boolean | "";
         square?: LayoutKitSquare;
         reveal?: boolean | "";
         layout?: "compact";
@@ -178,6 +195,8 @@ declare global {
         container?: boolean | "" | "off" | "sm" | "md" | "lg" | "xl";
         /** Share the parent grid's tracks. columns is the bare-attribute default. */
         subgrid?: boolean | "" | "columns" | "rows" | "both";
+        /** visual follows dense packing where reading-flow exists. source keeps DOM order. */
+        reading?: "visual" | "source";
       };
       "lk-cluster": LayoutKitGlobalAttributes & {
         gap?: LayoutKitSpace;
@@ -200,6 +219,8 @@ declare global {
         layout?: "compact";
         /** Stick the side panel within the viewport while the content scrolls. */
         sticky?: boolean | "";
+        /** Hairline on the side panel's children once that panel is stuck. */
+        stuck?: boolean | "";
       };
       "lk-cover": LayoutKitGlobalAttributes & {
         gap?: LayoutKitSpace;
@@ -227,6 +248,10 @@ declare global {
         snap?: boolean | "" | "off" | "mandatory" | "proximity" | "center";
         /** Slide size along the snap axis. */
         slide?: "full" | "half" | "third" | "peek";
+        /** Outlines the current slide's contents where scroll-state queries exist. */
+        mark?: "current";
+        /** Fades the end of a vertical scroller while more content sits below. */
+        cue?: boolean | "";
       };
       /** Page or nearest-scroller progress. Static bar when scroll timelines are unsupported. */
       "lk-progress": LayoutKitGlobalAttributes & {
@@ -238,6 +263,10 @@ declare global {
        */
       "lk-popover": LayoutKitGlobalAttributes & {
         anchor?: boolean | "";
+        /** At least as wide as the anchor, where anchor-size() exists. */
+        match?: "width";
+        /** Native popover state. hint is the light tooltip. The element does not set display. */
+        popover?: "auto" | "manual" | "hint" | "";
       };
       /** Native details/summary. panel="overlay" stacks the panel; anchor tethers it where supported. */
       "lk-disclosure": LayoutKitGlobalAttributes & {
@@ -253,6 +282,8 @@ declare global {
       "lk-menu": LayoutKitGlobalAttributes & {
         anchor?: boolean | "";
         side?: "end";
+        /** The panel is at least as wide as the invoker, where anchor-size() exists. */
+        match?: "width";
       };
       /** Multi-column text flow. Direct children avoid breaking across columns. */
       "lk-columns": LayoutKitGlobalAttributes & {
