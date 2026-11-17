@@ -246,6 +246,60 @@ rule("lk-center[inline]", "display: inline-flex;");
 rule("lk-center[horizontal]:not([vertical])", "justify-content: flex-start;");
 rule("lk-center[vertical]:not([horizontal])", "align-items: stretch;");
 
+section("Safe centering — overflow falls back to start, so the beginning stays reachable");
+// Plain `center` stays in the rules above. `safe` is an extra declaration, so a
+// browser that does not understand it keeps the earlier value. A centered item
+// that is wider or taller than its container aligns to the start instead of
+// overflowing both sides.
+const SAFE = "@supports (align-items: safe center) and (justify-content: safe center)";
+lines(`
+${SAFE} {
+  lk-center:not([horizontal]):not([vertical]):not([place]),
+  lk-stack[center],
+  lk-row[center] {
+    align-items: safe center;
+    justify-content: safe center;
+  }
+  lk-center[horizontal]:not([vertical]) {
+    align-items: safe center;
+  }
+  lk-center[vertical]:not([horizontal]) {
+    justify-content: safe center;
+  }
+  lk-stack[align="center"],
+  lk-row[align="center"],
+  lk-spread[align="center"] {
+    align-items: safe center;
+  }
+  lk-stack[justify="center"],
+  lk-row[justify="center"] {
+    justify-content: safe center;
+  }
+  lk-stack[place="center"],
+  lk-center[place="center"] {
+    justify-content: safe center;
+    align-items: safe center;
+  }
+  lk-row[place="center"],
+  lk-spread[place="center"],
+  lk-cluster[place="center"] {
+    justify-content: safe center;
+    align-items: safe center;
+  }
+}
+@supports (justify-items: safe center) and (align-items: safe center) {
+  lk-grid[place="center"] {
+    justify-items: safe center;
+    align-items: safe center;
+  }
+}
+@supports (place-items: safe center) {
+  lk-grid[place-items="center"] {
+    place-items: safe center;
+  }
+}
+`);
+
 section("Grid columns / rows / flow / placement");
 for (let n = 1; n <= 12; n++) rule(`lk-grid[cols="${n}"]`, `grid-template-columns: repeat(${n}, minmax(0, 1fr));`);
 for (let n = 1; n <= 12; n++) rule(`lk-grid[rows="${n}"]`, `grid-template-rows: repeat(${n}, minmax(0, 1fr));`);
@@ -1057,6 +1111,135 @@ lines(`
   lk-row[bands] > * {
     background-color: oklch(from var(--lk-base, mediumseagreen) 0.94 0.035 calc(h + sibling-index() * 18));
     color: oklch(from var(--lk-base, mediumseagreen) 0.28 0.04 h);
+  }
+}
+`);
+
+section("Reading order — visual reorder follows the picture only where reading-flow exists");
+// `reverse` and dense packing already change the picture. `spot` is allowed to
+// change it only inside this test, so Firefox and Safari keep source order.
+// `reading="source"` wins over the automatic value.
+lines(`
+@supports (reading-flow: flex-visual) {
+  lk-row[reverse],
+  lk-row[reading="visual"],
+  lk-stack[reading="visual"],
+  lk-row:has(> [spot]),
+  lk-stack:has(> [spot]) {
+    reading-flow: flex-visual;
+  }
+  lk-row[reading="source"],
+  lk-stack[reading="source"] {
+    reading-flow: source-order;
+  }
+  lk-row > [spot="first"],
+  lk-stack > [spot="first"],
+  lk-grid > [spot="first"] {
+    order: -1;
+  }
+  lk-row > [spot="last"],
+  lk-stack > [spot="last"],
+  lk-grid > [spot="last"] {
+    order: 1;
+  }
+}
+@supports (reading-flow: grid-rows) {
+  lk-grid[flow="dense"],
+  lk-grid[reading="visual"],
+  lk-grid:has(> [spot]) {
+    reading-flow: grid-rows;
+  }
+  lk-grid[reading="source"] {
+    reading-flow: source-order;
+  }
+}
+`);
+
+section("Scroll state — stuck bars and the current slide, without a listener");
+// A scroll-state query cannot style the container itself, so the hairline and
+// the current-slide outline land on a child. Without the feature, sticky and
+// snap keep the 2.1 look.
+lines(`
+@supports (container-type: scroll-state) {
+  lk-box[stuck][sticky],
+  lk-stack[stuck][sticky],
+  lk-row[stuck][sticky] {
+    container-type: scroll-state;
+    container-name: lk-stuck;
+  }
+  lk-sidebar[stuck][sticky]:not([side="end"]) > :first-child,
+  lk-sidebar[stuck][sticky][side="end"] > :last-child {
+    container-type: scroll-state;
+    container-name: lk-stuck;
+  }
+  lk-row[mark="current"] > *,
+  lk-scroll-area[mark="current"] > * {
+    container-type: scroll-state;
+    container-name: lk-slide;
+  }
+  lk-row[mark="current"] > * > *,
+  lk-scroll-area[mark="current"] > * > * {
+    outline: 1px solid transparent;
+    outline-offset: 2px;
+  }
+  lk-scroll-area[cue] {
+    container-type: scroll-state;
+    container-name: lk-scroll;
+  }
+}
+@supports (container-type: scroll-state) {
+  @container lk-stuck scroll-state(stuck: block-start) {
+    lk-box[stuck][sticky] > *,
+    lk-stack[stuck][sticky] > *,
+    lk-row[stuck][sticky] > *,
+    lk-sidebar[stuck][sticky] > * > * {
+      box-shadow: 0 1px 0 var(--lk-divider-color, color-mix(in srgb, currentColor 28%, transparent));
+    }
+  }
+  @container lk-slide scroll-state(snapped: inline) {
+    lk-row[mark="current"] > * > *,
+    lk-scroll-area[mark="current"]:not([direction="vertical"]) > * > * {
+      outline-color: color-mix(in srgb, currentColor 55%, transparent);
+    }
+  }
+  @container lk-slide scroll-state(snapped: block) {
+    lk-scroll-area[direction="vertical"][mark="current"] > * > * {
+      outline-color: color-mix(in srgb, currentColor 55%, transparent);
+    }
+  }
+  @container lk-scroll scroll-state(scrollable: block-end) {
+    lk-scroll-area[cue]:not([direction="horizontal"]) > * {
+      mask-image: linear-gradient(to bottom, #000 calc(100% - 1.75rem), transparent);
+    }
+  }
+}
+`);
+
+section("Anchor size — a panel can match its invoker. Hint popovers stay closed until opened");
+lines(`
+@supports (min-inline-size: anchor-size(width)) {
+  lk-menu[match="width"] > lk-popover,
+  lk-popover[match="width"] {
+    min-inline-size: anchor-size(width);
+  }
+}
+@supports (position-area: block-start) {
+  lk-menu[anchor] > lk-popover[popover="hint"] {
+    position-anchor: --lk-menu;
+    margin: 0;
+    inset: unset;
+    position-area: block-start span-inline-end;
+    justify-self: start;
+    position-try-fallbacks: flip-block;
+    padding: var(--lk-space-sm);
+  }
+  lk-popover[anchor][popover="hint"] {
+    margin: 0;
+    inset: unset;
+    position-area: block-start span-inline-end;
+    justify-self: start;
+    position-try-fallbacks: flip-block;
+    padding: var(--lk-space-sm);
   }
 }
 `);

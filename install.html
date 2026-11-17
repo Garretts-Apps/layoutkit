@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Install LayoutKit — the 2.1.0 stylesheet</title>
-  <meta name="description" content="Install LayoutKit 2.1.0 from the repository stylesheet or npm. One file, 80,010 bytes, no runtime. The 2.0 defaults are unchanged.">
+  <title>Install LayoutKit — the 2.2.0 stylesheet</title>
+  <meta name="description" content="Install LayoutKit 2.2.0 from the repository stylesheet. One file, 85,031 bytes, no runtime. npm latest is still 1.3.2.">
   <link rel="canonical" href="https://layoutkit.dev/install">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="Install LayoutKit">
-  <meta property="og:description" content="One CSS file for pure-CSS layout primitives. Load the 2.1.0 stylesheet from this repo until the release is on npm.">
+  <meta property="og:description" content="One CSS file for pure-CSS layout primitives. The site serves the 2.2.0 stylesheet. npm latest is 1.3.2.">
   <meta property="og:url" content="https://layoutkit.dev/install">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
   <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Install LayoutKit">
-  <meta name="twitter:description" content="One CSS file for pure-CSS layout primitives. Load the 2.1.0 stylesheet from this repo until the release is on npm.">
+  <meta name="twitter:description" content="One CSS file for pure-CSS layout primitives. The site serves the 2.2.0 stylesheet. npm latest is 1.3.2.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
@@ -37,7 +37,7 @@
               <lk-row gap="2" align="center">
                 <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
                 <span class="brand">LayoutKit</span>
-                <span class="badge">2.1.0</span>
+                <span class="badge">2.2.0</span>
               </lk-row>
             </a>
             <lk-spacer></lk-spacer>
@@ -72,7 +72,7 @@
         <lk-stack gap="2xl">
           <section aria-labelledby="install-heading">
             <lk-stack gap="md">
-              <p class="kicker">One stylesheet · 2.1.0</p>
+              <p class="kicker">One stylesheet · 2.2.0</p>
               <h1 id="install-heading" class="title">Install LayoutKit</h1>
               <p class="lede">Load one CSS file early, when it controls the first paint. If it does not load, nothing in JavaScript rebuilds the layout. A missing CSS feature is different: <code>@supports</code> skips that feature.</p>
             </lk-stack>
@@ -84,7 +84,7 @@
               <p class="measure muted">Pin the version. Import the stylesheet once, at the application root or in your global CSS.</p>
               <figure class="code">
                 <figcaption class="code-label">terminal</figcaption>
-                <pre><code>npm install layoutkit-css@2.1.0</code></pre>
+                <pre><code>npm install layoutkit-css@2.2.0</code></pre>
               </figure>
               <figure class="code">
                 <figcaption class="code-label">JavaScript</figcaption>
@@ -100,7 +100,7 @@
           <section id="browser" aria-labelledby="browser-heading">
             <lk-stack gap="md">
               <h2 id="browser-heading">Browser</h2>
-              <p class="measure muted">2.1.0 is not on the npm registry yet, so a public package URL would still serve 1.x. Link the stylesheet shipped with this site, or copy <code>packages/layoutkit/layoutkit.css</code> from the repository. The copy at the site root is that same 2.1.0 build.</p>
+              <p class="measure muted">npm latest is 1.3.2, published 5 July 2026. 1.4.0 through 2.2.0 are in this repository and are not on the registry. A public package URL still serves 1.3.2. Link the stylesheet shipped with this site, or copy <code>packages/layoutkit/layoutkit.css</code>. The copy at the site root is that same 2.2.0 build.</p>
               <figure class="code">
                 <figcaption class="code-label">document head</figcaption>
                 <pre><code><span class="tok-tag">&lt;link</span> <span class="tok-attr">rel</span>=<span class="tok-str">"stylesheet"</span> <span class="tok-attr">href</span>=<span class="tok-str">"/layoutkit.css"</span><span class="tok-tag">&gt;</span></code></pre>
@@ -122,7 +122,7 @@
           <section id="release" aria-labelledby="release-heading">
             <lk-stack gap="md">
               <h2 id="release-heading">What changed</h2>
-              <p class="measure muted">2.1.0 adds <code>lk-frame</code>, <code>lk-bleed</code>, <code>lk-dock</code>, and <code>lk-select</code>, plus opt-in <code>look</code>, <code>pattern</code>, <code>blend</code>, and <code>bands</code>. It does not change a 2.0.0 default.</p>
+              <p class="measure muted">2.1.0 adds <code>lk-frame</code>, <code>lk-bleed</code>, <code>lk-dock</code>, and <code>lk-select</code>, plus opt-in <code>look</code>, <code>pattern</code>, <code>blend</code>, and <code>bands</code>. 2.2.0 adds reading order, a stuck hairline, the current-slide outline, and anchor width. Centered overflow uses <code>safe center</code> where that keyword exists. The 2.0 container, snap, and fluid-space defaults stay.</p>
               <p class="measure muted">2.0.0 turned container queries on switcher, sidebar, and grid, a switcher limit of 4, single-child centering, center overlay, fluid spacing, and horizontal scroll-snap on. Each one has an <code>off</code> value.</p>
               <p class="measure muted"><code>width="xl"</code> is 56rem. The old 64rem step is <code>width="2xl"</code>. <code>width="3xl"</code> is 80rem.</p>
               <lk-cluster gap="sm">
@@ -151,7 +151,7 @@ tar -tzf layoutkit-css-*.tgz</code></pre>
   <footer class="site-footer">
     <lk-box width="3xl" padding="8">
       <lk-stack gap="md">
-        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
+        <p>LayoutKit 2.2.0. Pure-CSS layout primitives. MIT.</p>
         <lk-cluster gap="md">
           <a href="/docs">Docs</a>
           <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>

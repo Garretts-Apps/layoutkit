@@ -84,45 +84,23 @@ DX gaps that are real but should not turn layoutkit into those products:
 
 ## Prioritized for a later run
 
-1. **Scroll-button and scroll-marker carousels.** `::scroll-button()` and
-   `::scroll-marker()` would give the snap row next/previous controls with no
-   script. Support is still uneven, so it stays behind `@supports` until it is
-   safe to style.
-2. **`view()` timelines for reveal-on-scroll.** Useful, and it replaces
-   IntersectionObserver, but it is an animation system. LayoutKit should only
-   add it with a static "already visible" fallback and a reduced-motion rule.
-3. **`calc-size()` / `interpolate-size` on disclosure panels.** Animating a
-   details panel from zero to auto is the main reason people still write a
-   height script. It needs a fallback that is the current instant open.
-4. **Container style queries.** `@container style(--lk-mode: compact)` would
-   let a nested layout branch on a parent token. Worth adding once the syntax
-   is boring in every evergreen browser.
-5. **`sibling-index()` / `sibling-count()`.** These would replace the
-   nth-last-child limit trick with a readable rule, and would allow staggered
-   layouts without script. Wait until the functions are interoperable.
-6. **Reading order.** `reading-flow` and `reading-order` matter if a later
-   change visually reorders children. Do not add visual reordering until this
-   exists, or the accessible order will lie.
-7. **Masonry.** `grid-template-rows: masonry` is still not a shared syntax.
-   Do not ship a half-working masonry attribute.
-8. **Full Utopia space pairs.** `--space-s-l` style pairs are a generator
-   product. Hosts can already assign a clamp to `--space-*`. A generated pair
-   matrix would multiply the stylesheet for little gain.
-9. **Toolbar-safe viewport height.** Elastic's `100vh - var(--h-toolbar)` is a
-   one-line opt-in (`--lk-cover-min` already is). Document it; do not add a
-   second full-height attribute.
-10. **Framework packages and a richer playground.** Typed React wrappers would
-    add a runtime LayoutKit refuses. Better playground presets, and docs that
-    deep-link each attribute, are the DX work that fits the static site.
-11. **12-column spans and viewport breakpoint props.** Leave these to normal
-    CSS or to Tailwind. They duplicate `cols`, `container`, and `subgrid`, and
-    they teach viewport thinking the intrinsic primitives exist to avoid.
-12. **Auto separators, icon squares, and classless control skins.** These are
-    component or theme work. `lk-divider` stays an explicit element.
+Shipped since this note was written:
+
+- 2.0.0: `::scroll-button()` / `::scroll-marker`, `view()` reveal, `interpolate-size` on disclosure, container style queries (`layout="compact"`), and `sibling-count()` on the switcher limit. Each stays behind `@supports`.
+- 2.1.0: `sibling-index()` on `bands`.
+- 2.2.0: `reading-flow` on reversed rows and dense grids. `spot` reorders a child only inside that same `@supports`, so a browser that cannot fix tab order does not move the picture. `stuck`, `mark="current"`, and vertical `cue` use scroll-state queries. `match="width"` uses `anchor-size()`. `--lk-cover-min` is documented as the toolbar clearance. There is still no second full-height attribute.
+
+Still deferred:
+
+1. **Masonry.** The shared syntax is now `display: grid-lanes`, not `grid-template-rows: masonry`. As of November 2026 Safari 26.4 ships it and Chrome and Firefox do not ship it unflagged. `reading-flow` is not in Safari, so a lanes attribute would reorder the picture in the browser that cannot correct reading order. Do not ship it yet.
+2. **Full Utopia space pairs.** Still a generator product. Hosts can assign a clamp to `--space-*`.
+3. **Framework packages.** Still no React wrapper.
+4. **12-column spans and viewport breakpoint props.** Leave these to normal CSS or to Tailwind.
+5. **Auto separators, icon squares, and classless control skins.** `lk-divider` stays an explicit element. `lk-select` remains the only control skin, and only inside `@supports (appearance: base-select)`.
 
 ## Breaking proposals (need owner approval)
 
-None from this research. Making `container` the default on switcher, sidebar,
-and grid would change containment. Making `limit` or `overlay` the default
-would move current children. Replacing `--lk-space-*` with fluid clamps would
-change every existing gap. Those stay opt-in.
+2.0.0 took the container, limit, overlay, fluid-space, and horizontal-snap
+defaults, with opt-outs. 2.2.0 makes centered alignment `safe` where the
+keyword exists. Content that fits does not move. Content that overflows aligns
+to the start. The restore rule is in `MIGRATION.md`.

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tutorial — LayoutKit layout wrappers inside semantic HTML</title>
-  <meta name="description" content="Learn LayoutKit 2.1: center, stack, spread, container-query grid and switcher, sidebar, and snap scrolling. Pure CSS, inside native semantic HTML.">
+  <meta name="description" content="Learn LayoutKit 2.2: center, stack, spread, container-query grid and switcher, sidebar, and snap scrolling. Pure CSS, inside native semantic HTML.">
   <link rel="canonical" href="https://layoutkit.dev/tutorial">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="Tutorial — LayoutKit">
-  <meta property="og:description" content="A short tour of LayoutKit 2.1 layouts: switcher, sidebar, grid, and snap scrolling, with no runtime.">
+  <meta property="og:description" content="A short tour of LayoutKit 2.2 layouts: switcher, sidebar, grid, and snap scrolling, with no runtime.">
   <meta property="og:url" content="https://layoutkit.dev/tutorial">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
   <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Tutorial — LayoutKit">
-  <meta name="twitter:description" content="A short tour of LayoutKit 2.1 layouts: switcher, sidebar, grid, and snap scrolling, with no runtime.">
+  <meta name="twitter:description" content="A short tour of LayoutKit 2.2 layouts: switcher, sidebar, grid, and snap scrolling, with no runtime.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
@@ -37,7 +37,7 @@
               <lk-row gap="2" align="center">
                 <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
                 <span class="brand">LayoutKit</span>
-                <span class="badge">2.1.0</span>
+                <span class="badge">2.2.0</span>
               </lk-row>
             </a>
             <lk-spacer></lk-spacer>
@@ -76,7 +76,7 @@
         <lk-stack gap="2xl">
           <section aria-labelledby="tutorial-heading">
             <lk-stack gap="md">
-              <p class="kicker">Tutorial · 2.1.0</p>
+              <p class="kicker">Tutorial · 2.2.0</p>
               <h1 id="tutorial-heading" class="title">Arrange native HTML.</h1>
               <p class="lede">Every example keeps headings, links, buttons, lists, and landmarks as real elements. The <code>lk-*</code> tags only place them. Upgrading from 1.x? <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Read MIGRATION.md</a>.</p>
             </lk-stack>
@@ -87,7 +87,7 @@
               <lk-stack gap="md">
                 <p class="kicker">Step 1</p>
                 <h2 id="center-heading">Center content</h2>
-                <p class="measure muted"><code>lk-center</code> covers a positioned parent unless <code>overlay="off"</code>. Empty states in normal flow use the opt-out.</p>
+                <p class="measure muted"><code>lk-center</code> covers a positioned parent unless <code>overlay="off"</code>. Empty states in normal flow use the opt-out. Where <code>safe center</code> exists, content that is wider than the center lines up at the start. Content that fits stays in the middle.</p>
                 <figure class="code">
                   <figcaption class="code-label">markup</figcaption>
                   <pre><code><span class="tok-tag">&lt;lk-center</span> <span class="tok-attr">overlay</span>=<span class="tok-str">"off"</span><span class="tok-tag">&gt;</span>
@@ -355,7 +355,7 @@
   <footer class="site-footer">
     <lk-box width="3xl" padding="8">
       <lk-stack gap="md">
-        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
+        <p>LayoutKit 2.2.0. Pure-CSS layout primitives. MIT.</p>
         <lk-cluster gap="md">
           <a href="/docs">Docs</a>
           <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Migration</a>

@@ -65,14 +65,17 @@
       if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
       if (has(p, "wrap")) d.push(["flex-wrap", "wrap"]);
       if (has(p, "snap")) d.push(["flex-wrap", "nowrap"], ["overflow-x", "auto"], ["overflow-y", "hidden"], ["scroll-snap-type", "x mandatory"]);
+      if (has(p, "reverse") || p.reading === "visual") d.push(["reading-flow", "flex-visual"]);
+      if (p.reading === "source") d.push(["reading-flow", "source-order"]);
+      if (has(p, "sticky") && has(p, "stuck")) d.push(["container-type", "scroll-state"]);
       d.push(...widthDecls(p), ...placeDecls(p, false));
       return d;
     },
     "lk-center"(p) {
       const both = !has(p, "horizontal") && !has(p, "vertical");
       const d = [["display", has(p, "inline") ? "inline-flex" : "flex"], ["flex-direction", "column"],
-        ["align-items", both || has(p, "horizontal") ? "center" : "stretch"],
-        ["justify-content", both || has(p, "vertical") ? "center" : "flex-start"]];
+        ["align-items", both || has(p, "horizontal") ? "safe center" : "stretch"],
+        ["justify-content", both || has(p, "vertical") ? "safe center" : "flex-start"]];
       if (has(p, "fill")) d.push(["flex", "1 1 0%"]);
       if (p["full-height"] === "container") d.push(["min-block-size", "100cqb"]);
       else if (has(p, "full-height")) d.push(["min-block-size", "100vh"]);
@@ -286,7 +289,10 @@
     }
     if (tag === "lk-menu" && has(attrs, "anchor")) {
       rules.push([" > button:first-child", [["anchor-name", "--lk-menu"]]]);
-      rules.push([" > lk-popover", [["position-anchor", "--lk-menu"], ["position-area", attrs.side === "end" ? "block-end span-inline-start" : "block-end span-inline-end"], ["justify-self", attrs.side === "end" ? "end" : "start"]]]);
+      const area = attrs.side === "end" ? "block-end span-inline-start" : "block-end span-inline-end";
+      const panel = [["position-anchor", "--lk-menu"], ["position-area", area], ["justify-self", attrs.side === "end" ? "end" : "start"]];
+      if (attrs.match === "width") panel.push(["min-inline-size", "anchor-size(width)"]);
+      rules.push([" > lk-popover", panel]);
     }
     if (tag === "lk-aspect-ratio") {
       rules.push([" > :is(img, video, iframe, canvas, svg)", [
@@ -424,6 +430,9 @@
     { label: "Columns", code: '<lk-columns cols="3" gap="lg">\n  <p>First point stays together.</p>\n  <p>Second point follows the flow.</p>\n  <p>Third point fills the row.</p>\n</lk-columns>' },
     { label: "Frame", code: '<lk-frame width="md">\n  <h2>Column</h2>\n  <p>The measure stays put. Gutters grow.</p>\n  <lk-bleed>\n    <p>This band is the full width of the frame.</p>\n  </lk-bleed>\n</lk-frame>' },
     { label: "Disclosure", code: '<lk-disclosure look="panel">\n  <details name="faq">\n    <summary>Shipping</summary>\n    <p>Orders leave on weekday mornings.</p>\n  </details>\n  <details name="faq">\n    <summary>Returns</summary>\n    <p>Open one and the other closes.</p>\n  </details>\n</lk-disclosure>' },
+    { label: "Stuck", code: '<lk-scroll-area max-h="sm" tabindex="0" aria-label="Scroll the section">\n  <lk-box sticky stuck>\n    <strong>Section</strong>\n  </lk-box>\n  <p>First note under the title.</p>\n  <p>Second note, so the region can scroll.</p>\n  <p>Third note. The hairline needs scroll-state queries.</p>\n  <p>Fourth note is the end.</p>\n</lk-scroll-area>' },
+    { label: "Reading", code: '<lk-row gap="sm" wrap reading="visual">\n  <button type="button">Not now</button>\n  <button type="button" spot="first">Save</button>\n</lk-row>' },
+    { label: "Hint", code: '<lk-menu anchor match="width">\n  <button type="button" popovertarget="save-hint" interestfor="save-hint">Save draft</button>\n  <lk-popover id="save-hint" popover="hint">Writes the draft on this device.</lk-popover>\n</lk-menu>' },
   ];
 
   const input = document.getElementById("pg-input");

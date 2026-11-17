@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LayoutKit — Pure-CSS layout primitives that replace JavaScript</title>
-  <meta name="description" content="LayoutKit 2.1.0 is pure-CSS layout primitives that replace JavaScript for layout. One stylesheet, 80,010 bytes. No runtime and no dependencies. Container queries are on. Newer CSS stays behind @supports.">
+  <meta name="description" content="LayoutKit 2.2.0 is pure-CSS layout primitives that replace JavaScript for layout. One stylesheet, 85,031 bytes. No runtime and no dependencies. Container queries are on. Newer CSS stays behind @supports.">
   <link rel="canonical" href="https://layoutkit.dev/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="LayoutKit">
   <meta property="og:title" content="LayoutKit — Pure-CSS layout primitives that replace JavaScript">
-  <meta property="og:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet, 80,010 bytes. No runtime. Version 2.1.0.">
+  <meta property="og:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet, 85,031 bytes. No runtime. Version 2.2.0.">
   <meta property="og:url" content="https://layoutkit.dev/">
   <meta property="og:image" content="https://layoutkit.dev/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
   <meta property="og:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="LayoutKit — Pure-CSS layout primitives that replace JavaScript">
-  <meta name="twitter:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet, 80,010 bytes. No runtime. Version 2.1.0.">
+  <meta name="twitter:description" content="Container-query switcher, sidebar, and grid, fluid spacing, and snap scrolling. One stylesheet, 85,031 bytes. No runtime. Version 2.2.0.">
   <meta name="twitter:image" content="https://layoutkit.dev/assets/og.png">
   <meta name="twitter:image:alt" content="LayoutKit, pure-CSS layout primitives that replace JavaScript for layout.">
   <link rel="stylesheet" href="/layoutkit.css">
@@ -37,7 +37,7 @@
               <lk-row gap="2" align="center">
                 <lk-center class="mark" overlay="off" square="sm" aria-hidden="true">L</lk-center>
                 <span class="brand">LayoutKit</span>
-                <span class="badge">2.1.0</span>
+                <span class="badge">2.2.0</span>
               </lk-row>
             </a>
             <lk-spacer></lk-spacer>
@@ -61,7 +61,7 @@
           <lk-stack gap="lg">
             <p class="kicker">One stylesheet · zero runtime</p>
             <h1 id="home-heading" class="display">Pure-CSS layout primitives that <em>replace JavaScript</em> for layout.</h1>
-            <p class="lede">LayoutKit is a readable vocabulary of <code>lk-*</code> wrappers — stack, switcher, sidebar, grid, and snap scrolling — used inside real HTML landmarks. Version 2.0 measures those layouts from their own container. Version 2.1 adds opt-in tags and does not change those defaults.</p>
+            <p class="lede">LayoutKit is a readable vocabulary of <code>lk-*</code> wrappers — stack, switcher, sidebar, grid, and snap scrolling — used inside real HTML landmarks. Version 2.0 measures those layouts from their own container. Version 2.2 keeps that, and lines overflowing centered content up at the start where <code>safe</code> exists.</p>
             <lk-cluster gap="sm">
               <a class="btn btn-primary" href="/install">Install LayoutKit</a>
               <a class="btn" href="/docs">Read the docs</a>
@@ -248,7 +248,7 @@
               <lk-card surface padding="lg">
                 <lk-stack gap="sm">
                   <h3>What it is</h3>
-                  <p class="muted">One CSS file of layout primitives, 80,010 bytes (12,795 gzipped). No runtime, no dependencies, no custom-element registration. Rules live in <code>@layer layoutkit</code>, so an unlayered rule you write later wins.</p>
+                  <p class="muted">One CSS file of layout primitives, 85,031 bytes (13,626 gzipped). No runtime, no dependencies, no custom-element registration. Rules live in <code>@layer layoutkit</code>, so an unlayered rule you write later wins.</p>
                 </lk-stack>
               </lk-card>
               <lk-card surface padding="lg">
@@ -304,17 +304,50 @@
           </lk-stack>
         </section>
 
+        <section aria-labelledby="release-heading">
+          <lk-stack gap="lg">
+            <lk-stack gap="sm">
+              <p class="kicker">Version 2.2.0</p>
+              <h2 id="release-heading">Order, overflow, and a bar that knows it is stuck.</h2>
+              <p class="measure muted">Centering is the complaint that does not go away, and so is a layout that flips while the keyboard still walks the old order. 2.2.0 lines overflowing centered content up at the start, where <code>safe</code> exists, so the first word stays reachable. Where <code>reading-flow</code> exists, a reversed row is read in the order you see. Firefox and Safari keep the source order, which is why <code>spot</code> does not move anything there. Scroll the notes. The title sticks. A hairline appears only where scroll-state queries exist.</p>
+            </lk-stack>
+            <div class="demo">
+              <lk-box padding="3">
+                <lk-stack gap="md">
+                  <lk-row gap="sm" wrap reading="visual">
+                    <button type="button">Not now</button>
+                    <button type="button" spot="first">Save</button>
+                  </lk-row>
+                  <lk-scroll-area max-h="sm" tabindex="0" aria-label="Scroll the section" style="--lk-sticky-top: 0px">
+                    <lk-box sticky stuck>
+                      <p class="demo-cell">Section title</p>
+                    </lk-box>
+                    <lk-stack gap="sm">
+                      <p>First note under the title.</p>
+                      <p>Second note, so the region can scroll.</p>
+                      <p>Third note. The line needs a scroll-state query.</p>
+                      <p>Fourth note is the end.</p>
+                      <p>Fifth note keeps the title above the text.</p>
+                      <p>Sixth note is the last one.</p>
+                    </lk-stack>
+                  </lk-scroll-area>
+                </lk-stack>
+              </lk-box>
+            </div>
+          </lk-stack>
+        </section>
+
         <section aria-labelledby="install-heading">
           <lk-stack gap="lg">
             <lk-stack gap="sm">
               <p class="kicker">Install</p>
               <h2 id="install-heading">Load the stylesheet early.</h2>
-              <p class="measure muted">2.1.0 is not published yet, so the public registry still serves 1.x. Use the file in this repository, or pin the package version when you install. This site loads <code>/layoutkit.css</code> from the 2.1.0 build. If that file does not load, nothing in JavaScript rebuilds the layout.</p>
+              <p class="measure muted">The public registry’s latest is 1.3.2, published 5 July 2026. This site loads <code>/layoutkit.css</code> from the 2.2.0 build. A package CDN would still serve 1.3.2. If that file does not load, nothing in JavaScript rebuilds the layout.</p>
             </lk-stack>
             <lk-switcher gap="md" at="lg">
               <figure class="code">
                 <figcaption class="code-label">npm</figcaption>
-                <pre><code>npm install layoutkit-css@2.1.0</code></pre>
+                <pre><code>npm install layoutkit-css@2.2.0</code></pre>
               </figure>
               <figure class="code">
                 <figcaption class="code-label">stylesheet</figcaption>
@@ -364,7 +397,7 @@
                 <p>Do not add ARIA roles to make a layout wrapper seem semantic. If it has no role, it usually needs no ARIA.</p>
               </lk-card>
               <lk-card surface padding="lg">
-                <p>Focus order follows source order. The switcher does not reverse <code>flex-direction</code> when it stacks. Scroll regions that must be keyboard stops need <code>tabindex="0"</code> and a name.</p>
+                <p>Focus order follows source order in Firefox and Safari. Where <code>reading-flow</code> exists, a reversed row follows the picture. The switcher does not reverse <code>flex-direction</code> when it stacks. Scroll regions that must be keyboard stops need <code>tabindex="0"</code> and a name.</p>
               </lk-card>
               <lk-card surface padding="lg">
                 <p>Reveal and disclosure motion turn off under reduced motion. The content stays visible, and scroll buttons never replace the keyboard.</p>
@@ -379,7 +412,7 @@
   <footer class="site-footer">
     <lk-box width="3xl" padding="8">
       <lk-stack gap="md">
-        <p>LayoutKit 2.1.0. Pure-CSS layout primitives. MIT.</p>
+        <p>LayoutKit 2.2.0. Pure-CSS layout primitives. MIT.</p>
         <lk-cluster gap="md">
           <a href="/docs">Docs</a>
           <a href="/install">Install</a>

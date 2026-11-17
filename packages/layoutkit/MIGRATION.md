@@ -1,3 +1,54 @@
+# Migrating to layoutkit-css 2.2.0
+
+2.2.0 keeps every tag name, attribute name, and export path. One default
+changes, and only when centered content overflows its container.
+
+## Restore plain centering
+
+Load this after LayoutKit. It is unlayered, so it beats `@layer layoutkit`.
+
+```css
+lk-center:not([horizontal]):not([vertical]):not([place]),
+lk-stack[center],
+lk-row[center] {
+  align-items: center;
+  justify-content: center;
+}
+lk-center[horizontal]:not([vertical]),
+lk-stack[align="center"],
+lk-row[align="center"],
+lk-spread[align="center"] { align-items: center; }
+lk-center[vertical]:not([horizontal]),
+lk-stack[justify="center"],
+lk-row[justify="center"] { justify-content: center; }
+lk-stack[place="center"],
+lk-center[place="center"],
+lk-row[place="center"],
+lk-spread[place="center"],
+lk-cluster[place="center"] {
+  justify-content: center;
+  align-items: center;
+}
+lk-grid[place="center"] { justify-items: center; align-items: center; }
+lk-grid[place-items="center"] { place-items: center; }
+```
+
+Content that fits is centered either way. `safe center` is what moves an item
+that is wider or taller than the container, back to the start. Browsers
+without the keyword never applied it.
+
+## Opt-in, off until you set them
+
+- `reading="visual"` or `reading="source"` on a row, stack, or grid. A reversed row and a dense grid already follow the picture where `reading-flow` exists. `source` opts out.
+- `spot="first"` or `spot="last"` on a child. Ignored where `reading-flow` is missing, so the source order stays the picture.
+- `stuck` on a sticky box, stack, row, or sidebar. A hairline on the children, where scroll-state queries exist.
+- `mark="current"` on a snap row or scroll area. An outline on the current slide's contents.
+- `cue` on a vertical scroll area. A fade while more content sits below.
+- `match="width"` on a menu or popover.
+- `popover="hint"` on `lk-popover`. Pair it with `popovertarget`. `interestfor` is the hover path where that attribute exists.
+
+Nothing else from 2.1.0 changes meaning.
+
 # Migrating to layoutkit-css 2.1.0
 
 2.1.0 adds tags and opt-in attributes. It does not change a 2.0.0 default.
