@@ -1,3 +1,14 @@
+# Unreleased: reveal removed
+
+`reveal` on `lk-box`, `lk-card`, and `lk-stack` no longer does anything. It
+faded a block in and slid it up as it scrolled into view. Content is now
+shown as it is, which is what every browser without `animation-timeline:
+view()` and every reduced-motion reader already got. Markup that sets
+`reveal` keeps working and needs no change; the attribute stays in
+`jsx.d.ts`, marked deprecated. To keep the effect, paste the 2.2.0 rule
+into your own stylesheet; it is in the git history of
+`packages/layoutkit/gen.mjs`.
+
 # Migrating to layoutkit-css 2.2.0
 
 2.2.0 keeps every tag name, attribute name, and export path. One default
@@ -185,7 +196,7 @@ These do nothing until you set the attribute.
 - `square="xs|sm|md|lg|xl"` on `lk-center` and `lk-box` (1.25rem, 1.75rem, 2.5rem, 4rem, 6rem).
 - `full-height="container"` and `lk-cover size="container"` use the query container (`100%`, then `100cqb`). A boolean `full-height` and a plain cover still use the viewport.
 - `adapt="scroll"` on `lk-row` is a horizontal snap scroller that becomes a column below 32rem.
-- `reveal` on `lk-box`, `lk-card`, and `lk-stack` fades in on `animation-timeline: view()` where that exists. The content stays visible otherwise, and `prefers-reduced-motion: reduce` disables the animation.
+- `reveal` on `lk-box`, `lk-card`, and `lk-stack` faded in on `animation-timeline: view()`. It was removed after 2.2.0 and now does nothing; see "Unreleased: reveal removed" above.
 - `layout="compact"` sets `--lk-layout: compact`. Inside `@container style(--lk-layout: compact)`, rows become columns. Browsers without style queries ignore that at-rule.
 - Snap scrollers gain `::scroll-button()` and `::scroll-marker` where `selector(::scroll-button(inline-start))` matches. The buttons are named Previous and Next.
 - `lk-disclosure` animates its height where `interpolate-size: allow-keywords` exists. `animate="off"` skips it. Reduced motion skips it. Closed content stays closed.

@@ -96,6 +96,7 @@ declare global {
         stuck?: boolean | "";
         /** visual follows the picture where reading-flow exists. source keeps DOM order. */
         reading?: "visual" | "source";
+        /** @deprecated Does nothing after 2.2.0. Content is shown as it is; LayoutKit no longer animates sections in on scroll. */
         reveal?: boolean | "";
         layout?: "compact";
         /** Paint each child from --lk-base and sibling-index(), where that function exists. */
@@ -152,6 +153,7 @@ declare global {
         /** Hairline on the children once the sticky box is stuck. Needs scroll-state queries. */
         stuck?: boolean | "";
         square?: LayoutKitSquare;
+        /** @deprecated Does nothing after 2.2.0. Content is shown as it is; LayoutKit no longer animates sections in on scroll. */
         reveal?: boolean | "";
         layout?: "compact";
         /** Gradient texture: checker, dots, or graph paper. */
@@ -168,6 +170,7 @@ declare global {
         border?: "none";
         /** Bleed a direct child figure to the card edges. */
         adapt?: "figure";
+        /** @deprecated Does nothing after 2.2.0. Content is shown as it is; LayoutKit no longer animates sections in on scroll. */
         reveal?: boolean | "";
       };
       "lk-spread": LayoutKitGlobalAttributes & {

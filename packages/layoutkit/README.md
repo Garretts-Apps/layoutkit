@@ -1,7 +1,7 @@
 # layoutkit-css
 
-LayoutKit is one CSS file of layout tags for semantic HTML. 2.2.0 is 85,031
-bytes (13,626 bytes gzipped). There is no runtime JavaScript and no build step
+LayoutKit is one CSS file of layout tags for semantic HTML. The file is 84,385
+bytes (13,508 bytes gzipped). There is no runtime JavaScript and no build step
 to use the file.
 
 `lk-stack`, `lk-row`, `lk-grid`, and `lk-center` name the layout so you are not
@@ -14,7 +14,7 @@ Use LayoutKit inside native semantic HTML.
 
 ## What LayoutKit Is
 
-- One CSS file. 85,031 bytes, 13,626 bytes gzipped, in 2.2.0.
+- One CSS file. 84,385 bytes, 13,508 bytes gzipped.
 - No runtime JavaScript.
 - No npm dependencies.
 - No custom element registration. The tags are unknown elements with a stylesheet.

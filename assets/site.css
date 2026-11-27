@@ -4,13 +4,13 @@
 
 :root {
   color-scheme: light;
-  --bg: #f3efe6;
-  --fg: #1c1612;
-  --muted: #534b42;
-  --surface: #fffdf8;
-  --tint: #e6dfd2;
-  --line: #8a8174;
-  --line-strong: #6f675c;
+  --bg: #f4f4f5;
+  --fg: #18181b;
+  --muted: #4b4b52;
+  --surface: #ffffff;
+  --tint: #e7e7ea;
+  --line: #84848c;
+  --line-strong: #6a6a72;
   --accent: #8c2f12;
   --accent-fg: #fffaf5;
   --link: #7a2a10;
@@ -198,13 +198,11 @@ a:hover { text-decoration-thickness: 2px; }
   color: var(--accent-fg);
 }
 
-.kicker {
+.label {
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
+  color: var(--muted);
 }
 .lede, .muted { color: var(--muted); }
 .lede {
@@ -214,14 +212,6 @@ a:hover { text-decoration-thickness: 2px; }
   text-wrap: pretty;
 }
 .measure { max-inline-size: 62ch; }
-
-.display em, .title em {
-  font-style: italic;
-  background-image: linear-gradient(var(--mark), var(--mark));
-  background-repeat: no-repeat;
-  background-size: 100% 0.38em;
-  background-position: 0 88%;
-}
 
 a.btn {
   display: inline-block;
@@ -259,8 +249,6 @@ figure.code, .code {
   font-family: var(--mono);
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--code-comment);
   padding: 0.55rem 1rem;
   border-block-end: 1px solid var(--code-line);
@@ -274,7 +262,7 @@ figure.code, .code {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-code, .kicker, .badge, .code-label, .panel-label { font-family: var(--mono); }
+code, .label, .badge, .code-label, .panel-label { font-family: var(--mono); }
 p code, li code, td code, h2 code, h3 code {
   font-size: 0.88em;
   background: var(--tint);
@@ -533,8 +521,6 @@ lk-disclosure[panel="overlay"] > details:not([open]) > :not(summary) {
 .panel-label {
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--code-comment);
   padding: 0.6rem 1rem;
   border-block-end: 1px solid var(--code-line);

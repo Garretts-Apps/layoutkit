@@ -1,7 +1,7 @@
 # LayoutKit
 
 LayoutKit is one CSS file of layout tags for semantic HTML. The file is
-85,031 bytes (13,626 bytes gzipped). There is no runtime JavaScript, no
+84,385 bytes (13,508 bytes gzipped). There is no runtime JavaScript, no
 dependency, and no build step to use it: link the stylesheet or import it once.
 
 It ships as `layoutkit-css` on npm:

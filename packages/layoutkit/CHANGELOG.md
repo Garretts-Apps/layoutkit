@@ -3,6 +3,12 @@
 All notable changes to `layoutkit-css` are documented here. This project
 follows [Semantic Versioning](https://semver.org/).
 
+## Unreleased
+
+### Changed
+
+- **`reveal` is removed.** `lk-box`, `lk-card`, and `lk-stack` no longer fade in on scroll. Markup with `reveal` still works and shows the content as it is. `MIGRATION.md` explains how to keep the effect in your own CSS. `check-package` now fails if the rule comes back.
+
 ## 2.2.0
 
 One default moves, and only when centered content overflows. The stylesheet

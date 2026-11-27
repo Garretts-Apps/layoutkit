@@ -133,7 +133,7 @@ if (!css.includes("lk-columns[cols=\"3\"]")) fail("lk-columns must set an enumer
 if (!css.includes('lk-switcher[at="xs"]')) fail("switcher must expose an enumerated threshold");
 if (!css.includes("min-inline-size: 0")) fail("scroll areas must be allowed to shrink");
 if (!css.includes("sibling-count()")) fail("switcher limit must use sibling-count where supported");
-if (!css.includes("animation-timeline: view()")) fail("reveal must use a view timeline");
+if (css.includes("[reveal]") || css.includes("lk-reveal")) fail("reveal was removed after 2.2.0: content must not fade in on scroll");
 if (!css.includes("interpolate-size: allow-keywords")) fail("disclosure animation must use interpolate-size");
 if (!packageChangelog.includes("## 2.0.0")) fail("changelog must document 2.0.0");
 if (!packageChangelog.includes("### Breaking changes")) fail("changelog must label breaking changes");
@@ -168,10 +168,15 @@ if (!css.includes('[lk-weight="normal"]')) fail("lk-weight scale must be declare
 
 const dts = readFileSync(join(pkgDir, "jsx.d.ts"), "utf8");
 const typeAttrs = new Map();
+// Typed so existing markup still compiles, but no longer styled.
+const deprecatedAttrs = new Set(["reveal"]);
 const elementPattern = /"(lk-[a-z0-9-]+)":\s*LayoutKitGlobalAttributes\s*&\s*\{([\s\S]*?)\n\s*\};/g;
 for (const match of dts.matchAll(elementPattern)) {
   const props = new Set();
-  for (const prop of match[2].matchAll(/(?:^|\n)\s*(?:"([^"]+)"|([A-Za-z][\w-]*))\??:/g)) props.add(prop[1] || prop[2]);
+  for (const prop of match[2].matchAll(/(?:^|\n)\s*(?:"([^"]+)"|([A-Za-z][\w-]*))\??:/g)) {
+    const name = prop[1] || prop[2];
+    if (!deprecatedAttrs.has(name)) props.add(name);
+  }
   typeAttrs.set(match[1], props);
 }
 const cssTags = [...cssAttrs.keys()].sort();

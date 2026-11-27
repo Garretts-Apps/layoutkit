@@ -59,7 +59,7 @@
       <lk-sidebar class="docs-frame" sticky gap="xl">
         <nav class="toc" aria-label="Tutorial steps">
           <lk-stack gap="sm">
-            <p class="kicker">Steps</p>
+            <p class="label">Steps</p>
             <lk-switcher at="xs" limit="off" gap="1">
               <a class="navlink" href="#center">1 Center</a>
               <a class="navlink" href="#stack">2 Stack</a>
@@ -76,17 +76,14 @@
         <lk-stack gap="2xl">
           <section aria-labelledby="tutorial-heading">
             <lk-stack gap="md">
-              <p class="kicker">Tutorial · 2.2.0</p>
               <h1 id="tutorial-heading" class="title">Arrange native HTML.</h1>
-              <p class="lede">Every example keeps headings, links, buttons, lists, and landmarks as real elements. The <code>lk-*</code> tags only place them. Upgrading from 1.x? <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Read MIGRATION.md</a>.</p>
+              <p class="lede">Every example keeps headings, links, buttons, lists, and landmarks as native elements. The <code>lk-*</code> tags only place them. Upgrading from 1.x? <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">Read MIGRATION.md</a>.</p>
             </lk-stack>
           </section>
 
           <section id="center" aria-labelledby="center-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 1</p>
-                <h2 id="center-heading">Center content</h2>
+                <h2 id="center-heading">Step 1: Center content</h2>
                 <p class="measure muted"><code>lk-center</code> covers a positioned parent unless <code>overlay="off"</code>. Empty states in normal flow use the opt-out. Where <code>safe center</code> exists, content that is wider than the center lines up at the start. Content that fits stays in the middle.</p>
                 <figure class="code">
                   <figcaption class="code-label">markup</figcaption>
@@ -102,14 +99,11 @@
                   </lk-center>
                 </div>
               </lk-stack>
-            </lk-card>
           </section>
 
           <section id="stack" aria-labelledby="stack-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 2</p>
-                <h2 id="stack-heading">Stack with a fluid gap</h2>
+                <h2 id="stack-heading">Step 2: Stack with a fluid gap</h2>
                 <p class="measure muted"><code>gap="md"</code> uses the fluid space scale. A host <code>--space-md</code> token still wins.</p>
                 <figure class="code">
                   <figcaption class="code-label">markup</figcaption>
@@ -128,14 +122,11 @@
                   </lk-box>
                 </div>
               </lk-stack>
-            </lk-card>
           </section>
 
           <section id="spread" aria-labelledby="spread-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 3</p>
-                <h2 id="spread-heading">A header with spread</h2>
+                <h2 id="spread-heading">Step 3: A header with spread</h2>
                 <p class="measure muted"><code>lk-spread</code> pushes the first and last children apart. The landmark stays a <code>nav</code>.</p>
                 <figure class="code">
                   <figcaption class="code-label">markup</figcaption>
@@ -163,14 +154,11 @@
                   </lk-box>
                 </div>
               </lk-stack>
-            </lk-card>
           </section>
 
           <section id="grid" aria-labelledby="grid-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 4</p>
-                <h2 id="grid-heading">A grid that knows its width</h2>
+                <h2 id="grid-heading">Step 4: A grid that knows its width</h2>
                 <p class="measure muted">Fixed <code>cols</code> stack below 32rem because the grid is a container. <code>responsive</code> is auto-fit and does not use that stack. The 16rem frame shows the stack. This card shows the wide grid.</p>
                 <figure class="code">
                   <figcaption class="code-label">markup</figcaption>
@@ -201,14 +189,11 @@
                   </div>
                 </lk-switcher>
               </lk-stack>
-            </lk-card>
           </section>
 
           <section id="switcher" aria-labelledby="switcher-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 5</p>
-                <h2 id="switcher-heading">Switcher, from the container</h2>
+                <h2 id="switcher-heading">Step 5: Switcher, from the container</h2>
                 <p class="measure muted">Children sit in a row above 30rem and take the full row below it. <code>at</code> picks another threshold: xs 20rem, sm 24rem, lg 40rem, xl 48rem, 2xl 64rem. Five or more children each take a row unless you set <code>limit</code>.</p>
                 <figure class="code">
                   <figcaption class="code-label">markup</figcaption>
@@ -236,14 +221,11 @@
                   </div>
                 </lk-switcher>
               </lk-stack>
-            </lk-card>
           </section>
 
           <section id="sidebar" aria-labelledby="sidebar-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 6</p>
-                <h2 id="sidebar-heading">A sidebar that wraps</h2>
+                <h2 id="sidebar-heading">Step 6: A sidebar that wraps</h2>
                 <p class="measure muted">The side starts near 18rem. The content keeps at least half the sidebar’s own width, then the pair wraps. <code>sticky</code> pins the side while the content is on screen.</p>
                 <figure class="code">
                   <figcaption class="code-label">markup</figcaption>
@@ -264,14 +246,11 @@
                   </lk-box>
                 </div>
               </lk-stack>
-            </lk-card>
           </section>
 
           <section id="snap" aria-labelledby="snap-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 7</p>
-                <h2 id="snap-heading">Snap scrolling</h2>
+                <h2 id="snap-heading">Step 7: Snap scrolling</h2>
                 <p class="measure muted">A horizontal <code>lk-scroll-area</code> snaps unless <code>snap="off"</code>. <code>slide="peek"</code> shows the next item. Give the region a tabindex and a name so it is a keyboard stop.</p>
                 <figure class="code">
                   <figcaption class="code-label">markup</figcaption>
@@ -291,14 +270,11 @@
                   </lk-box>
                 </div>
               </lk-stack>
-            </lk-card>
           </section>
 
           <section id="page" aria-labelledby="page-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 8</p>
-                <h2 id="page-heading">Compose a page</h2>
+                <h2 id="page-heading">Step 8: Compose a page</h2>
                 <p class="measure muted"><code>fill</code> grows a wrapper that is itself a flex item. The landmark stays a native <code>main</code>.</p>
                 <div class="demo">
                   <lk-stack class="demo-page">
@@ -316,15 +292,12 @@
                   </lk-stack>
                 </div>
               </lk-stack>
-            </lk-card>
           </section>
 
           <section id="menu" aria-labelledby="menu-heading">
-            <lk-card surface padding="lg">
               <lk-stack gap="md">
-                <p class="kicker">Step 9</p>
-                <h2 id="menu-heading">A menu without script</h2>
-                <p class="measure muted"><code>lk-menu</code> with <code>anchor</code> tethers a native popover to the button. The invoker is the first child and must be a real <code>button</code>.</p>
+                <h2 id="menu-heading">Step 9: A menu without script</h2>
+                <p class="measure muted"><code>lk-menu</code> with <code>anchor</code> tethers a native popover to the button. The invoker is the first child and must be a <code>button</code> element.</p>
                 <div class="demo">
                   <lk-box padding="4">
                     <lk-menu anchor>
@@ -345,7 +318,6 @@
                   <a class="btn" href="/docs">Full reference</a>
                 </lk-cluster>
               </lk-stack>
-            </lk-card>
           </section>
         </lk-stack>
       </lk-sidebar>

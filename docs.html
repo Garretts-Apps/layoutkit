@@ -59,7 +59,7 @@
       <lk-sidebar class="docs-frame" sticky gap="xl">
         <nav class="toc" aria-label="On this page">
           <lk-stack gap="sm">
-            <p class="kicker">On this page</p>
+            <p class="label">On this page</p>
             <lk-switcher at="xs" limit="off" gap="1">
               <a class="navlink" href="#install">Install</a>
               <a class="navlink" href="#scope">Scope</a>
@@ -84,9 +84,8 @@
         <lk-stack gap="2xl">
           <section aria-labelledby="docs-heading">
             <lk-stack gap="md">
-              <p class="kicker">Reference · 2.2.0</p>
               <h1 id="docs-heading" class="title">LayoutKit docs</h1>
-              <p class="lede">A pure-CSS layout vocabulary, 85,031 bytes. <code>lk-*</code> tags make layout intent visible. Native HTML carries the meaning. 2.2.0 keeps the 2.0 defaults, and centered overflow lines up at the start where <code>safe</code> exists. Types ship in <code>jsx.d.ts</code>.</p>
+              <p class="lede">A pure-CSS layout vocabulary, 84,385 bytes. <code>lk-*</code> tags make layout intent visible. Native HTML carries the meaning. 2.2.0 keeps the 2.0 defaults, and centered overflow lines up at the start where <code>safe</code> exists. Types ship in <code>jsx.d.ts</code>.</p>
               <p class="measure">Coming from 1.5? <a href="https://github.com/Garretts-Apps/layoutkit/blob/main/packages/layoutkit/MIGRATION.md">MIGRATION.md</a> lists every default that changed, including the restore snippet. The path in the repo is <code>packages/layoutkit/MIGRATION.md</code>.</p>
             </lk-stack>
           </section>
@@ -133,7 +132,7 @@
               <p class="measure muted">LayoutKit is semantic to the person reading the markup, not to the accessibility tree. Do not replace <code>main</code>, <code>nav</code>, <code>section</code>, <code>article</code>, headings, buttons, links, lists, tables, or form controls.</p>
               <lk-grid cols="2" gap="lg">
                 <article>
-                  <p class="kicker">Good</p>
+                  <p class="label">Good</p>
                   <figure class="code">
                     <figcaption class="code-label">landmarks stay native</figcaption>
                     <pre><code><span class="tok-tag">&lt;main&gt;</span>
@@ -147,7 +146,7 @@
                   </figure>
                 </article>
                 <article>
-                  <p class="kicker">Bad</p>
+                  <p class="label">Bad</p>
                   <figure class="code">
                     <figcaption class="code-label">meaning is gone</figcaption>
                     <pre><code><span class="tok-tag">&lt;lk-box&gt;</span>
@@ -175,8 +174,8 @@
                     <tr><td><code>lk-stack</code></td><td>Vertical flow. One child centers unless <code>adapt="off"</code>. Children keep <code>min-inline-size: auto</code>.</td><td>gap, padding, align, justify, place, fill, full-height, wrap, width, adapt, sticky, stuck, reading, bands</td></tr>
                     <tr><td><code>lk-row</code></td><td>Horizontal flow. One child centers. <code>adapt="scroll"</code> is a snap row that becomes a column below 32rem. <code>reverse</code> flips the picture. Tab order follows it where <code>reading-flow</code> exists.</td><td>gap, padding, align, justify, place, fill, wrap, reverse, width, adapt, sticky, stuck, snap, slide, mark, reading, bands</td></tr>
                     <tr><td><code>lk-center</code></td><td>Centers its content. Overflow uses <code>safe center</code> where that keyword exists. Covers a positioned parent unless <code>overlay="off"</code>.</td><td>fill, full-height, inline, horizontal, vertical, place, width, overlay, square</td></tr>
-                    <tr><td><code>lk-box</code></td><td>Block wrapper. <code>pattern</code> and <code>blend</code> are opt-in.</td><td>padding, fill, width, flow, sticky, stuck, square, reveal, pattern, blend</td></tr>
-                    <tr><td><code>lk-card</code></td><td>Neutral padded block.</td><td>padding, radius, surface, border, width, flow, adapt, reveal</td></tr>
+                    <tr><td><code>lk-box</code></td><td>Block wrapper. <code>pattern</code> and <code>blend</code> are opt-in.</td><td>padding, fill, width, flow, sticky, stuck, square, pattern, blend</td></tr>
+                    <tr><td><code>lk-card</code></td><td>Neutral padded block.</td><td>padding, radius, surface, border, width, flow, adapt</td></tr>
                     <tr><td><code>lk-spread</code></td><td>Space-between row. Accepts <code>width</code>.</td><td>align, padding, place, width</td></tr>
                     <tr><td><code>lk-grid</code></td><td>Grid. Fixed <code>cols</code> stack from the grid’s own width, default 32rem. Dense flow follows the picture for tab order where <code>reading-flow</code> exists.</td><td>cols, rows, responsive, min, gap, col-gap, row-gap, flow, place, place-items, container, subgrid, reading</td></tr>
                     <tr><td><code>lk-cluster</code></td><td>Wrapping group.</td><td>gap, place</td></tr>
@@ -207,30 +206,30 @@
               <h2 id="attributes-heading">Attributes</h2>
               <p class="measure muted">Attributes name stable layout behavior. They are not a mirror of every CSS property.</p>
               <lk-grid cols="2" gap="md">
-                <lk-card surface padding="lg">
+                <article>
                   <h3>Spacing</h3>
                   <p class="muted"><code>gap</code>, <code>padding</code>, <code>col-gap</code>, and <code>row-gap</code> take <code>none</code>, <code>px</code>, <code>xs</code> through <code>3xl</code>, and the numeric scale. Named steps are fluid unless you set <code>--space-*</code>.</p>
-                </lk-card>
-                <lk-card surface padding="lg">
+                </article>
+                <article>
                   <h3>Alignment</h3>
                   <p class="muted"><code>align</code>, <code>justify</code>, <code>place</code>, <code>place-items</code>, and <code>center</code>. A center value uses <code>safe center</code> where that keyword exists, so overflow lines up at the start. <code>place</code> and <code>justify</code> still win over single-child centering.</p>
-                </lk-card>
-                <lk-card surface padding="lg">
+                </article>
+                <article>
                   <h3>Sizing</h3>
                   <p class="muted"><code>fill</code>, <code>full-height</code>, <code>width</code>, <code>size</code>, <code>min</code>, and <code>max-h</code>. A boolean <code>full-height</code> and a plain cover use <code>100dvh</code>, then <code>100svh</code>, then <code>100vh</code>. <code>full-height="container"</code> uses the query container. A toolbar gap is <code>--lk-cover-min: calc(100dvh - var(--lk-toolbar, 0px))</code> on the host. There is no second height attribute.</p>
-                </lk-card>
-                <lk-card surface padding="lg">
+                </article>
+                <article>
                   <h3>Grid tracks</h3>
                   <p class="muted"><code>responsive</code> and <code>min</code> are auto-fit, so empty tracks collapse. <code>min</code> overrides <code>responsive</code>. Both clamp a track to the container. <code>flow</code> on a grid is <code>row</code>, <code>col</code>, or <code>dense</code>. On a box or card it is the spacing scale.</p>
-                </lk-card>
-                <lk-card surface padding="lg">
+                </article>
+                <article>
                   <h3>Switcher</h3>
                   <p class="muted">Omitted <code>at</code>, or <code>at="md"</code>, stacks below 30rem. <code>xs</code> 20rem, <code>sm</code> 24rem, <code>lg</code> 40rem, <code>xl</code> 48rem, <code>2xl</code> 64rem. <code>at="flex"</code> restores the <code>--lk-switch-at</code> formula. <code>limit</code> is 2–6 or <code>off</code>.</p>
-                </lk-card>
-                <lk-card surface padding="lg">
+                </article>
+                <article>
                   <h3>On by default</h3>
                   <p class="muted">Container queries, single-child centering, center overlay, a switcher limit of 4, fluid space, and horizontal snap. Turn one off with <code>container="off"</code>, <code>adapt="off"</code>, <code>overlay="off"</code>, <code>limit="off"</code>, or <code>snap="off"</code>. Subgrid, sticky, anchor, and reveal stay opt-in.</p>
-                </lk-card>
+                </article>
               </lk-grid>
             </lk-stack>
           </section>
@@ -384,7 +383,7 @@
 
               <lk-stack gap="md">
                 <h3>Popover and disclosure</h3>
-                <p class="measure muted">The menu invoker is a real button. <code>anchor</code> tethers the panel with <code>position-area</code> where that exists. Disclosure uses native <code>details</code>. Height animation requires <code>interpolate-size</code> and is skipped when motion is reduced.</p>
+                <p class="measure muted">The menu invoker is a <code>button</code> element. <code>anchor</code> tethers the panel with <code>position-area</code> where that exists. Disclosure uses native <code>details</code>. Height animation requires <code>interpolate-size</code> and is skipped when motion is reduced.</p>
                 <div class="demo">
                   <lk-box padding="4">
                     <lk-cluster gap="lg">
