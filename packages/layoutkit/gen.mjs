@@ -839,7 +839,7 @@ lines(`
 }
 `);
 
-section("Opt-outs and 2.0 extras — square, sticky, container height, scrolling rows, reveal");
+section("Opt-outs and 2.0 extras — square, sticky, container height, scrolling rows");
 rule('lk-switcher[container="off"],\n  lk-sidebar[container="off"],\n  lk-grid[container="off"]', "container-type: normal; container-name: none;");
 rule('lk-row[adapt="off"],\n  lk-stack[adapt="off"]', "justify-content: flex-start;");
 rule('lk-scroll-area[snap="off"]', "scroll-snap-type: none;");
@@ -870,27 +870,6 @@ lines(`
       overflow: visible;
       scroll-snap-type: none;
     }
-  }
-}
-@supports (animation-timeline: view()) {
-  lk-box[reveal],
-  lk-card[reveal],
-  lk-stack[reveal] {
-    animation-name: lk-reveal;
-    animation-duration: auto;
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 40%;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  lk-box[reveal],
-  lk-card[reveal],
-  lk-stack[reveal] {
-    animation: none;
-    opacity: 1;
-    transform: none;
   }
 }
 @supports (selector(::scroll-button(inline-start))) {
@@ -964,12 +943,6 @@ lk-sidebar[layout="compact"] {
     flex: 0 0 auto;
     min-inline-size: 0;
   }
-}
-`);
-lines(`
-@keyframes lk-reveal {
-  from { opacity: 0; transform: translateY(1rem); }
-  to { opacity: 1; transform: none; }
 }
 `);
 
